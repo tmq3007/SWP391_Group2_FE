@@ -1,39 +1,41 @@
-import React, { useState } from 'react';
-import { Menu, MenuItem, Button } from '@mui/material';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const ShopMenu = () => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
+    const [category, setCategory] = React.useState('');
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleChange = (event) => {
+        setCategory(event.target.value);
     };
 
     return (
-        <div>
-            <Button
-                aria-controls={open ? 'simple-menu' : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-                sx={{ color: '#019376' }}
-            >
-                <p>Category</p>
-            </Button>
-            <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={handleClose} >Category 1</MenuItem>
-                <MenuItem onClick={handleClose}  >Category 2</MenuItem>
-                <MenuItem onClick={handleClose}  >Category 3</MenuItem>
-            </Menu>
-        </div>
+        <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+                <InputLabel
+                    id="demo-simple-select-label"
+                    className="logo font-semibold text-2xl" style={{ color: "#019376" }}
+                >
+                    Shop
+                </InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={category}
+                    label="Category"
+                    className="logo font-semibold text-2xl" style={{ color: "#019376" }}
+                    onChange={handleChange}
+                >
+                    <MenuItem style={{ color: "#019376" }} value={0}>ALL</MenuItem>
+                    <MenuItem style={{ color: "#019376" }} value={10}>Shop 1</MenuItem>
+                    <MenuItem style={{ color: "#019376" }} value={20}>Shop 2</MenuItem>
+                    <MenuItem style={{ color: "#019376" }} value={30}>Shop 3</MenuItem>
+                </Select>
+            </FormControl>
+        </Box>
     );
 };
 

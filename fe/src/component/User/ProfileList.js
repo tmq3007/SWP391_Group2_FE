@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const ProfileList = () => {
+const ProfileList = ({ handleLogout }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
@@ -12,6 +12,12 @@ const ProfileList = () => {
 
     const handleMenuClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleMenuLogout = () => {
+        console.log('Logout from ProfileList'); // Check if this gets logged
+        handleLogout(); // Trigger the logout function from the parent
+        handleMenuClose(); // Close the menu after logout
     };
 
     return (
@@ -24,7 +30,7 @@ const ProfileList = () => {
                 onClick={handleMenuOpen}
                 color="inherit"
             >
-                <AccountCircleIcon sx={{ fontSize: "1.8rem" }} />
+                <AccountCircleIcon sx={{ fontSize: '1.8rem' }} />
             </IconButton>
 
             {/* Menu for profile options */}
@@ -37,9 +43,15 @@ const ProfileList = () => {
                     'aria-labelledby': 'profile-button',
                 }}
             >
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
+                    Profile
+                </MenuItem>
+                <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
+                    My account
+                </MenuItem>
+                <MenuItem style={{ color: '#019376' }} onClick={handleMenuLogout}>
+                    Logout
+                </MenuItem>
             </Menu>
         </div>
     );
