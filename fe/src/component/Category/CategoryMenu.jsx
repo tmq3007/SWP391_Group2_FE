@@ -13,15 +13,17 @@ const CategoryMenu = () => {
 
     return (
         <div>
-            <Accordion
+            <Accordion elevation={0}
                 expanded={expanded === 'panel1'} // Check if panel1 is expanded
                 onChange={handleChange('panel1')}
                 style={{
                     marginBottom: '0px',
                     backgroundColor: '#F3F4F6',
                     boxShadow: 'none',
+                    borderShadow: 'none',
+                    outline: 'none',
                 }}
-                disableGutters
+
             >
                 <AccordionSummary
                     style={{
@@ -42,13 +44,15 @@ const CategoryMenu = () => {
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion
+            <Accordion elevation={0}
                 expanded={expanded === 'panel2'}
                 onChange={handleChange('panel2')}
                 style={{
                     marginBottom: '0px',
                     backgroundColor: '#F3F4F6',
                     boxShadow: 'none',
+                    border: 'none',
+                    borderShadow: 'none',
                 }}
                 disableGutters
             >
@@ -71,13 +75,15 @@ const CategoryMenu = () => {
                 </AccordionDetails>
             </Accordion>
 
-            <Accordion
+            <Accordion elevation={0}
                 expanded={expanded === 'panel3'}
                 onChange={handleChange('panel3')}
                 style={{
                     marginBottom: '0px',
                     backgroundColor: '#F3F4F6',
                     boxShadow: 'none',
+                    border: 'none',
+                    borderShadow: 'none',
                 }}
                 disableGutters
             >

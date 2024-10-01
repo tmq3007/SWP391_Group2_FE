@@ -11,4 +11,12 @@
     height: 90vh;
     background-color: black;
     opacity: 0.4;
+}/* Home.css */
+.pagination-item {
+    color: #019376; /* Màu mặc định cho các trang khác */
+}
+
+.pagination-item.Mui-selected {
+    background-color: #019376; /* Màu cho trang hiện tại */
+    color: white; /* Màu chữ cho trang hiện tại */
 }

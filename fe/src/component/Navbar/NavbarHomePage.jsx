@@ -9,7 +9,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export const NavbarHomePage = () => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // de true la dang dang nhap
+        const [isLoggedIn, setIsLoggedIn] = useState(true); // de true la dang dang nhap
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
