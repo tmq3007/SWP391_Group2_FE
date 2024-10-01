@@ -2,16 +2,23 @@ import React from 'react';
 import './App.css';
 import { NavbarHomePage } from "./component/Navbar/NavbarHomePage";
 import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
-import { lightTheme } from "./component/Theme/DarkTheme"; // Adjust import to reflect lightTheme
+import { lightTheme } from "./component/Theme/DarkTheme";
 import Home from "./component/Home/Home";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProductDetail from "./component/Product/ProductDetail"; // Import Router
 
 function App() {
     return (
-        <ThemeProvider theme={lightTheme}> {/* Directly use lightTheme */}
+        <ThemeProvider theme={lightTheme}>
             <CssBaseline />
-            <NavbarHomePage /> {/* No need to pass theme toggle props */}
-            <Divider />
-            <Home />
+            <Router>
+                <NavbarHomePage />
+                <Divider />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/product-detail" element={<ProductDetail />} />
+                </Routes>
+            </Router>
         </ThemeProvider>
     );
 }

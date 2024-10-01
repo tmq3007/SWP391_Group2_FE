@@ -1,47 +1,46 @@
-import * as React from 'react';
-import { Card, CardContent, CardMedia, Typography, Button, Badge } from '@mui/material';
+import React from 'react';
+import { Card, CardContent, CardMedia, Typography, Button, Badge, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import ProductDetail from './ProductDetail'; // Import component ProductDetail
+import '../../style/ProductCard.css';
 
 const ProductCard = () => {
     const originalPrice = 2.00;
     const discountPrice = 1.60;
     const discountPercentage = Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
 
-    // State để theo dõi trạng thái yêu thích
     const [isFavorite, setIsFavorite] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
 
-    // Hàm xử lý khi bấm vào nút yêu thích
     const handleFavoriteToggle = () => {
-        setIsFavorite((prev) => !prev); // Đảo ngược trạng thái yêu thích
+        setIsFavorite((prev) => !prev);
+    };
+
+    const handleProductClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     return (
-        <Card sx={{ maxWidth: 320, borderRadius: 1, boxShadow: 1, position: 'relative' }}>
+        <Card className="product-card">
             <Badge
                 badgeContent={`${discountPercentage}%`}
                 color="success"
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                sx={{
-                    position: 'absolute',
-                    top: 20,
-                    right: 40,
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '16px',
-                    fontWeight: 'bold'
-                }}
+                className="discount-badge"
             />
             <CardMedia
                 component="img"
                 height="140"
                 image="https://pickbazar-react-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F1%2FApples.jpg&w=1920&q=75"
                 alt="Apples"
+                onClick={handleProductClick}
+                className="product-image"
             />
             <CardContent>
                 <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
@@ -53,36 +52,32 @@ const ProductCard = () => {
                 <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
                     ${originalPrice.toFixed(2)}
                 </Typography>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
+                <div className="product-price">
                     <Typography variant="h6" component="div" sx={{ color: "#019376", fontWeight: 'semibold' }}>
                         ${discountPrice.toFixed(2)}
                     </Typography>
                     <Button
                         variant="contained"
-                        onClick={handleFavoriteToggle} // Gọi hàm khi bấm vào button
-                        sx={{
-                            color: "#019376",
-                            borderRadius: '50px',
-                            height: '40px',
-                            padding: '0 20px',
-                            right: -30,
-                        }}
+                        onClick={handleFavoriteToggle}
+                        className="favorite-button"
                     >
-                        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />} {/* Hiển thị icon tùy theo trạng thái */}
+                        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                     </Button>
                     <Button
                         variant="contained"
-                        sx={{
-                            color: "#019376",
-                            borderRadius: '50px',
-                            height: '40px',
-                            padding: '0 20px',
-                        }}
+                        className="cart-button"
                     >
                         <AddShoppingCartIcon />
                     </Button>
                 </div>
             </CardContent>
+
+            <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+                <DialogTitle>Product Details</DialogTitle>
+                <DialogContent>
+                    <ProductDetail />
+                </DialogContent>
+            </Dialog>
         </Card>
     );
 };
