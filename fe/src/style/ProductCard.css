@@ -1,47 +1,71 @@
 /* ProductCard.css */
 .product-card {
     max-width: 320px;
-    border-radius: 4px;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
+    overflow: hidden;
 }
 
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
 .discount-badge {
     position: absolute;
-    top: 30px;
-    right: 10px;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
+    top: 10px;
+    right: 25px;
+    background-color: #019376;
+    color: white; /* Màu chữ */
+    border-radius: 50px;
+    padding: 10px 10px;
+    font-size: 14px;
     font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    text-anchor: middle;
 }
+
 
 .product-image {
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
 }
 
 .product-price {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 15px;
+    padding: 0 10px;
 }
-
-.favorite-button {
-    color: #019376;
-    border-radius: 50px;
-    height: 40px;
-    padding: 0 20px;
-    right: -40px;
+.favorite-button{
+    right: -30px;
 }
-
+.favorite-button,
 .cart-button {
-    color: #019376;
+    background-color: #019376;
+    color: white;
     border-radius: 50px;
     height: 40px;
     padding: 0 20px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.favorite-button:hover,
+.cart-button:hover {
+    background-color: #017a63; /* Màu xanh đậm hơn khi hover */
+    transform: translateY(-2px);
+}
+
+.favorite-button:active,
+.cart-button:active {
+    transform: translateY(0);
 }

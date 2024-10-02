@@ -28,12 +28,7 @@ const ProductCard = () => {
 
     return (
         <Card className="product-card">
-            <Badge
-                badgeContent={`${discountPercentage}%`}
-                color="success"
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                className="discount-badge"
-            />
+
             <CardMedia
                 component="img"
                 height="140"
@@ -45,6 +40,8 @@ const ProductCard = () => {
             <CardContent>
                 <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                     Apples
+                    <span className="discount-badge">{discountPercentage}%</span>
+                />
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     1 lb
