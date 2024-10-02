@@ -40,5 +40,8 @@ export const lightTheme = createTheme({
         textColor: {
             main: '#111111',
         },
+        green: {
+            main: '#039375',
+        },
     },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+    import React, { useEffect, useState } from 'react';
 import { IconButton, Button, Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -6,21 +6,32 @@ import ShopMenu from '../Shop/ShopMenu';
 import ProfileList from '../User/ProfileList';
 import './NavbarHomePage.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useNavigate } from "react-router-dom";
 
 export const NavbarHomePage = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially false
+    const token = localStorage.getItem('jwt');
+    const navigate = useNavigate();
 
-        const [isLoggedIn, setIsLoggedIn] = useState(true); // de true la dang dang nhap
+    // Check for token on component mount
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            setIsLoggedIn(true);
+            console.log("changed");
+        }
+    }, [token]);
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
-
+        localStorage.removeItem('jwt'); // Remove the token from local storage
         setIsLoggedIn(false);
-        console.log('isLoggedIn:', isLoggedIn);
+        console.log('isLoggedIn:', false);
     };
 
     const handleJoin = () => {
+        navigate("/auth/login");
         console.log('Redirecting to login page');
-
     };
 
     return (
@@ -60,8 +71,6 @@ export const NavbarHomePage = () => {
                         <span style={{ color: "#FFFFFF" }}>Join</span>
                     </Button>
                 )}
-
-
             </div>
         </div>
     );
