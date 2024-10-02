@@ -1,37 +1,43 @@
-import React, { useState } from 'react';
+    import React, { useEffect, useState } from 'react';
 import { IconButton, Button, Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ShopMenu from '../Shop/ShopMenu';
 import ProfileList from '../User/ProfileList';
-import '../../style/NavbarHomePage.css';
+import './NavbarHomePage.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 export const NavbarHomePage = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Đặt là true khi đang đăng nhập
-    const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially false
+    const token = localStorage.getItem('jwt');
+    const navigate = useNavigate();
+
+    // Check for token on component mount
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            setIsLoggedIn(true);
+            console.log("changed");
+        }
+    }, [token]);
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
+        localStorage.removeItem('jwt'); // Remove the token from local storage
         setIsLoggedIn(false);
-        console.log('isLoggedIn:', isLoggedIn);
-        navigate('/'); // Điều hướng về trang Home sau khi logout
+        console.log('isLoggedIn:', false);
     };
 
     const handleJoin = () => {
+        navigate("/auth/login");
         console.log('Redirecting to login page');
-        navigate('/login'); // Điều hướng đến trang login nếu người dùng bấm Join
-    };
-
-    const handleLogoClick = () => {
-        navigate('/'); // Điều hướng về trang Home khi nhấp vào logo
     };
 
     return (
         <div className="navbar navbar-padding flex justify-between">
             <div className="flex items-center space-x-4">
-                <div className="lg:mr-10 cursor-pointer flex items-center space-x-4" onClick={handleLogoClick}>
+                <div className="lg:mr-10 cursor-pointer flex items-center space-x-4">
                     <li className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
                         Shopii
                     </li>
