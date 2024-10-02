@@ -1,0 +1,28 @@
+li{
+    list-style: none;
+}
+/* NavbarHomePage.css */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100; /* Ensure it stays on top of other content */
+    background-color: white;
+    box-shadow: 0 2px 2px -2px gray; /* Optional: add a shadow to separate it from content */
+}
+
+.navbar-padding {
+    padding: 0.8rem 1.25rem; /* Adjust padding as per your layout */
+}
+
+@media (min-width: 1024px) {
+    .navbar-padding {
+        padding: 0.8rem 5rem; /* Larger padding for larger screens */
+    }
+}
+
+body {
+    margin: 0; /* Ensure the navbar doesn't affect the body margin */
+    padding-top: 60px; /* Adjust based on the height of your navbar */
+}

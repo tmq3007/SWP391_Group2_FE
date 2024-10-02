@@ -1,0 +1,29 @@
+.banner {
+    background-image: url("https://img.freepik.com/premium-photo/top-view-colorful-assorted-fresh-vegetables-white-background-panoramic-shot_824701-2377.jpg?w=1380");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 90vh;
+}
+
+.cover {
+    width: 100%;
+    height: 90vh;
+    background-color: black;
+    opacity: 0.4;
+}
+.pagination-item {
+    color: #019376;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+.pagination-item:hover {
+    background-color: #019376; /* Màu nền khi hover */
+    color: white;
+}
+
+.pagination-item.Mui-selected {
+    background-color: #019376 !important; /* Màu nền cho trang hiện tại */
+    color: white !important; /* Màu chữ cho trang hiện tại */
+}
+

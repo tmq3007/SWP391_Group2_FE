@@ -1,0 +1,24 @@
+.accordion {
+    margin-bottom: 0;
+    background-color: #F3F4F6;
+    box-shadow: none;
+    border: none;
+}
+
+.accordion-summary {
+    background-color: #FFFFFF;
+    border-bottom: none;
+    text-align: center; /* Center text */
+}
+
+.accordion-summary span {
+    font-weight: bold;
+}
+
+.accordion-summary.expanded {
+    color: #019376; /* Màu chữ khi panel mở */
+}
+
+.accordion-details {
+    background-color: #FFFFFF;
+}
