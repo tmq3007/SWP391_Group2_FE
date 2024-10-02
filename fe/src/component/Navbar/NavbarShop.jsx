@@ -3,6 +3,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import './NavbarShop.css';
+import Divider from '@mui/material/Divider';
+
 
 export const NavbarShop = () => {
     return (
@@ -17,8 +19,8 @@ export const NavbarShop = () => {
                 <IconButton className="block lg:hidden">
                     <MenuIcon sx={{ fontSize: '1.5rem' }} />
                 </IconButton>
+            <Divider orientation="vertical" variant="middle" flexItem />
             </div>
-
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
                 <SearchIcon className="absolute left-4 text-gray-400" />
@@ -28,6 +30,7 @@ export const NavbarShop = () => {
                     placeholder="Search your route..."
                 />
             </div>
+            <Divider orientation="vertical" variant="middle" flexItem />
 
             {/* User Info */}
             <div className="flex items-center space-x-3">
