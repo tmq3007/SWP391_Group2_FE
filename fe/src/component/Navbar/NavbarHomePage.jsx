@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ShopMenu from '../Shop/ShopMenu';
 import ProfileList from '../User/ProfileList';
-import './NavbarHomePage.css';
+import '../../style/NavbarHomePage.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 

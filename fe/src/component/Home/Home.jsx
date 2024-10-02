@@ -74,6 +74,7 @@ const Home = () => {
                     )}
                 />
             </Stack>
+
         </div>
     );
 }
