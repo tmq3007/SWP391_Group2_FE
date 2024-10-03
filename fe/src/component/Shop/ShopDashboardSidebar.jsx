@@ -25,13 +25,20 @@ import {
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import "../../style/ShopDashboard.css";
+import { useNavigate } from 'react-router-dom';
+
 
 
 export const ShopDashboardSidebar = () => {
     const [open, setOpen] = React.useState(true);
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setOpen(!open);
+    };
+
+    const handleAllProductClick = () => {
+        navigate('/shop-product');
     };
 
     return (
@@ -72,7 +79,7 @@ export const ShopDashboardSidebar = () => {
                     </ListItemButton>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <ListItemButton className="pl-8 sidebar-item">
+                            <ListItemButton className="pl-8 sidebar-item" onClick={handleAllProductClick}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>
                             <ListItemButton className="pl-8 sidebar-item">

@@ -1,21 +1,6 @@
 import React from 'react';
-import WidgetsIcon from '@mui/icons-material/Widgets';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import StarIcon from '@mui/icons-material/Star';
-import BookIcon from '@mui/icons-material/Book';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
-import SubtitlesIcon from '@mui/icons-material/Subtitles';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import MessageIcon from '@mui/icons-material/Message';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { ShopDashboardSidebar } from './ShopDashboardSidebar';
