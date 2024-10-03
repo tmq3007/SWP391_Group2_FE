@@ -186,7 +186,7 @@ export const ShopDashboard = () => {
                 <List
                     subheader={
                         <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                           FEEDBACK CONTROL
+                            FEEDBACK CONTROL
                         </ListSubheader>
                     }
                 >
@@ -402,4 +402,3 @@ export const ShopDashboard = () => {
         </section>
     );
 };
-
