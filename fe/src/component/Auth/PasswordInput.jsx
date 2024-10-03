@@ -19,7 +19,7 @@ const PasswordInput = ({ label, field, form: { touched, errors }, ...props }) =>
 
     return (
         <div>
-            <InputLabel sx={{ mt: 3 }} htmlFor={props.id || props.name}>
+            <InputLabel sx={{ mt: 3}} htmlFor={props.id || props.name}>
                 {label}
             </InputLabel>
             <TextField

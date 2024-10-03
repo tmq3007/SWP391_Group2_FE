@@ -65,6 +65,7 @@ const LoginForm = () => {
                         <Field
                             name="password"
                             label="Password"
+                            margin="normal"
                             component={PasswordInput} // Render PasswordInput with Field
                         />
 
@@ -83,14 +84,7 @@ const LoginForm = () => {
             </Formik>
 
             <Typography sx={{ mt: 3 }} variant='body2' align='center'>
-                <hr style={{
-                    color: '#000000',
-                    backgroundColor: '#000000',
-                    height: .1,
-                    borderColor: '#000000'
-                }}
-                    className="hr-text gradient"
-                />
+
                 Don't have an account?
                 <Button
                     sx={{ color: '#039375' }}

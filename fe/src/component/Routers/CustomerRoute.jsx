@@ -6,6 +6,8 @@ import Auth from "../Auth/Auth";
 import ProductDetail from "../Product/ProductDetail";
 import {ShopDashboard} from "../Shop/ShopDashboard";
 
+
+
 const CustomerRoute = () => {
     return (
         <div>

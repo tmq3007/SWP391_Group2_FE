@@ -21,9 +21,7 @@ function App() {
             {/*<NavbarHomePage /> /!* No need to pass theme toggle props *!/*/}
             {/*<Divider />*/}
             {/*<Home />*/}
-
             <CustomerRoute/>
-
         </ThemeProvider>
     );
 }
