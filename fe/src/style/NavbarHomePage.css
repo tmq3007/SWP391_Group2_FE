@@ -74,3 +74,8 @@ body {
 li {
     list-style: none;
 }
+/* Trong file style/NavbarHomePage.css */
+.shop-menu {
+
+    height:20px;
+}

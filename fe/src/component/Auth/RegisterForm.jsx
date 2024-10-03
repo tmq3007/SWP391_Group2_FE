@@ -113,14 +113,7 @@ const RegisterForm = () => {
             </Formik>
 
             <Typography sx={{ mt: 3 }} variant='body2' align='center'>
-                <hr style={{
-                    color: '#000000',
-                    backgroundColor: '#000000',
-                    height: .1,
-                    borderColor: '#000000'
-                }}
-                    className="hr-text gradient"
-                />
+
                 Already have an account?
                 <Button sx={{ color: '#039375' }} size='small' onClick={() => navigate("/auth/login")}>
                     Login
