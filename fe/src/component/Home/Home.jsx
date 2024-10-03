@@ -13,6 +13,7 @@ const Home = () => {
     const dispatch = useDispatch();
     const { products } = useSelector(store => store);
     console.log(products);
+
     useEffect(() => {
         dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
     }, [dispatch]);
@@ -20,12 +21,15 @@ const Home = () => {
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
 
+    // Tính toán chỉ số sản phẩm hiện tại dựa trên trang
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+
+    // Lấy danh sách sản phẩm hiện tại dựa trên trang
     const currentProducts = products && products.products ? products.products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
 
     const handleChange = (event, value) => {
-        setCurrentPage(value);
+        setCurrentPage(value); // Cập nhật trang hiện tại
     };
 
     return (
@@ -57,15 +61,14 @@ const Home = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
                     {
-                        currentProducts.map((item, index) => <ProductCard key={item.id || index} item={item} />)
+                        currentProducts.map((item) => <ProductCard key={item.id} item={item} />) // Sử dụng item.id làm key
                     }
-
                 </div>
             </section>
 
             <Stack spacing={2} className="mt-5" alignItems="center" sx={{ marginBottom: "30px" }}>
                 <Pagination
-                    count={Math.ceil((products && products.product ? products.product.length : 0) / itemsPerPage)}
+                    count={Math.ceil((products && products.products ? products.products.length : 0) / itemsPerPage)} // Tính số trang
                     page={currentPage}
                     onChange={handleChange}
                     color="primary"

@@ -78,7 +78,7 @@ export const NavbarHomePage = () => {
                                 sx={{ backgroundColor: '#019376' }}
                                 onClick={() => {
                                     if (userRole === "ROLE_VENDOR") {
-                                        navigate("/vendor-dashboard");
+                                        navigate("/shop-dashboard");
                                     }
                                 }}
                             >
