@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import './App.css';
 import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import { lightTheme } from "./component/Theme/DarkTheme"; // Adjust import to reflect lightTheme
-import CustomerRoute from "./component/Routers/CustomerRoute";
+import CustomRoute from "./component/Routers/CustomRoute";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./component/State/Authentication/Action";
 
@@ -21,7 +21,7 @@ function App() {
             {/*<NavbarHomePage /> /!* No need to pass theme toggle props *!/*/}
             {/*<Divider />*/}
             {/*<Home />*/}
-            <CustomerRoute/>
+            <CustomRoute/>
         </ThemeProvider>
     );
 }

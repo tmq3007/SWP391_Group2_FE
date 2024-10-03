@@ -33,6 +33,7 @@ import {
 } from '@mui/material';
 import "../../style/ShopDashboard.css";
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
+import {NavbarShop} from "../Navbar/NavbarShop";
 
 export const ShopDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -41,7 +42,10 @@ export const ShopDashboard = () => {
         setOpen(!open);
     };
     return (
+
+
         <section className="main flex h-screen">
+            <NavbarShop/>
             {/* Sidebar */}
             <ShopDashboardSidebar />
 

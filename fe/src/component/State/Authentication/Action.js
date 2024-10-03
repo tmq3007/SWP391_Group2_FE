@@ -16,8 +16,11 @@ export const registerUser = (reqData) => async (dispatch) => {
     try{
         const {data}=await axios.post(`${API_URL}/api/v1/users/sign-up`,reqData.userData);
         if(data.result.token)localStorage.setItem('jwt',data.result.token);
-        if(data.role==="ROLE_VENDOR"){
-            reqData.navigate("")
+
+        const token = jwtDecode(data.result.token);
+
+        if(token.scope === "ROLE_VENDOR"){
+            reqData.navigate("/")
         }
         else {
             reqData.navigate("/")
@@ -90,14 +93,10 @@ export const getUser = (jwt) => async (dispatch) => {
     }
 }
 
-export const logout = (jwt) => async (dispatch) => {
+export const logout = (token) => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST});
     try{
-        const {data}=await axios.post(`${API_URL}/api/v1/auth/logout`,{
-            headers:{
-                Authorization: `Bearer ${jwt}`
-            }
-        });
+        const {data}=await axios.post(`${API_URL}/api/v1/auth/logout`,token);
 
         localStorage.clear();
         dispatch({ type: LOGOUT, payload: data.jwt });

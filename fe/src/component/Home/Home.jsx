@@ -8,11 +8,13 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsAction } from "../State/Product/Action";
+import {NavbarHomePage} from "../Navbar/NavbarHomePage";
 
 const Home = () => {
     const dispatch = useDispatch();
     const { products } = useSelector(store => store);
     console.log(products);
+
 
     useEffect(() => {
         dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
@@ -33,7 +35,11 @@ const Home = () => {
     };
 
     return (
+
+
+
         <div>
+            <NavbarHomePage/>;
             <section className="banner -z-50 relative flex flex-col items-center">
                 <div className="w-[50vw] z-10 text-center">
                     <p className="text-2xl lg:text-5xl font-bold z-10 py-5 mt-9" style={{ color: "#019376" }}>

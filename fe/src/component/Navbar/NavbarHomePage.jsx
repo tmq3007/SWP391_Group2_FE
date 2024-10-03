@@ -7,15 +7,19 @@ import ProfileList from '../User/ProfileList';
 import '../../style/NavbarHomePage.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
+import {logout} from "../State/Authentication/Action";
+import {useDispatch} from "react-redux";
 
 export const NavbarHomePage = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const token = localStorage.getItem('jwt');
     const [userRole, setUserRole] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const role = localStorage.getItem('role');
+
 
     useEffect(() => {
-        const role = localStorage.getItem('role');
         if (token && role) {
             setIsLoggedIn(true);
             setUserRole(role);
@@ -25,6 +29,9 @@ export const NavbarHomePage = () => {
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
+
+        dispatch(logout({token: token}));
+
         localStorage.removeItem('jwt');
         localStorage.removeItem('role');
         setIsLoggedIn(false);

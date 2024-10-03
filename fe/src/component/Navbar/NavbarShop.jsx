@@ -4,15 +4,24 @@ import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import '../../style/NavbarShop.css';
 import Divider from '@mui/material/Divider';
+import {useNavigate} from "react-router-dom";
 
 
 export const NavbarShop = () => {
+
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/");
+        return null;
+    }
+
     return (
         <div className="navbar navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
             {/* Logo and Menu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
-                    <li className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
+                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
                         Shopii
                     </li>
                 </div>
