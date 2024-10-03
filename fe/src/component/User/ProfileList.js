@@ -30,11 +30,12 @@ const ProfileList = ({ handleLogout }) => {
                 onClick={handleMenuOpen}
                 color="inherit"
             >
-                <img
-                    src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
-                    alt=""
-                    className="h-8 w-8 rounded-full"
-                />
+
+                    <img
+                        src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
+                        alt=""
+                        className="h-8 w-8 rounded-full"
+                    />
                 {/*<AccountCircleIcon sx={{fontSize: '1.8rem'}}/>*/}
             </IconButton>
 
@@ -48,10 +49,10 @@ const ProfileList = ({ handleLogout }) => {
                     'aria-labelledby': 'profile-button',
                 }}
             >
-                <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
+                <MenuItem style={{color: '#019376'}} onClick={handleMenuClose}>
                     Profile
                 </MenuItem>
-                <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
+                <MenuItem style={{color: '#019376' }} onClick={handleMenuClose}>
                     My account
                 </MenuItem>
                 <MenuItem style={{ color: '#019376' }} onClick={handleMenuLogout}>
