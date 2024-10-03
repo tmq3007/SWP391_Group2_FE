@@ -99,6 +99,15 @@ export const NavbarHomePage = () => {
                             >
                                 <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>
+                        ) || userRole === "ROLE_ADMIN" && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ backgroundColor: '#019376' }}
+                                onClick={() => navigate("/admin-dashboard")}
+                            >
+                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
+                            </Button>
                         )}
                     </>
                 ) : (
