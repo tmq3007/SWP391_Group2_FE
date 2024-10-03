@@ -74,11 +74,7 @@ export const NavbarHomePage = () => {
                         <FavoriteIcon sx={{ fontSize: '1.5rem' }} />
                     </Badge>
                 </IconButton>
-                <IconButton>
-                    <Badge badgeContent={4} color="success">
-                        <ShoppingCartIcon sx={{ fontSize: '1.5rem' }} />
-                    </Badge>
-                </IconButton>
+
 
                 {isLoggedIn ? (
                     <>
