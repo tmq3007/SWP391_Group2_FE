@@ -8,7 +8,7 @@ import '../../style/ProductCard.css';
 
 const ProductCard = ({ item }) => {
     const originalPrice = item.unitSellPrice || 0;
-    const discount = item.discount || 0; // Nhận giá trị giảm giá từ item
+    const discount = item.discount *100 || 0; // Nhận giá trị giảm giá từ item
     const discountPrice = originalPrice * (1 - discount / 100); // Tính giá sau khi giảm
     const discountPercentage = Math.round(discount); // Phần trăm giảm giá (nếu có)
 
