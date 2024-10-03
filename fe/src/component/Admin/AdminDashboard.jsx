@@ -18,7 +18,6 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { ShopDashboardSidebar } from './ShopDashboardSidebar';
 
 
 import {
@@ -34,8 +33,9 @@ import {
 import "../../style/ShopDashboard.css";
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
 import {NavbarShop} from "../Navbar/NavbarShop";
+import {AdminDashboardSidebar} from "./AdminDashboardSidebar";
 
-export const ShopDashboard = () => {
+export const AdminDashboard = () => {
     const [open, setOpen] = React.useState(true);
 
     const handleClick = () => {
@@ -47,7 +47,7 @@ export const ShopDashboard = () => {
         <section className="main flex h-screen">
             <NavbarShop/>
             {/* Sidebar */}
-            <ShopDashboardSidebar />
+            <AdminDashboardSidebar />
 
             {/* Main Content */}
             <div className="w-4/5 bg-white">
@@ -69,7 +69,7 @@ export const ShopDashboard = () => {
                                 xl:space-y-0 xl:space-x-5 xl:divide-x'>
                                     <div>
                                         <AlternateEmailIcon fontSize='small'/>
-                                        <a href="">store_owner@gmail.com</a>
+                                        <a href="">admin@gmail.com</a>
                                     </div>
                                     <Divider orientation="vertical" variant="middle" flexItem/>
                                     <div>
@@ -87,7 +87,7 @@ export const ShopDashboard = () => {
                             <div className='flex items-center'>
                                 <a href=""
                                    className='inline-flex items-center justify-center w-28 h-10 rounded-lg
-                                    bg-[#019376] text-xs font-medium text-white hover:bg-green-300'>
+                                    bg-green-500 text-xs font-medium text-white hover:bg-green-300'>
                                     <EditIcon fontSize='small'/>
                                     Edit Shop
                                 </a>
