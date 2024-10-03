@@ -1,18 +1,51 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import '../../style/NavbarShop.css';
 import Divider from '@mui/material/Divider';
+import {useNavigate} from "react-router-dom";
 
 
 export const NavbarShop = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const token = localStorage.getItem('jwt');
+    const [userRole, setUserRole] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const role = localStorage.getItem('role');
+        if (token && role) {
+            setIsLoggedIn(true);
+            setUserRole(role);
+            console.log("Role from localStorage:", role);
+        }
+    }, [token]);
+
+    const handleLogout = () => {
+        console.log('Logout clicked. Logging out...');
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('role');
+        setIsLoggedIn(false);
+        setUserRole(null);
+        navigate("/auth/login");
+        console.log('isLoggedIn:', false);
+    };
+
+    const handleJoin = () => {
+        navigate("/auth/login");
+        console.log('Redirecting to login page');
+    };
+
+    const handleLogoClick = () => {
+        navigate('/');
+    };
     return (
         <div className="navbar navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
             {/* Logo and Menu */}
             <div className="flex items-center space-x-10">
-                <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
-                    <li className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
+                <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer" >
+                    <li onClick={handleLogoClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
                         Shopii
                     </li>
                 </div>

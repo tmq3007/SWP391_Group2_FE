@@ -44,4 +44,7 @@ export const lightTheme = createTheme({
             main: '#039375',
         },
     },
+    typography: {
+        fontFamily: 'Poppins, sans-serif',
+    },
 });

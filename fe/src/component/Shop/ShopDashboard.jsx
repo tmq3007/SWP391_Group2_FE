@@ -19,7 +19,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { ShopDashboardSidebar } from './ShopDashboardSidebar';
-
+import { NavbarShop } from '../../component/Navbar/NavbarShop';
 
 import {
     List,
@@ -42,8 +42,10 @@ export const ShopDashboard = () => {
     };
     return (
         <section className="main flex h-screen">
+            {/*Navbar*/}
+            <NavbarShop/>
             {/* Sidebar */}
-            <ShopDashboardSidebar />
+            <ShopDashboardSidebar/>
 
             {/* Main Content */}
             <div className="w-4/5 bg-white">
