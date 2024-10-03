@@ -51,19 +51,31 @@ export const NavbarHomePage = () => {
     };
 
     return (
-        <div className="navbar navbar-padding flex justify-between">
-            <div className="flex items-center space-x-4">
-                <div  className="lg:mr-10 cursor-pointer flex items-center space-x-4">
+        <div className="navbar navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
+            {/* Logo and ShopMenu */}
+            <div className="flex items-center space-x-10">
+                <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
                     <li onClick={handleClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
                         Shopii
                     </li>
                 </div>
-                <ShopMenu />
+
+                <ShopMenu className="shop-menu" />
+
             </div>
-            <div className="flex items-center space-x-2 lg:space-x-10">
-                <IconButton>
-                    <SearchIcon sx={{ fontSize: '1.5rem' }} />
-                </IconButton>
+
+            {/* Search Bar */}
+            <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
+                <SearchIcon className="absolute left-4 text-gray-400" />
+                <input
+                    type="text"
+                    className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"
+                    placeholder="Search your route..."
+                />
+            </div>
+
+            {/* User Info and Actions */}
+            <div className="flex items-center space-x-3">
                 <IconButton>
                     <Badge badgeContent={4} color="success">
                         <FavoriteIcon sx={{ fontSize: '1.5rem' }} />
@@ -78,16 +90,12 @@ export const NavbarHomePage = () => {
                 {isLoggedIn ? (
                     <>
                         <ProfileList handleLogout={handleLogout} />
-                        {(userRole === "ROLE_VENDOR") && (
+                        {userRole === "ROLE_VENDOR" && (
                             <Button
                                 variant="contained"
                                 color="primary"
                                 sx={{ backgroundColor: '#019376' }}
-                                onClick={() => {
-                                    if (userRole === "ROLE_VENDOR") {
-                                        navigate("/shop-dashboard");
-                                    }
-                                }}
+                                onClick={() => navigate("/shop-dashboard")}
                             >
                                 <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>
