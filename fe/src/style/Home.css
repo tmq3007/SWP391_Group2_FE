@@ -26,4 +26,8 @@
     background-color: #019376 !important; /* Màu nền cho trang hiện tại */
     color: white !important; /* Màu chữ cho trang hiện tại */
 }
+.cart-modal {
+    background-color: #019376 !important;
+    border-radius: 8px; /* Makes the corners slightly rounded */
+}
 
