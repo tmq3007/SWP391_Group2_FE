@@ -8,7 +8,7 @@ import '../../style/ProductCard.css';
 
 const ProductCard = ({ item }) => {
     const originalPrice = item.unitSellPrice || 0;
-    const discount = item.discount *100 || 0; // Nhận giá trị giảm giá từ item
+    const discount = item.discount * 100 || 0; // Nhận giá trị giảm giá từ item
     const discountPrice = originalPrice * (1 - discount / 100); // Tính giá sau khi giảm
     const discountPercentage = Math.round(discount); // Phần trăm giảm giá (nếu có)
 
@@ -33,13 +33,13 @@ const ProductCard = ({ item }) => {
                 component="img"
                 height="140"
                 image={item.pictureUrl} // Thay thế bằng URL ảnh từ item
-                alt={item.name}
+                alt={item.productName}
                 onClick={handleProductClick}
                 className="product-image"
             />
             <CardContent>
                 <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-                    {item.name}
+                    {item.productName}
                     {discount > 0 && <span className="discount-badge">Sale {discountPercentage}%</span>} {/* Hiển thị badge giảm giá nếu có */}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
