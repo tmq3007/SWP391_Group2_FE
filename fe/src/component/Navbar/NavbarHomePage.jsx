@@ -1,4 +1,4 @@
-    import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconButton, Button, Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -9,23 +9,27 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 
 export const NavbarHomePage = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially false
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const token = localStorage.getItem('jwt');
+    const [userRole, setUserRole] = useState(null);
     const navigate = useNavigate();
 
-    // Check for token on component mount
     useEffect(() => {
-        const token = localStorage.getItem('jwt');
-        if (token) {
+        const role = localStorage.getItem('role');
+        if (token && role) {
             setIsLoggedIn(true);
-            console.log("changed");
+            setUserRole(role);
+            console.log("Role from localStorage:", role);
         }
     }, [token]);
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
-        localStorage.removeItem('jwt'); // Remove the token from local storage
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('role');
         setIsLoggedIn(false);
+        setUserRole(null);
+        navigate("/auth/login");
         console.log('isLoggedIn:', false);
     };
 
@@ -33,12 +37,17 @@ export const NavbarHomePage = () => {
         navigate("/auth/login");
         console.log('Redirecting to login page');
     };
+    const handleClick = () => {
+        if (userRole !== "ROLE_ADMIN") {
+            navigate("/"); // Chuyển hướng về trang home page
+        }
+    };
 
     return (
         <div className="navbar navbar-padding flex justify-between">
             <div className="flex items-center space-x-4">
-                <div className="lg:mr-10 cursor-pointer flex items-center space-x-4">
-                    <li className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
+                <div  className="lg:mr-10 cursor-pointer flex items-center space-x-4">
+                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
                         Shopii
                     </li>
                 </div>
@@ -60,7 +69,23 @@ export const NavbarHomePage = () => {
                 </IconButton>
 
                 {isLoggedIn ? (
-                    <ProfileList handleLogout={handleLogout} /> // Pass logout handler to ProfileList
+                    <>
+                        <ProfileList handleLogout={handleLogout} />
+                        {(userRole === "ROLE_VENDOR") && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ backgroundColor: '#019376' }}
+                                onClick={() => {
+                                    if (userRole === "ROLE_VENDOR") {
+                                        navigate("/shop-dashboard");
+                                    }
+                                }}
+                            >
+                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
+                            </Button>
+                        )}
+                    </>
                 ) : (
                     <Button
                         variant="contained"

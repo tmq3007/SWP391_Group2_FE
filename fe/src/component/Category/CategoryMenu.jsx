@@ -1,79 +1,60 @@
 import * as React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import '../../style/CategoryMenu.css'; // Import file CSS
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListSubheader from '@mui/material/ListSubheader';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import '../../style/CategoryMenu.css';
+import { Collapse } from "@mui/material";
 
 const CategoryMenu = () => {
-    const [expanded, setExpanded] = React.useState(false); // Track expanded state
+    const [openIndex, setOpenIndex] = React.useState(null); // Theo dõi chỉ số danh sách đang mở
 
-    const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false); // Update expanded state
+    const handleClick = (index) => {
+        // Nếu danh sách đang mở, đóng nó; ngược lại, mở danh sách mới
+        setOpenIndex(openIndex === index ? null : index);
     };
 
     return (
-        <div>
-            <Accordion elevation={0}
-                       expanded={expanded === 'panel1'} // Check if panel1 is expanded
-                       onChange={handleChange('panel1')}
-                       className="accordion" // Sử dụng class từ file CSS
-            >
-                <AccordionSummary
-                    className="accordion-summary" // Sử dụng class từ file CSS
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
+        <List
+            subheader={
+                <ListSubheader
+                    style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }}
+                    component="div"
+                    className="text-sm font-semibold text-center text-gray-400"
                 >
-                    <span className={`accordion-summary ${expanded === 'panel1' ? 'expanded' : ''}`}>
-                        Category 1
-                    </span>
-                </AccordionSummary>
-                <AccordionDetails className="accordion-details">
-                    Category Details 1
-                </AccordionDetails>
-            </Accordion>
-
-            <Accordion elevation={0}
-                       expanded={expanded === 'panel2'}
-                       onChange={handleChange('panel2')}
-                       className="accordion"
-            >
-                <AccordionSummary
-                    className="accordion-summary"
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2-content"
-                    id="panel2-header"
-                >
-                    <span className={`accordion-summary ${expanded === 'panel2' ? 'expanded' : ''}`}>
-                        Category 2
-                    </span>
-                </AccordionSummary>
-                <AccordionDetails className="accordion-details">
-                    Category Details 2
-                </AccordionDetails>
-            </Accordion>
-
-            <Accordion elevation={0}
-                       expanded={expanded === 'panel3'}
-                       onChange={handleChange('panel3')}
-                       className="accordion"
-            >
-                <AccordionSummary
-                    className="accordion-summary"
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel3-content"
-                    id="panel3-header"
-                >
-                    <span className={`accordion-summary ${expanded === 'panel3' ? 'expanded' : ''}`}>
-                        Category 3
-                    </span>
-                </AccordionSummary>
-                <AccordionDetails className="accordion-details">
-                    Category Details 3
-                </AccordionDetails>
-            </Accordion>
-        </div>
+                    CATEGORY LIST
+                </ListSubheader>
+            }
+        >
+            {['Categories 1', 'Categories 2'].map((category, index) => (
+                <React.Fragment key={index}>
+                    <ListItemButton onClick={() => handleClick(index)}>
+                        <ListItemIcon>
+                            <ShoppingBagIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={category} />
+                        {openIndex === index ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItemButton sx={{ pl: 4 }}>
+                                <ListItemText primary="Category 1" />
+                            </ListItemButton>
+                            <ListItemButton sx={{ pl: 4 }}>
+                                <ListItemText primary="Category 2" />
+                            </ListItemButton>
+                            <ListItemButton sx={{ pl: 4 }}>
+                                <ListItemText primary="Category 3" />
+                            </ListItemButton>
+                        </List>
+                    </Collapse>
+                </React.Fragment>
+            ))}
+        </List>
     );
 };
 

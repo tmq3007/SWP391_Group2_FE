@@ -2,7 +2,7 @@ import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import './NavbarShop.css';
+import '../../style/NavbarShop.css';
 import Divider from '@mui/material/Divider';
 
 
