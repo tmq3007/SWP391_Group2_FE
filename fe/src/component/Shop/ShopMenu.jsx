@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 const ShopMenu = () => {
-    const [category, setCategory] = React.useState('');
+    const [category, setCategory] = React.useState(0); // Đặt giá trị mặc định là 0 (ALL)
 
     const handleChange = (event) => {
         setCategory(event.target.value);
