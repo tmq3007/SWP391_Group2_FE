@@ -24,7 +24,8 @@ import {
     Collapse
 } from '@mui/material';
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import './ShopDashboard.css';
+import "../../style/ShopDashboard.css";
+
 
 export const ShopDashboardSidebar = () => {
     const [open, setOpen] = React.useState(true);
