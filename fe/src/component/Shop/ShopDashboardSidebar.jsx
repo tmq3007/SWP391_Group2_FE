@@ -37,10 +37,6 @@ export const ShopDashboardSidebar = () => {
         setOpen(!open);
     };
 
-    const handleAllProductClick = () => {
-        navigate('/shop-product');
-    };
-
     return (
             <div className="w-1/5 bg-white p-6">
                 {/* MAIN section */}
@@ -79,7 +75,7 @@ export const ShopDashboardSidebar = () => {
                     </ListItemButton>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <ListItemButton className="pl-8 sidebar-item" onClick={handleAllProductClick}>
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-product")}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>
                             <ListItemButton className="pl-8 sidebar-item">
