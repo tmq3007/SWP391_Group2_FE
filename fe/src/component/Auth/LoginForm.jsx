@@ -71,12 +71,14 @@ const LoginForm = () => {
 
                         {/* Submit Button */}
                         <Button
-                            sx={{ mt: 3, padding: "1rem", color: '#039375' }}
+                            sx={{ mt: 3, padding: "1rem", color: '#039375', '&:hover': {
+                                    color: 'white',
+                                } }}
                             fullWidth
                             type='submit'
                             variant='contained'
                         >
-                            Login
+                            <p className=' items-center'>Login</p>
                         </Button>
 
                     </Form>
