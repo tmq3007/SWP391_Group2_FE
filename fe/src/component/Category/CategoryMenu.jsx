@@ -14,10 +14,11 @@ const CategoryMenu = () => {
 
     return (
         <div>
-            <Accordion elevation={0}
+             <Accordion elevation={0}
                        expanded={expanded === 'panel1'} // Check if panel1 is expanded
                        onChange={handleChange('panel1')}
                        className="accordion" // Sử dụng class từ file CSS
+                        disableGutters={true}
             >
                 <AccordionSummary
                     className="accordion-summary" // Sử dụng class từ file CSS

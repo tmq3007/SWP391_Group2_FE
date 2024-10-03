@@ -1,14 +1,15 @@
 .accordion {
     margin-bottom: 0;
     background-color: #F3F4F6;
-    box-shadow: none;
-    border: none;
-}
+    box-shadow: 0 0 0 0; /* Không có shadow */
+
+  }
 
 .accordion-summary {
     background-color: #FFFFFF;
-    border-bottom: none;
+    border: none; /* Không có gạch dưới */
     text-align: center; /* Center text */
+    padding: 10px 0; /* Thêm padding nếu cần */
 }
 
 .accordion-summary span {

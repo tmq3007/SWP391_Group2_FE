@@ -1,28 +1,76 @@
-li{
-    list-style: none;
-}
-/* NavbarHomePage.css */
+/* General reset for the navbar */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 100; /* Ensure it stays on top of other content */
-    background-color: white;
-    box-shadow: 0 2px 2px -2px gray; /* Optional: add a shadow to separate it from content */
+    z-index: 100;
+    background-color: #ffffff; /* Clean white background */
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1); /* Soft shadow for a clean separation */
+    transition: all 0.3s ease-in-out; /* Smooth transitions on hover or scroll */
 }
 
 .navbar-padding {
-    padding: 0.8rem 1.25rem; /* Adjust padding as per your layout */
+    padding: 1rem 1.5rem; /* More comfortable padding */
 }
 
 @media (min-width: 1024px) {
     .navbar-padding {
-        padding: 0.8rem 5rem; /* Larger padding for larger screens */
+        padding: 1rem 6rem; /* More spacing on larger screens */
     }
 }
 
+/* Styling for the logo */
+.logo {
+    font-family: 'Poppins', sans-serif; /* Modern font */
+    font-weight: bold;
+    font-size: 1.8rem; /* Slightly bigger logo */
+    color: #019376; /* Use brand color */
+    transition: color 0.3s ease-in-out; /* Smooth transition */
+}
+
+.logo:hover {
+    color: #017d65; /* Darker shade on hover */
+    cursor: pointer;
+}
+
+/* Styling for the buttons and icons */
+.MuiIconButton-root {
+    color: #666666; /* Neutral color for icons */
+    transition: color 0.3s ease;
+}
+
+.MuiIconButton-root:hover {
+    color: #019376; /* Highlight on hover */
+}
+
+.MuiButton-containedPrimary {
+    background-color: #019376;
+    color: #ffffff;
+    padding: 0.5rem 1.25rem; /* Adjust button padding */
+    border-radius: 25px; /* Rounded button */
+    font-weight: 600;
+    text-transform: none; /* Keep normal case */
+    transition: background-color 0.3s ease;
+}
+
+.MuiButton-containedPrimary:hover {
+    background-color: #017d65; /* Darker shade on hover */
+}
+
+/* Badge styling */
+.MuiBadge-colorSuccess {
+    background-color: #019376; /* Match brand color */
+    color: white;
+}
+
+/* Adjust body margin for fixed navbar */
 body {
-    margin: 0; /* Ensure the navbar doesn't affect the body margin */
-    padding-top: 60px; /* Adjust based on the height of your navbar */
+    margin: 0;
+    padding-top: 70px; /* Adjust height based on navbar size */
+}
+
+/* Remove list style for logo */
+li {
+    list-style: none;
 }

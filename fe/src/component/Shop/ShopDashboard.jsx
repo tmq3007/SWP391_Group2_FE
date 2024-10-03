@@ -29,7 +29,7 @@ import {
     ListItemButton,
     Collapse
 } from '@mui/material';
-import './ShopDashboard.css';
+import '../../style/ShopDashboard.css';
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 

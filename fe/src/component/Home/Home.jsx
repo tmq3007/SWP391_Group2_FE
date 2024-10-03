@@ -1,24 +1,29 @@
-import React, { useState } from 'react';
-import "../../style/Home.css"; // Import file CSS
+import React, { useEffect, useState } from 'react';
+import "../../style/Home.css";
 import MultiItemCarousel from "./MultiItemCarousel";
 import { Divider, PaginationItem } from "@mui/material";
 import CategoryMenu from "../Category/CategoryMenu";
 import ProductCard from "../Product/ProductCard";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-
-const products = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; // Thay thế bằng sản phẩm thực tế
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProductsAction } from "../State/Product/Action";
 
 const Home = () => {
-    const itemsPerPage = 8; // Số sản phẩm mỗi trang
-    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const dispatch = useDispatch();
+    const { products } = useSelector(store => store);
+    console.log(products);
+    useEffect(() => {
+        dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
+    }, [dispatch]);
 
-    // Tính toán số sản phẩm cần hiển thị
+    const itemsPerPage = 8;
+    const [currentPage, setCurrentPage] = useState(1);
+
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    const currentProducts = products && products.products ? products.products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
 
-    // Hàm xử lý thay đổi trang
     const handleChange = (event, value) => {
         setCurrentPage(value);
     };
@@ -50,31 +55,25 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8"
-                    style={{ width: '100%', maxWidth: '1600px' }}
-                >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
                     {
-                        currentProducts.map((item, index) => <ProductCard key={index} item={item} />)
+                        currentProducts.map((item, index) => <ProductCard key={item.id || index} item={item} />)
                     }
+
                 </div>
             </section>
 
             <Stack spacing={2} className="mt-5" alignItems="center" sx={{ marginBottom: "30px" }}>
                 <Pagination
-                    count={Math.ceil(products.length / itemsPerPage)} // Số trang
-                    page={currentPage} // Trang hiện tại
-                    onChange={handleChange} // Hàm xử lý thay đổi trang
+                    count={Math.ceil((products && products.product ? products.product.length : 0) / itemsPerPage)}
+                    page={currentPage}
+                    onChange={handleChange}
                     color="primary"
                     renderItem={(item) => (
-                        <PaginationItem
-                            {...item}
-                            className="pagination-item" // Sử dụng class từ file CSS
-                        />
+                        <PaginationItem {...item} className="pagination-item" />
                     )}
                 />
             </Stack>
-
         </div>
     );
 }

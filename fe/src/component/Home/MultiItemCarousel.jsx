@@ -1,10 +1,11 @@
-import React from 'react'
-import {TopProduct} from "./TopProduct";
+import React from 'react';
+import { TopProduct } from "./TopProduct";
 import CarouselItem from "./CarouselItem";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
- const MultiItemCarousel = () => {
+
+const MultiItemCarousel = () => {
     const settings = {
         dots: true,
         infinite: true,
@@ -15,14 +16,16 @@ import Slider from "react-slick";
         autoplaySpeed: 2000,
         arrows: false
     };
+
     return (
         <div>
             <Slider {...settings}>
-                {TopProduct.map((item)=> (
-                    <CarouselItem image={item.image}  title={item.title} />
+                {TopProduct.map((item, index) => (
+                    <CarouselItem key={item.id || index} image={item.image} title={item.title} />
                 ))}
             </Slider>
         </div>
-    )
+    );
 }
-export default MultiItemCarousel
+
+export default MultiItemCarousel;
