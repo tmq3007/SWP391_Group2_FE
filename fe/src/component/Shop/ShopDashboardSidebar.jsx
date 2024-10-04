@@ -40,10 +40,10 @@ export const ShopDashboardSidebar = () => {
     return (
             <div className="w-1/5 bg-white p-6">
                 {/* MAIN section */}
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
-                                       className="text-sm font-semibold text-gray-500">
+                                       className="text-sm font-semibold text-gray-500" >
                             MAIN
                         </ListSubheader>
                     }
@@ -58,7 +58,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* PRODUCT MANAGEMENT section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -105,7 +105,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* FINANCIAL MANAGEMENT section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -129,7 +129,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* ORDER MANAGEMENT section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -153,7 +153,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* FEATURE MANAGEMENT section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -177,7 +177,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* FEEDBACK CONTROL section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -201,7 +201,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* USER CONTROL section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -219,7 +219,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* PROMOTIONAL CONTROL section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
@@ -257,7 +257,7 @@ export const ShopDashboardSidebar = () => {
 
                 {/* Layout/Page management section */}
                 <Divider className="mt-4 mb-4"/>
-                <List
+                <List className="cursor-pointer"
                     subheader={
                         <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
                                        className="text-sm font-semibold text-gray-500">
