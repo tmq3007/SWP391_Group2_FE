@@ -52,7 +52,7 @@ export const ShopDashboardSidebar = () => {
                         <ListItemIcon>
                             <WidgetsIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
-                        <ListItemText primary="Dashboard"/>
+                        <ListItemText primary="Dashboard" onClick={() => navigate("/shop-dashboard")}/>
                     </ListItem>
                 </List>
 
