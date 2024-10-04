@@ -6,6 +6,7 @@ import Auth from "../Auth/Auth";
 import ProductDetail from "../Product/ProductDetail";
 import {ShopDashboard} from "../Shop/ShopDashboard";
 import {AdminDashboard} from "../Admin/AdminDashboard";
+import {ShopProduct} from "../Shop/ShopProduct";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -33,6 +34,13 @@ const CustomRoute = () => {
                                <ShopDashboard/>
                            </ProtectedRoute>
                        }/>
+                <Route path="/shop-product"
+                       element={
+                            <ProtectedRoute role="ROLE_VENDOR">
+                                <ShopProduct/>
+                            </ProtectedRoute>
+                       }/>
+
                 <Route path="/auth/unauthorized" element={<h1>Unauthorized Access</h1>} />
                 <Route path="/admin-dashboard"
                        element={
