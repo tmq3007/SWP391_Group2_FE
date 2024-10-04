@@ -72,7 +72,7 @@ export const ShopDashboard = () => {
                             <div className='flex items-center'>
                                 <a href=""
                                    className='inline-flex items-center justify-center w-28 h-10 rounded-lg
-                                    bg-[#019376] text-xs font-medium text-white hover:bg-green-300'>
+                                    bg-[#019376] text-xs font-medium text-white hover:bg-green-600'>
                                     <EditIcon fontSize='small'/>
                                     Edit Shop
                                 </a>
