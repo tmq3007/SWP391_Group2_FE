@@ -23,9 +23,18 @@ import {
     ListItemButton,
     Collapse
 } from '@mui/material';
-import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import {Dashboard, ExpandLess, ExpandMore, Group, NewReleases, RecentActors, Storefront} from "@mui/icons-material";
 import "../../style/ShopDashboard.css";
 
+const menu=[
+    {title:"Dashboard", icon:<Dashboard/>, path:"/dashboard-page"},
+    {title:"All Shops", icon:<ShoppingBagIcon/>, path:"/all-shops"},
+    {title:"Add New Shop", icon:<BookIcon/>, path:"/add-new-shop"},
+    {title:"Inactive/New shops", icon:<NewReleases/>, path:"/inactive-new-shops"},
+    {title:"All Users", icon:<Group/>, path:"/all-users"},
+    {title:"All Vendors", icon:<Storefront/>, path:"/all-vendors"},
+    {title:"All Customers", icon:<RecentActors/>, path:"/all-customers"},
+]
 
 export const AdminDashboardSidebar = () => {
     const [open, setOpen] = React.useState(true);
