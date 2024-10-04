@@ -81,11 +81,7 @@ export const NavbarHomePage = () => {
                         <FavoriteIcon sx={{ fontSize: '1.5rem' }} />
                     </Badge>
                 </IconButton>
-                <IconButton>
-                    <Badge badgeContent={4} color="success">
-                        <ShoppingCartIcon sx={{ fontSize: '1.5rem' }} />
-                    </Badge>
-                </IconButton>
+
 
                 {isLoggedIn ? (
                     <>
@@ -96,6 +92,15 @@ export const NavbarHomePage = () => {
                                 color="primary"
                                 sx={{ backgroundColor: '#019376' }}
                                 onClick={() => navigate("/shop-dashboard")}
+                            >
+                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
+                            </Button>
+                        ) || userRole === "ROLE_ADMIN" && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ backgroundColor: '#019376' }}
+                                onClick={() => navigate("/admin-dashboard")}
                             >
                                 <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>

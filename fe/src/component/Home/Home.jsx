@@ -8,38 +8,66 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsAction } from "../State/Product/Action";
-import {NavbarHomePage} from "../Navbar/NavbarHomePage";
+import CartModal from '../Cart/CartModal';
+import {NavbarHomePage} from "../Navbar/NavbarHomePage";  // Import the CartModal
 
 const Home = () => {
     const dispatch = useDispatch();
-    const { products } = useSelector(store => store);
-    console.log(products);
-
-
-    useEffect(() => {
-        dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
-    }, [dispatch]);
-
+    const { products } = useSelector(store => store);  // Getting products from store
+    const [cart, setCart] = useState([]);  // Initialize cart state
+    const [openCartModal, setOpenCartModal] = useState(false);  // State to open/close cart modal
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Tính toán chỉ số sản phẩm hiện tại dựa trên trang
-    const indexOfLastProduct = currentPage * itemsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+    // Fetch products
+    useEffect(() => {
+        dispatch(getAllProductsAction()); // Call action to fetch product data
+    }, [dispatch]);
 
-    // Lấy danh sách sản phẩm hiện tại dựa trên trang
-    const currentProducts = products && products.products ? products.products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
+    // Load cart from localStorage on initial render
+    useEffect(() => {
+        const savedCart = JSON.parse(localStorage.getItem('cart'));
+        if (savedCart) {
+            setCart(savedCart);  // Load saved cart data
+        }
+    }, []);
 
-    const handleChange = (event, value) => {
-        setCurrentPage(value); // Cập nhật trang hiện tại
+    // Save cart to localStorage whenever cart state changes
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart));  // Save the cart to localStorage
+    }, [cart]);
+
+    // Add a product to the cart (this could be triggered when a user clicks "Add to Cart")
+    const addToCart = (product) => {
+        const updatedCart = [...cart, product];
+        setCart(updatedCart);  // Update cart state
     };
 
+    // Get the current page products
+    const indexOfLastProduct = currentPage * itemsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+    const currentProducts = products && products.products ? products.products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
+
+    // Pagination change handler
+    const handleChange = (event, value) => {
+        setCurrentPage(value); // Update current page
+    };
+
+    // Open and close modal handlers
+    const handleOpenCart = () => {
+        setOpenCartModal(true);
+    };
+
+    const handleCloseCart = () => {
+        setOpenCartModal(false);
+    };
+
+    // Calculate total price from the cart
+    const totalPrice = cart.reduce((total, item) => total + (item.discountPrice || item.unitSellPrice), 0);
+
     return (
-
-
-
         <div>
-            <NavbarHomePage/>;
+            <NavbarHomePage/>
             <section className="banner -z-50 relative flex flex-col items-center">
                 <div className="w-[50vw] z-10 text-center">
                     <p className="text-2xl lg:text-5xl font-bold z-10 py-5 mt-9" style={{ color: "#019376" }}>
@@ -67,14 +95,20 @@ const Home = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
                     {
-                        currentProducts.map((item) => <ProductCard key={item.id} item={item} />) // Sử dụng item.id làm key
+                        currentProducts.map((item) =>
+                            <ProductCard
+                                key={item.id}
+                                item={item}
+                                addToCart={() => addToCart(item)} // Add "Add to Cart" functionality
+                            />
+                        )  // Use item.id as key
                     }
                 </div>
             </section>
 
             <Stack spacing={2} className="mt-5" alignItems="center" sx={{ marginBottom: "30px" }}>
                 <Pagination
-                    count={Math.ceil((products && products.products ? products.products.length : 0) / itemsPerPage)} // Tính số trang
+                    count={Math.ceil((products && products.products ? products.products.length : 0) / itemsPerPage)} // Calculate number of pages
                     page={currentPage}
                     onChange={handleChange}
                     color="primary"
@@ -83,6 +117,24 @@ const Home = () => {
                     )}
                 />
             </Stack>
+
+            {/* Add the cart button */}
+            <div className="fixed bottom-10 right-10 cart-modal">
+                <button
+                    className=" text-white p-3 rounded-lg shadow-lg"
+                    onClick={handleOpenCart}
+                >
+                    View Cart ({cart.length})
+                </button>
+            </div>
+
+            {/* Cart Modal */}
+            <CartModal
+                open={openCartModal}
+                onClose={handleCloseCart}
+                cartItems={cart}
+                totalPrice={totalPrice}
+            />
         </div>
     );
 }

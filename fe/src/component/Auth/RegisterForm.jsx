@@ -106,8 +106,18 @@ const RegisterForm = () => {
                             fullWidth
                         />
 
-                        <Button sx={{ mt: 3, padding: "1rem", color: '#039375' }} fullWidth type='submit'
-                                variant='contained'>Register</Button>
+                        <Button
+                            sx={{
+                                mt: 3, padding: "1rem", backgroundColor: '#019376', '&:hover': {
+                                    color: 'white',
+                                }
+                            }}
+                            fullWidth
+                            type='submit'
+                            variant='contained'
+                        >
+                            <span style={{color: "#FFFFFF"}}>Register</span>
+                        </Button>
                     </Form>
                 )}
             </Formik>
