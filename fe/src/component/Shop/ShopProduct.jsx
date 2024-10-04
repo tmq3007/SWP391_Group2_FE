@@ -23,21 +23,16 @@ export const ShopProduct = () => {
         { id: 10, name: 'Product 10', type: 'Type 1', price: '$35', quantity: 150, status: 'Available' }
     ];
 
-    // Số sản phẩm trên mỗi trang
     const productsPerPage = 5;
 
-    // State cho trang hiện tại
     const [page, setPage] = useState(1);
 
-    // Tính tổng số trang
     const totalPages = Math.ceil(products.length / productsPerPage);
 
-    // Tính toán sản phẩm cần hiển thị cho trang hiện tại
     const indexOfLastProduct = page * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
 
-    // Hàm thay đổi trang
     const handlePageChange = (event, value) => {
         setPage(value);
     };
