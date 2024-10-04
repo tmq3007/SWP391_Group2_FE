@@ -25,6 +25,7 @@ import {
 } from '@mui/material';
 import {Dashboard, ExpandLess, ExpandMore, Group, NewReleases, RecentActors, Storefront} from "@mui/icons-material";
 import "../../style/ShopDashboard.css";
+import {useNavigate} from "react-router-dom";
 
 const menu=[
     {title:"Dashboard", icon:<Dashboard/>, path:"/dashboard-page"},
@@ -43,6 +44,12 @@ export const AdminDashboardSidebar = () => {
         setOpen(!open);
     };
 
+    const navigate = useNavigate();
+
+    const handleNavigate = (path) => {
+        navigate(`/admin-dashboard${path}`)
+    }
+
     return (
         <div className="w-1/5 bg-gray-100 p-6">
             {/* MAIN section */}
@@ -53,7 +60,7 @@ export const AdminDashboardSidebar = () => {
                     </ListSubheader>
                 }
             >
-                <ListItem button style={{ borderRadius: '8px', marginBottom: '8px', transition: '0.3s', backgroundColor: '#ffffff', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}
+                <ListItem onClick={() => handleNavigate("/dashboard-page")} button style={{ borderRadius: '8px', marginBottom: '8px', transition: '0.3s', backgroundColor: '#ffffff', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e0e0e0'}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
                 >
@@ -83,7 +90,7 @@ export const AdminDashboardSidebar = () => {
                 </ListItemButton>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{pl: 4}}>
+                        <ListItemButton onClick={() => handleNavigate("/all-shops")} sx={{pl: 4}}>
                             <ListItemText primary="All Product"/>
                         </ListItemButton>
 
