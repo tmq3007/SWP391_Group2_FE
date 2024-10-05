@@ -13,6 +13,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import "../../style/ShopDashboardSidebar.css";
+
 import {
     List,
     ListSubheader,
@@ -38,7 +40,7 @@ export const ShopDashboardSidebar = () => {
     };
 
     return (
-            <div className="w-1/5 bg-white p-6">
+            <div className="w-1/5 bg-white p-6 h-screen overflow-auto">
                 {/* MAIN section */}
                 <List className="cursor-pointer"
                     subheader={
