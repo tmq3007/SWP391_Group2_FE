@@ -66,6 +66,7 @@ const Home = () => {
     const totalPrice = cart.reduce((total, item) => total + (item.discountPrice || item.unitSellPrice), 0);
 
     return (
+
         <div>
             <NavbarHomePage/>
             <section className="banner -z-50 relative flex flex-col items-center">

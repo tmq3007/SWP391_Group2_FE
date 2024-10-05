@@ -43,25 +43,24 @@
     justify-content: space-between;
     margin-top: 15px;
     padding: 0 10px;
-}
+}.favorite-button,
+ .cart-button {
+     background-color: white; /* Nền màu trắng khi không hover */
+     color: black; /* Chữ màu đen */
+     border-radius: 50px;
+     height: 40px;
+     padding: 0 20px;
+     cursor: pointer;
+     transition: background-color 0.3s ease, transform 0.2s ease;
+ }
 .favorite-button{
-    right: -30px;
-}
-.favorite-button,
-.cart-button {
-    background-color: #019376;
-    color: white;
-    border-radius: 50px;
-    height: 40px;
-    padding: 0 20px;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    right:-30px;
 }
 
 .favorite-button:hover,
 .cart-button:hover {
-    background-color: #017a63; /* Màu xanh đậm hơn khi hover */
+    background-color: #a8ccc5; /* Màu xanh nền khi hover */
+    color: white; /* Chữ màu trắng khi hover */
     transform: translateY(-2px);
 }
 
