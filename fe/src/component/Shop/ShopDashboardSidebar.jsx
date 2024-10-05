@@ -78,7 +78,7 @@ export const ShopDashboardSidebar = () => {
                             <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-product")}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item">
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-add-product")} >
                                 <ListItemText primary="Add New Product"/>
                             </ListItemButton>
                             <ListItemButton className="pl-8 sidebar-item">
