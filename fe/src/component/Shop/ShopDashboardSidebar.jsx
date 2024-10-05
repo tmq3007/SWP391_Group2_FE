@@ -40,7 +40,7 @@ export const ShopDashboardSidebar = () => {
     };
 
     return (
-            <div className="w-1/5 bg-white p-6 h-screen overflow-auto">
+            <div className="w-1/5 bg-white p-6 h-full overflow-y-auto">
                 {/* MAIN section */}
                 <List className="cursor-pointer"
                     subheader={
