@@ -60,14 +60,14 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
                             onClick={handleFavoriteToggle}
                             className={`favorite-button ${isFavorite ? 'active' : ''}`}
                         >
-                            {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                            {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }}/> : <FavoriteBorderIcon />}
                         </Button>
                         <Button
                             variant="contained"
                             onClick={() => addToCart(item)}  // Add to cart functionality
                             className="cart-button"
                         >
-                            <AddShoppingCartIcon />
+                            <AddShoppingCartIcon sx={{ color: '#019376' }}/>
                         </Button>
                     </div>
                 </CardContent>
