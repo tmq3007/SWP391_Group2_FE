@@ -1,19 +1,27 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Button, List, ListItem, ListItemText, Divider } from '@mui/material';
+import {
+    Dialog, DialogTitle, DialogContent, Typography, Button, List, ListItem, ListItemText, Divider, Avatar, IconButton
+} from '@mui/material';
+import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const CartModal = ({ open, onClose, cartItems, totalPrice }) => {
-    // Aggregate cart items by ID
-    const aggregatedItems = cartItems.reduce((acc, item) => {
-        const existingItem = acc.find(i => i.id === item.id);
-        if (existingItem) {
-            // If item with same ID exists, increment its quantity
-            existingItem.quantity += item.quantity;
-        } else {
-            // Otherwise, push the item with its quantity
-            acc.push({ ...item });
-        }
-        return acc;
-    }, []);
+const CartModal = ({ open, onClose, cartItems, updateCart }) => {
+    const totalPrice = cartItems.reduce((total, item) => {
+        const originalPrice = item.unitSellPrice || 0;
+        const discount = item.discount || 0;
+        const discountPrice = originalPrice * (1 - discount);
+        return total + (discountPrice * item.quantity);
+    }, 0);
+
+    const uniqueItemCount = cartItems.length;
+
+    const handleDecreaseQuantity = (item) => {
+        updateCart(item, item.quantity - 1);
+    };
+
+    const handleRemoveItem = (item) => {
+        updateCart(item, 0);
+    };
 
     return (
         <Dialog
@@ -21,25 +29,37 @@ const CartModal = ({ open, onClose, cartItems, totalPrice }) => {
             onClose={onClose}
             maxWidth="sm"
             fullWidth
-            sx={{ '& .MuiDialog-paper': { margin: 0, position: 'fixed', right: 0, top: 0, bottom: 0, width: '400px' } }} // Modal on the right side
         >
-            <DialogTitle>Shopping Cart</DialogTitle>
+            <DialogTitle>Shopping Cart ({uniqueItemCount} items)</DialogTitle>
             <DialogContent>
-                {aggregatedItems.length === 0 ? (
+                {cartItems.length === 0 ? (
                     <Typography variant="body1">Your cart is empty.</Typography>
                 ) : (
                     <List>
-                        {aggregatedItems.map((item, index) => (
-                            <div key={item.id}> {/* Use item.id as the key */}
-                                <ListItem>
-                                    <ListItemText
-                                        primary={item.productName}
-                                        secondary={`Price: $${item.discountPrice ? item.discountPrice.toFixed(2) : item.unitSellPrice.toFixed(2)} | Quantity: ${item.quantity}`}
-                                    />
-                                </ListItem>
-                                <Divider />
-                            </div>
-                        ))}
+                        {cartItems.map((item) => {
+                            const originalPrice = item.unitSellPrice || 0;
+                            const discount = item.discount || 0;
+                            const discountPrice = originalPrice * (1 - discount);
+
+                            return (
+                                <div key={item.id}>
+                                    <ListItem>
+                                        <Avatar alt={item.productName} src={item.pictureUrl} sx={{ marginRight: 2 }} />
+                                        <ListItemText
+                                            primary={item.productName}
+                                            secondary={`Price: $${discountPrice.toFixed(2)} | Quantity: ${item.quantity}`}
+                                        />
+                                        <IconButton onClick={() => handleDecreaseQuantity(item)} size="small">
+                                            <RemoveIcon />
+                                        </IconButton>
+                                        <IconButton onClick={() => handleRemoveItem(item)} size="small">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItem>
+                                    <Divider />
+                                </div>
+                            );
+                        })}
                         <ListItem>
                             <Typography variant="h6">Total Price: ${totalPrice.toFixed(2)}</Typography>
                         </ListItem>

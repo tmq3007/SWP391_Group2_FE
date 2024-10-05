@@ -60,7 +60,7 @@ export const NavbarHomePage = () => {
                     </li>
                 </div>
 
-                <ShopMenu className="shop-menu" />
+                {/*<ShopMenu className="shop-menu" />*/}
 
             </div>
 

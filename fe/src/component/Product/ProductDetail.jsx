@@ -1,53 +1,108 @@
 import React from 'react';
-import { Typography, Card, CardContent, CardMedia, Button } from '@mui/material';
+import { Typography, Button, Box, Chip } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import StarIcon from '@mui/icons-material/Star';
 
-const ProductDetail = ({ item, addToCart, onClose }) => {
-    const originalPrice = item.unitSellPrice || 0;  // Get original price from item
-    const discount = item.discount * 100 || 0;      // Get discount from item
-    const discountPrice = originalPrice * (1 - discount / 100);  // Calculate discounted price
-    const productDescription = item.description || "No description available.";  // Product description
+const ProductDetail = ({ item, addToCart }) => {
+    const originalPrice = item.unitSellPrice || 0;  // Giá gốc
+    const discount = item.discount * 100 || 0;      // Giảm giá (phần trăm)
+    const discountPrice = originalPrice * (1 - discount / 100);  // Tính giá giảm
+    const productDescription = item.description || "No description available.";  // Mô tả sản phẩm
+
+    // Gán cứng dữ liệu cho rating, category và shop
+    const rating = 3.33;
+    const categories = ['fruits & vegetables', 'vegetables'];
+    const shop = 'Grocery Shop';
+    const piecesAvailable = 10;
 
     return (
-        <Card sx={{ maxWidth: 600, margin: 'auto', marginTop: 5, borderRadius: 1, boxShadow: 2 }}>
-            <CardMedia
-                component="img"
-                height="300"
-                image={item.pictureUrl}  // Use image from item
-                alt={item.productName}
-            />
-            <CardContent>
-                <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-                    {item.productName}
+        <section className="flex flex-col md:flex-row p-8 space-y-6 md:space-y-0 md:space-x-6">
+            {/* Phần bên trái: Hình ảnh sản phẩm */}
+            <div className="md:w-2/5 bg-white p-6 flex flex-col items-start rounded-lg  ">
+                <img
+                    src={item.pictureUrl}
+                    alt={item.productName}
+                    className="max-w-full h-auto rounded-lg mb-4"
+                />
+
+                {/* Phần bên dưới: Danh mục và cửa hàng */}
+                <Box className="w-full text-left">
+                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                        Categories:
+                    </Typography>
+                    <Box display="flex" gap={1} mt={1}>
+                        {categories.map((category, index) => (
+                            <Chip key={index} label={category} variant="outlined" />
+                        ))}
+                    </Box>
+
+                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold', marginTop: 2 }}>
+                        Sellers:
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#555' }}>{shop}</Typography>
+                </Box>
+            </div>
+
+            {/* Phần bên phải: Thông tin chi tiết sản phẩm */}
+            <div className="md:w-3/5 bg-white p-8 rounded-lg flex flex-col justify-start space-y-6  ">
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                        {item.productName}
+                    </Typography>
+
+                    {/* Phần hiển thị sao đánh giá */}
+                    <Box display="flex" alignItems="center">
+                        <StarIcon sx={{ color: '#FFD700', fontSize: 30 }} />
+                        <Typography variant="h6" component="div" sx={{ marginLeft: 1, fontWeight: 'medium' }}>
+                            {rating.toFixed(2)}
+                        </Typography>
+                    </Box>
+                </Box>
+
+
+                <Typography variant="body1" sx={{ color: '#555', lineHeight: 1.6 }}>
+                    {productDescription}
                 </Typography>
+
                 {discount > 0 && (
-                    <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ textDecoration: 'line-through', fontSize: '1rem' }}
+                    >
                         Original Price: ${originalPrice.toFixed(2)}
                     </Typography>
                 )}
-                <Typography variant="h5" component="div" sx={{ color: "#019376", fontWeight: 'bold', marginBottom: 2 }}>
-                    Discount Price: ${discountPrice.toFixed(2)}
+
+                <Typography variant="h4" sx={{ color: "#019376", fontWeight: 'bold' }}>
+                    ${discountPrice.toFixed(2)}
                 </Typography>
-                <Typography variant="body1" component="div" sx={{ marginBottom: 2 }}>
-                    {productDescription}
-                </Typography>
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: "#019376",
-                        borderRadius: '20px',
-                        padding: '10px 20px',
-                    }}
-                    onClick={() => {
-                        addToCart(item);  // Logic to add to cart
-                        // Do not close the modal here
-                    }}
-                >
-                    <AddShoppingCartIcon sx={{ marginRight: 1 }} />
-                    Add to Cart
-                </Button>
-            </CardContent>
-        </Card>
+
+                <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            backgroundColor: "#019376",
+                            borderRadius: '30px',
+                            padding: '12px 30px',
+                            fontSize: '1.1rem',
+                            '&:hover': {
+                                backgroundColor: "#017c65",
+                            }
+                        }}
+                        onClick={() => addToCart(item)}  // Thêm sản phẩm vào giỏ hàng
+                    >
+                        <AddShoppingCartIcon sx={{ marginRight: 1 }} />
+                        Add to Cart
+                    </Button>
+
+                    <Typography variant="body2" sx={{ color: '#888' }}>
+                        {piecesAvailable} pieces available
+                    </Typography>
+                </Box>
+
+            </div>
+        </section>
     );
 };
 
