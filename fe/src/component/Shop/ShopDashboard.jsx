@@ -5,20 +5,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { ShopDashboardSidebar } from './ShopDashboardSidebar';
 
-
 import {
     List,
-    ListSubheader,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Divider,
-    ListItemButton,
-    Collapse
+    Divider
 } from '@mui/material';
 import "../../style/ShopDashboard.css";
-import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
-import {NavbarShop} from "../Navbar/NavbarShop";
+import { ExpandLess, ExpandMore, LocationOn } from "@mui/icons-material";
+import { NavbarShop } from "../Navbar/NavbarShop";
 
 export const ShopDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -27,15 +20,14 @@ export const ShopDashboard = () => {
         setOpen(!open);
     };
     return (
-
-
-        <section className="main flex h-screen">
-            <NavbarShop/>
+        <section className="main flex h-screen overflow-hidden">
+            <NavbarShop />
             {/* Sidebar */}
             <ShopDashboardSidebar />
 
             {/* Main Content */}
-            <div className="w-4/5 bg-white">
+            <div className="content w-4/5 bg-white h-full overflow-auto"
+                 style={{'::-webkit-scrollbar': {display: 'none'}}}>
                 <div className="h-full p-6">
                     <div className="w-full h-full bg-cover bg-center"
                          style={{backgroundImage: `url('https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F883%2FUntitled-6.jpg&w=1920&q=75')`}}>
@@ -43,8 +35,10 @@ export const ShopDashboard = () => {
 
                     <div className='relative z-10 px-4 lg:px-6 xl:px-10'>
                         <div className='-mt-16 flex flex-wrap gap-6 lg:-mt-[6.0625rem] 2xl:flex-nowrap'>
-                            <img src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F882%2FFurniture.png&w=1920&q=75" alt=""
-                                 className="rounded-full object-cover h-28 w-28 lg:h-[11.125rem] lg:w-[11.125rem]"/>
+                            <img
+                                src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F882%2FFurniture.png&w=1920&q=75"
+                                alt=""
+                                className="rounded-full object-cover h-28 w-28 lg:h-[11.125rem] lg:w-[11.125rem]"/>
                         </div>
                         <div className='flex w-full flex-wrap justify-between self-end 2xl:flex-1'>
                             <div className='flex-auto pr-5 xl:flex-1'>
@@ -90,7 +84,9 @@ export const ShopDashboard = () => {
                                 <div className='relative mt-5 pt-5 xl:pt-7'>
                                     <h2 className='mb-4 text-lg font-semibold text-muted-black xl:text-xl'>Bio</h2>
                                     <div className='text-sm leading-[171.429%] text-[#666]'>
-                                        The furniture shop is the best shop around the city. This is being run under the store owner and our aim is to provide quality product and hassle free customer service.
+                                        The furniture shop is the best shop around the city. This is being run under the
+                                        store owner and our aim is to provide quality product and hassle free customer
+                                        service.
                                     </div>
 
                                 </div>
@@ -150,4 +146,3 @@ export const ShopDashboard = () => {
         </section>
     );
 };
-
