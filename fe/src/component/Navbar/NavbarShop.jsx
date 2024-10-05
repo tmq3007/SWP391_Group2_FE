@@ -59,7 +59,7 @@ export const NavbarShop = () => {
     };
 
     const handleClick = () => {
-        navigate("/");
+        navigate("/vendor-dashboard");
         return null;
     }
 

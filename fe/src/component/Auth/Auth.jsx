@@ -29,9 +29,7 @@ const Auth = () => {
                     p: 4,
                     borderRadius: 2,
                 }}>
-
                     {location.pathname==='/auth/register'?<RegisterForm/>:<LoginForm/>}
-
                 </Box>
             </Modal>
 
