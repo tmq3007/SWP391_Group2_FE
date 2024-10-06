@@ -7,6 +7,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HelpIcon from '@mui/icons-material/Help';
 import { useNavigate, useLocation } from "react-router-dom";
+import {logout} from "../../State/Authentication/Action";
+import {useDispatch} from "react-redux";
 
 const menu = [
   {
@@ -44,9 +46,12 @@ const menu = [
 export default function ProfileNav({ open, handleClose }) {
   const navigate = useNavigate();
   const location = useLocation(); // Hook to get the current URL
-
+  const dispatch = useDispatch ();
   const handleNavigate = (item) => {
-    navigate(`${item.herf}`); // Navigate to the selected menu item
+
+
+      navigate(`${item.herf}`);
+    // Navigate to the selected menu item
   };
 
   return (

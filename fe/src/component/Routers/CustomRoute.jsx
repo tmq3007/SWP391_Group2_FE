@@ -10,6 +10,7 @@ import {ShopProduct} from "../Shop/ShopProduct";
 import VendorDashboard from "../Vendor/VendorDashboard";
 import {ShopEditProduct} from "../Shop/ShopEditProduct";
 import {ShopAddProduct} from "../Shop/ShopAddProduct";
+import {CustomerProfile} from "../User/CustomerProfile/CustomerProfile";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -31,7 +32,7 @@ const CustomRoute = () => {
                 <Route path='/' element={<Home/>}/>
                 <Route path='/auth/:register' element={<Home/>}/>
                 <Route path="/product-detail" element={<ProductDetail />} />
-
+                <Route path="/my-profile/*" element={<CustomerProfile/>} />
                 <Route path="/shop-dashboard"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
