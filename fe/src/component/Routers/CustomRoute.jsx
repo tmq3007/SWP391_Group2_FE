@@ -44,7 +44,7 @@ const CustomRoute = () => {
                        }/>
 
                 <Route path="/auth/unauthorized" element={<h1>Unauthorized Access</h1>} />
-                <Route path="/admin-dashboard"
+                <Route path="/admin-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_ADMIN">
                                <AdminDashboard/>

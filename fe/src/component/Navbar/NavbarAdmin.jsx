@@ -12,7 +12,7 @@ export const NavbarAdmin = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate("/");
+        navigate("/admin-dashboard");
         return null;
     }
 
@@ -32,7 +32,7 @@ export const NavbarAdmin = () => {
             </div>
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
-                <SearchIcon className="absolute left-4 text-gray-400" />
+                <SearchIcon className="absolute left-4 text-gray-400 top-2" />
                 <input
                     type="text"
                     className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"

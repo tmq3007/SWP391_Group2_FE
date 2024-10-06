@@ -89,7 +89,7 @@ export const getUser = (jwt) => async (dispatch) => {
     } catch (error) {
         dispatch({ type: GET_USER_FAILURE, payload: error });
         console.error('Error:', error);
-        throw error;
+
     }
 }
 
@@ -104,6 +104,6 @@ export const logout = (token) => async (dispatch) => {
         console.log("logout");
     } catch (error) {
         console.error('Error:', error);
-        throw error;
+
     }
 }

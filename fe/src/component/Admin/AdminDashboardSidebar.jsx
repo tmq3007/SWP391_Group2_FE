@@ -7,12 +7,6 @@ import BookIcon from '@mui/icons-material/Book';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import MessageIcon from '@mui/icons-material/Message';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import {
     List,
     ListSubheader,
@@ -23,9 +17,19 @@ import {
     ListItemButton,
     Collapse
 } from '@mui/material';
-import {Dashboard, ExpandLess, ExpandMore, Group, NewReleases, RecentActors, Storefront} from "@mui/icons-material";
+import {
+    Dashboard,
+    ExpandLess,
+    ExpandMore,
+    Group,
+    NewReleases,
+    RecentActors,
+    Settings,
+    Storefront
+} from "@mui/icons-material";
 import "../../style/ShopDashboard.css";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
+
 
 const menu=[
     {title:"Dashboard", icon:<Dashboard/>, path:"/dashboard-page"},
@@ -51,7 +55,7 @@ export const AdminDashboardSidebar = () => {
     }
 
     return (
-        <div className="w-1/5 bg-gray-100 p-6">
+        <div className="w-1/5 bg-gray-100 p-6 sticky">
             {/* MAIN section */}
             <List
                 subheader={
@@ -60,14 +64,14 @@ export const AdminDashboardSidebar = () => {
                     </ListSubheader>
                 }
             >
-                <ListItem onClick={() => handleNavigate("/dashboard-page")} button style={{ borderRadius: '8px', marginBottom: '8px', transition: '0.3s', backgroundColor: '#ffffff', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}
+                <ListItem onClick={() =>  handleNavigate('/dashboard-page')} button style={{ borderRadius: '8px', marginBottom: '8px', transition: '0.3s', backgroundColor: '#ffffff', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e0e0e0'}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
                 >
                     <ListItemIcon>
                         <WidgetsIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText primary="Dashboard"/>
+                        <ListItemText primary='Dashboard' />
                 </ListItem>
             </List>
 
@@ -77,7 +81,7 @@ export const AdminDashboardSidebar = () => {
             <List
                 subheader={
                     <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        PRODUCT MANAGEMENT
+                        SHOP MANAGEMENT
                     </ListSubheader>
                 }
             >
@@ -90,35 +94,15 @@ export const AdminDashboardSidebar = () => {
                 </ListItemButton>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton onClick={() => handleNavigate("/all-shops")} sx={{pl: 4}}>
-                            <ListItemText primary="All Product"/>
+                        <ListItemButton sx={{pl: 4}}>
+                            <ListItemText primary="All Shops"/>
                         </ListItemButton>
 
                         <ListItemButton sx={{pl: 4}}>
-                            <ListItemText primary="Add New Product"/>
-                        </ListItemButton>
-
-                        <ListItemButton sx={{pl: 4}}>
-                            <ListItemText primary="My Draft"/>
-                        </ListItemButton>
-
-                        <ListItemButton sx={{pl: 4}}>
-                            <ListItemText primary="All Low & Out of Stock Product"/>
+                            <ListItemText primary="Inactive/New shops"/>
                         </ListItemButton>
                     </List>
                 </Collapse>
-                <ListItem button>
-                    <ListItemIcon>
-                        <InventoryIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Inventory"/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <BookIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Attributes"/>
-                </ListItem>
             </List>
 
             {/* FINANCIAL MANAGEMENT section */}
@@ -126,7 +110,7 @@ export const AdminDashboardSidebar = () => {
             <List
                 subheader={
                     <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        FINANCIAL MANAGEMENT
+                        USER MANAGEMENT
                     </ListSubheader>
                 }
             >
@@ -134,13 +118,19 @@ export const AdminDashboardSidebar = () => {
                     <ListItemIcon>
                         <StarIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText primary="Withdrawals"/>
+                    <ListItemText primary="All Users"/>
                 </ListItem>
                 <ListItem button>
                     <ListItemIcon>
                         <VolunteerActivismIcon fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText primary="Refunds"/>
+                    <ListItemText primary="All Vendors"/>
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon>
+                        <VolunteerActivismIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <ListItemText primary="All Customers"/>
                 </ListItem>
             </List>
 
@@ -149,150 +139,19 @@ export const AdminDashboardSidebar = () => {
             <List
                 subheader={
                     <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        ORDER MANAGEMENT
+                        SETTING MANAGEMENT
                     </ListSubheader>
                 }
             >
                 <ListItem button>
                     <ListItemIcon>
-                        <FormatListNumberedRtlIcon fontSize="small"/>
+                        <Settings fontSize="small"/>
                     </ListItemIcon>
-                    <ListItemText primary="Orders"/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <SubtitlesIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Transactions"/>
+                    <ListItemText primary="Settings"/>
                 </ListItem>
             </List>
 
-            {/* FEATURE MANAGEMENT section */}
-            <Divider className="mt-4 mb-4"/>
-            <List
-                subheader={
-                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        FEATURE MANAGEMENT
-                    </ListSubheader>
-                }
-            >
-                <ListItem button>
-                    <ListItemIcon>
-                        <ReceiptLongIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Store Notice"/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <MessageIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Message"/>
-                </ListItem>
-            </List>
 
-            {/* FEEDBACK CONTROL section */}
-            <Divider className="mt-4 mb-4"/>
-            <List
-                subheader={
-                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        FEEDBACK CONTROL
-                    </ListSubheader>
-                }
-            >
-                <ListItem button>
-                    <ListItemIcon>
-                        <StarIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Reviews"/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <HelpOutlineIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Questions"/>
-                </ListItem>
-            </List>
-
-            {/* USER CONTROL section */}
-            <Divider className="mt-4 mb-4"/>
-            <List
-                subheader={
-                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        USER CONTROL
-                    </ListSubheader>
-                }
-            >
-                <ListItem button>
-                    <ListItemIcon>
-                        <PeopleAltIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Staff"/>
-                </ListItem>
-
-            </List>
-
-            {/* PROMOTIONAL CONTROL section */}
-            <Divider className="mt-4 mb-4"/>
-            <List
-                subheader={
-                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        PROMOTIONAL CONTROL
-                    </ListSubheader>
-                }
-            >
-                <ListItem button>
-                    <ListItemIcon>
-                        <CardGiftcardIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Coupons"/>
-                </ListItem>
-                <ListItemButton onClick={handleClick}>
-                    <ListItemIcon>
-                        <ShoppingBagIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Flash Sale"/>
-                    {open ? <ExpandLess/> : <ExpandMore/>}
-                </ListItemButton>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{pl: 4}}>
-                            <ListItemText primary="Available Flash deals"/>
-                        </ListItemButton>
-
-                        <ListItemButton sx={{pl: 4}}>
-                            <ListItemText primary="My Products in Deals"/>
-                        </ListItemButton>
-
-                        <ListItemButton sx={{pl: 4}}>
-                            <ListItemText primary="Ask for Enrol;ment"/>
-                        </ListItemButton>
-
-                    </List>
-                </Collapse>
-            </List>
-
-            {/* Layout/Page management section */}
-            <Divider className="mt-4 mb-4"/>
-            <List
-                subheader={
-                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        LAYOUT/PAGE MANAGEMENT
-                    </ListSubheader>
-                }
-            >
-                <ListItem button>
-                    <ListItemIcon>
-                        <ElectricBoltIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="FAQs"/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <ElectricBoltIcon fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Term And Conditions"/>
-                </ListItem>
-            </List>
         </div>
     );
 };
