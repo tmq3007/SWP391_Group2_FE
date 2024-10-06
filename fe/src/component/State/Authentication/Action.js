@@ -88,7 +88,7 @@ export const getUser = (jwt) => async (dispatch) => {
         console.log(data);
     } catch (error) {
         dispatch({ type: GET_USER_FAILURE, payload: error });
-        console.error('Error:', error);
+        console.error('Error get user:', error);
 
     }
 }

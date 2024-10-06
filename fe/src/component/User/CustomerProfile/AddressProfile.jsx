@@ -47,19 +47,7 @@ const AddAddressModal = ({ open, handleClose }) => {
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth className='border-8'>
             <DialogTitle className="text-lg font-bold p-4 justify-center items-center text-center">Add New Address</DialogTitle>
             <DialogContent className="p-4">
-                <div className='mb-4'>
-                    {/*//title*/}
-                    <span className='font-semibold'> Title </span>
-                    <TextField
-                        label="Title"
-                        name="title"
-                        variant="outlined"
-                        value={addressData.title}
-                        onChange={handleChange}
-                        fullWidth
-                        className="mb-4 font-semibold"
-                    />
-                </div>
+
 
                 {/*//city*/}
                 <div className='mb-4'>
@@ -78,10 +66,10 @@ const AddAddressModal = ({ open, handleClose }) => {
                 <div className='mb-4'>
                     <span className='font-semibold'> District </span>
                     <TextField
-                        label="District"
+                        //label="District"
                         name="district"
                         variant="outlined"
-                        value={addressData.title}
+                        //value={addressData.title}
                         onChange={handleChange}
                         fullWidth
                         className="mb-4 font-semibold"
@@ -91,10 +79,10 @@ const AddAddressModal = ({ open, handleClose }) => {
                 <div className='mb-4'>
                     <span className='font-semibold'> Sub-district </span>
                     <TextField
-                        label="Sub-district"
+                        //label="Sub-district"
                         name="Sub-district"
                         variant="outlined"
-                        value={addressData.title}
+                        //value={addressData.title}
                         onChange={handleChange}
                         fullWidth
                         className="mb-4 font-semibold"
@@ -104,10 +92,10 @@ const AddAddressModal = ({ open, handleClose }) => {
                 <div className='mb-4'>
                     <span className='font-semibold'> Street Address </span>
                     <TextField
-                        label="Street Address"
+                        //label="Street Address"
                         name="street"
                         variant="outlined"
-                        value={addressData.street}
+                        //value={addressData.street}
                         onChange={handleChange}
                         multiline
                         rows={2}

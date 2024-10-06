@@ -18,7 +18,7 @@ export const CustomerProfile = () => {
               <Routes>
                   <Route path="/" element={<ProfileInfo/>}/>
                   {/* Route for Profile Info */}
-                  <Route path="/profile" element={<ProfileInfo/>}/>
+                  <Route path="/profileinfo" element={<ProfileInfo/>}/>
 
                   {/* Route for Change Password */}
                   <Route path="/change-pass" element={<ChangePassword/>}/>
