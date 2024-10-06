@@ -5,7 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 export const ShopAddProduct = () => {
-    const [category, setCategory] = React.useState(0); // Đặt giá trị mặc định là 0 (ALL)
+    const [category, setCategory] = React.useState(0);
 
     const handleChange = (event) => {
         setCategory(event.target.value);
@@ -347,6 +347,22 @@ export const ShopAddProduct = () => {
                             </div>
                         </div>
                     </form>
+                    <div
+                        className="sticky bottom-0 -mx-5 bg-gray-100/10 py-3 px-5 backdrop-blur text-end md:py-5 lg:-mx-8 lg:px-8 z-0">
+                        <div className="flex items-center justify-end">
+                            <button
+                                data-variant="normal"
+                                className="inline-flex items-center justify-center flex-shrink-0 bg-[#009f7f] text-white
+                                font-semibold rounded outline-none transition duration-300 ease-in-out
+                                focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 bg-accent
+                                text-light border border-transparent hover:bg-accent-hover px-5 py-0 h-12 text-sm md:text-base"
+                                data-metatip="true"
+                                data-label-id="0"
+                            >
+                                Add Product
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
