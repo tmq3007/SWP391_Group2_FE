@@ -8,6 +8,8 @@ import * as Yup from "yup";
 import {useDispatch} from "react-redux";
 import {loginUser} from "../State/Authentication/Action";  // For form validation
 
+
+
 // Initial form values
 const initialValues = {
     username: '',
@@ -24,6 +26,7 @@ const LoginForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    
     // Handle form submission
     const handleSubmit = (values) => {
 
@@ -87,11 +90,11 @@ const LoginForm = () => {
                 )}
             </Formik>
 
-            <Typography sx={{ mt: 3 }} variant='body2' align='center'>
+            <Typography sx={{mt: 3}} variant='body2' align='center'>
 
                 Don't have an account?
                 <Button
-                    sx={{ color: '#039375' }}
+                    sx={{color: '#039375'}}
                     size='small'
                     onClick={() => navigate("/auth/register")}
                 >
