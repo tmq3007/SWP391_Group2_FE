@@ -29,9 +29,9 @@ const PopularProducts = () => {
                     <li key={index} className="product-item">
                         <div className="product-details">
                             <img
-                                src={`https://via.placeholder.com/40`} // Placeholder image; you can replace it with product images
+                                src={`https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F20%2FVeggiePlatter.jpg&w=1920&q=75`} // Placeholder image; you can replace it with product images
                                 alt={product.name}
-                                className="product-image"
+                                className="rounded-lg border border-gray-200 w-16 h-16"
                             />
                             <div className="product-info">
                                 <div className="product-name">{product.name}</div>

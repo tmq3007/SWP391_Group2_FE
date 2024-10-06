@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography } from "@mui/material";
+import {Alert, Button, Snackbar, Typography} from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import InputField from "./InputField";
@@ -7,6 +7,7 @@ import PasswordInput from "./PasswordInput";
 import * as Yup from "yup";
 import {registerUser} from "../State/Authentication/Action";
 import {useDispatch} from "react-redux";
+import { useEffect, useState } from "react";
 
 // Initial values and validation schema
 const initialValues = {
@@ -36,13 +37,44 @@ const RegisterForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleSubmit = (values) => {
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setSnackBarOpen(false);
+    };
+        const [snackBarOpen, setSnackBarOpen] = useState(false);
+        const [snackBarMessage, setSnackBarMessage] = useState("");
+
+        const handleSubmit = (values) => {
         const { confirmPassword, ...userData } = values;
-        dispatch(registerUser({userData, navigate}));
+        dispatch(registerUser({userData, navigate}))
+            .catch((error) => {
+                setSnackBarMessage(error.response.data.message);
+                setSnackBarOpen(true);
+            });
     };
 
     return (
         <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
             <Typography variant='h4' className='text-center'>
                 Register
             </Typography>

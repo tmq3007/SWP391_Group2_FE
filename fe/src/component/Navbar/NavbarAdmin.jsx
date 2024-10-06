@@ -1,15 +1,62 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import { IconButton } from '@mui/material';
+import {Button, IconButton, Menu} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import '../../style/NavbarShop.css';
 import Divider from '@mui/material/Divider';
 import {useNavigate} from "react-router-dom";
+import ProfileList from "../User/ProfileList";
+import {useDispatch} from "react-redux";
+import {logout} from "../State/Authentication/Action";
+import MenuItem from "@mui/material/MenuItem";
 
 
 export const NavbarAdmin = () => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const isMenuOpen = Boolean(anchorEl);
 
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        console.log('Logout clicked. Logging out...');
+
+        dispatch(logout({token: token}));
+
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('role');
+        setIsLoggedIn(false);
+        setUserRole(null);
+        navigate("/auth/login");
+        console.log('isLoggedIn:', false);
+    };
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const token = localStorage.getItem('jwt');
+    const [userRole, setUserRole] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const role = localStorage.getItem('role');
+
+
+    useEffect(() => {
+        if (token && role) {
+            setIsLoggedIn(true);
+            setUserRole(role);
+            console.log("Role from localStorage:", role);
+        }
+    }, [token]);
+
+
+    const handleJoin = () => {
+        navigate("/auth/login");
+        console.log('Redirecting to login page');
+    };
 
     const handleClick = () => {
         navigate("/admin-dashboard");
@@ -32,7 +79,7 @@ export const NavbarAdmin = () => {
             </div>
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
-                <SearchIcon className="absolute left-4 text-gray-400 top-2" />
+                <SearchIcon className="absolute left-4 text-gray-400" />
                 <input
                     type="text"
                     className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"
@@ -41,18 +88,60 @@ export const NavbarAdmin = () => {
             </div>
             <Divider orientation="vertical" variant="middle" flexItem />
 
-            {/* User Info */}
-            <div className="flex items-center space-x-3">
-                <img
-                    src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
-                    alt=""
-                    className="h-9 w-9 rounded-full"
-                />
-                <div className="flex flex-col">
-                    <span className="font-semibold text-black">Siu</span>
-                    <span className="text-xs text-gray-400">Store Owner</span>
-                </div>
-            </div>
+            {isLoggedIn ? (
+                <>
+                    <div className="flex items-center space-x-2">
+                        <IconButton
+                            edge="end"
+                            aria-controls={isMenuOpen ? 'profile-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={handleMenuOpen}
+                            color="inherit"
+                        >
+                            <img
+                                src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
+                                alt="profile"
+                                className="h-9 w-9 rounded-full"
+                            />
+                        </IconButton>
+
+                        <div className="flex flex-col">
+                            <span className="font-semibold text-sm text-black">Siu</span>
+                            <span className="text-xs text-gray-400">Store Owner</span>
+                        </div>
+                    </div>
+
+                    <Menu
+                        id="profile-menu"
+                        anchorEl={anchorEl}
+                        open={isMenuOpen}
+                        onClose={handleMenuClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'profile-button',
+                        }}
+                    >
+                        <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
+                            Profile
+                        </MenuItem>
+                        <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
+                            My account
+                        </MenuItem>
+                        <MenuItem style={{ color: '#019376' }} onClick={handleLogout}>
+                            Logout
+                        </MenuItem>
+                    </Menu>
+                </>
+            ) : (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleJoin}
+                    sx={{ backgroundColor: '#019376' }}
+                >
+                    <span style={{ color: "#FFFFFF" }}>Join</span>
+                </Button>
+            )}
+
         </div>
     );
 };
