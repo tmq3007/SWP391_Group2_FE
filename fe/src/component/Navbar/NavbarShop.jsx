@@ -59,7 +59,7 @@ export const NavbarShop = () => {
     };
 
     const handleClick = () => {
-        navigate("/");
+        navigate("/vendor-dashboard");
         return null;
     }
 
@@ -101,7 +101,7 @@ export const NavbarShop = () => {
                             <img
                                 src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
                                 alt="profile"
-                                className="h-9 w-9 rounded-full"
+                                className="h-9 w-9 rounded-full object-cover"
                             />
                         </IconButton>
 

@@ -9,11 +9,18 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsAction } from "../State/Product/Action";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {useNavigate} from "react-router-dom";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
+
 
 export const ShopProduct = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    // Lấy products từ Redux store
     const { products } = useSelector(store => store); // Assuming productReducer is the correct name
 
     const productsPerPage = 5;
@@ -35,6 +42,13 @@ export const ShopProduct = () => {
         setPage(value);
     };
 
+    {/*Hide and Display Filter*/}
+    const [isFilterVisible, setFilterVisible] = useState(false);
+
+    const toggleFilter = () => {
+        setFilterVisible(!isFilterVisible);
+    }
+
     return (
         <section className='main flex h-screen'>
             {/* Navbar */}
@@ -46,12 +60,12 @@ export const ShopProduct = () => {
                 <div className='h-full p-5 md:p-8'>
                     <div className='bg-white rounded bg-light p-5 shadow md:p-8 mb-8 flex flex-col'>
                         <div className='flex w-full flex-col items-center md:flex-row justify-between'>
-                            <h2 className="relative text-lg font-semibold text-heading">Products</h2>
+                            <h2 className="relative text-lg font-semibold text-heading text-[#1f2937]">Products</h2>
 
                             <div className='flex w-full flex-col items-center md:w-3/4 md:flex-row justify-between'>
                                 <div className='flex w-full items-center'>
                                     <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
-                                        <SearchIcon className="absolute left-4 text-gray-400" />
+                                        <SearchIcon className="absolute left-4 text-gray-400"/>
                                         <input
                                             type="text"
                                             id="search"
@@ -66,24 +80,34 @@ export const ShopProduct = () => {
                                     </div>
                                     <button className="inline-flex items-center justify-center flex-shrink-0 font-medium bg-[#019376]
                                     leading-none rounded-full outline-none transition duration-300 ease-in-out
-                                    text-white px-5 py-0 h-12 text-[15px] lg:text-base ms-4">
+                                    text-white px-5 py-0 h-12 text-[15px] lg:text-base ms-4" onClick={() => navigate("/shop-add-product")}>
                                         <span className='hidden md:block'>+Add Product</span>
                                     </button>
 
-                                    <button className="mt-5 flex items-center whitespace-nowrap
-                                    text-base font-semibold text-[#019376] md:mt-0 pl-3">
+                                    <button
+                                        onClick={toggleFilter}
+                                        className="mt-5 flex items-center whitespace-nowrap
+                                        text-base font-semibold text-[#019376] md:mt-0 pl-3"
+                                    >
                                         Filter
-                                        <ArrowUpwardIcon className="text-[#019376]" />
+                                        {isFilterVisible ? (
+                                            <ArrowDownwardIcon className="text-[#019376]"/>
+                                        ) : (
+                                            <ArrowUpwardIcon className="text-[#019376]"/>
+                                        )}
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex w-full transition visible h-auto">
-                            <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center md:pt-8">
-                                <ShopFilter />
+                        {/* Phần filter sẽ được ẩn hiện dựa vào state */}
+                        {isFilterVisible && (
+                            <div className="flex w-full transition visible h-auto">
+                                <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center md:pt-8">
+                                    <ShopFilter />
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     <div className="rc-table-content">
@@ -108,7 +132,11 @@ export const ShopProduct = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.unitSellPrice}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.stock}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Action</td>
+                                    <td className="px-6 py-4 whitespace-nowrap
+                                    text-sm text-gray-500 flex-col">
+                                        <ModeEditIcon onClick={() => navigate("/shop-edit-product")}/>
+                                        <RemoveRedEyeIcon onClick={() => navigate("/")}/>
+                                        <DeleteIcon onClick={() => navigate("/")}/></td>
                                 </tr>
                             ))}
 

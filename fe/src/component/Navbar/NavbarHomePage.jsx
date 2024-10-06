@@ -60,7 +60,7 @@ export const NavbarHomePage = () => {
                     </li>
                 </div>
 
-                <ShopMenu className="shop-menu" />
+                {/*<ShopMenu className="shop-menu" />*/}
 
             </div>
 
@@ -81,8 +81,6 @@ export const NavbarHomePage = () => {
                         <FavoriteIcon sx={{ fontSize: '1.5rem' }} />
                     </Badge>
                 </IconButton>
-
-
                 {isLoggedIn ? (
                     <>
                         <ProfileList handleLogout={handleLogout} />
@@ -91,7 +89,7 @@ export const NavbarHomePage = () => {
                                 variant="contained"
                                 color="primary"
                                 sx={{ backgroundColor: '#019376' }}
-                                onClick={() => navigate("/shop-dashboard")}
+                                onClick={() => navigate("/vendor-dashboard")}
                             >
                                 <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>

@@ -9,51 +9,67 @@ import Stack from '@mui/material/Stack';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsAction } from "../State/Product/Action";
 import CartModal from '../Cart/CartModal';
-import {NavbarHomePage} from "../Navbar/NavbarHomePage";  // Import the CartModal
+import { NavbarHomePage } from "../Navbar/NavbarHomePage";
 
 const Home = () => {
     const dispatch = useDispatch();
-    const { products } = useSelector(store => store);  // Getting products from store
-    const [cart, setCart] = useState([]);  // Initialize cart state
-    const [openCartModal, setOpenCartModal] = useState(false);  // State to open/close cart modal
+    const { products } = useSelector(store => store);
+   // const {categories} = useSelector(store => store);
+    const [cart, setCart] = useState([]);
+    const [openCartModal, setOpenCartModal] = useState(false);
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Fetch products
     useEffect(() => {
-        dispatch(getAllProductsAction()); // Call action to fetch product data
+        dispatch(getAllProductsAction());
     }, [dispatch]);
 
-    // Load cart from localStorage on initial render
     useEffect(() => {
         const savedCart = JSON.parse(localStorage.getItem('cart'));
         if (savedCart) {
-            setCart(savedCart);  // Load saved cart data
+            setCart(savedCart);
         }
     }, []);
 
-    // Save cart to localStorage whenever cart state changes
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cart));  // Save the cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
     }, [cart]);
 
-    // Add a product to the cart (this could be triggered when a user clicks "Add to Cart")
-    const addToCart = (product) => {
-        const updatedCart = [...cart, product];
-        setCart(updatedCart);  // Update cart state
+    const addToCart = (product, quantity) => {
+        const existingProduct = cart.find(item => item.id === product.id);
+        if (existingProduct) {
+            // Update quantity
+            const updatedCart = cart.map(item =>
+                item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
+            );
+            setCart(updatedCart);
+        } else {
+            // Add new product to cart
+            setCart([...cart, { ...product, quantity }]);
+        }
     };
 
-    // Get the current page products
+    const updateCart = (product, newQuantity) => {
+        if (newQuantity > 0) {
+            const updatedCart = cart.map(item =>
+                item.id === product.id ? { ...item, quantity: newQuantity } : item
+            );
+            setCart(updatedCart);
+        } else {
+            // Remove product from cart
+            const updatedCart = cart.filter(item => item.id !== product.id);
+            setCart(updatedCart);
+        }
+    };
+
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
     const currentProducts = products && products.products ? products.products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
 
-    // Pagination change handler
     const handleChange = (event, value) => {
-        setCurrentPage(value); // Update current page
+        setCurrentPage(value);
     };
 
-    // Open and close modal handlers
     const handleOpenCart = () => {
         setOpenCartModal(true);
     };
@@ -62,12 +78,16 @@ const Home = () => {
         setOpenCartModal(false);
     };
 
-    // Calculate total price from the cart
-    const totalPrice = cart.reduce((total, item) => total + (item.discountPrice || item.unitSellPrice), 0);
+    const totalPrice = cart.reduce((total, item) => {
+        const originalPrice = item.unitSellPrice || 0;
+        const discount = item.discount || 0;
+        const discountPrice = originalPrice * (1 - discount);
+        return total + (discountPrice * item.quantity);
+    }, 0);
 
     return (
         <div>
-            <NavbarHomePage/>
+            <NavbarHomePage />
             <section className="banner -z-50 relative flex flex-col items-center">
                 <div className="w-[50vw] z-10 text-center">
                     <p className="text-2xl lg:text-5xl font-bold z-10 py-5 mt-9" style={{ color: "#019376" }}>
@@ -99,16 +119,16 @@ const Home = () => {
                             <ProductCard
                                 key={item.id}
                                 item={item}
-                                addToCart={() => addToCart(item)} // Add "Add to Cart" functionality
+                                addToCart={addToCart} // Directly pass addToCart
                             />
-                        )  // Use item.id as key
+                        )
                     }
                 </div>
             </section>
 
             <Stack spacing={2} className="mt-5" alignItems="center" sx={{ marginBottom: "30px" }}>
                 <Pagination
-                    count={Math.ceil((products && products.products ? products.products.length : 0) / itemsPerPage)} // Calculate number of pages
+                    count={Math.ceil((products && products.products ? products.products.length : 0) / itemsPerPage)}
                     page={currentPage}
                     onChange={handleChange}
                     color="primary"
@@ -118,21 +138,20 @@ const Home = () => {
                 />
             </Stack>
 
-            {/* Add the cart button */}
             <div className="fixed bottom-10 right-10 cart-modal">
                 <button
-                    className=" text-white p-3 rounded-lg shadow-lg"
+                    className="text-white p-3 rounded-lg shadow-lg"
                     onClick={handleOpenCart}
                 >
                     View Cart ({cart.length})
                 </button>
             </div>
 
-            {/* Cart Modal */}
             <CartModal
                 open={openCartModal}
                 onClose={handleCloseCart}
                 cartItems={cart}
+                updateCart={updateCart}
                 totalPrice={totalPrice}
             />
         </div>

@@ -29,13 +29,13 @@ export const ShopDashboard = () => {
     return (
 
 
-        <section className="main flex h-screen">
+        <section className="main flex h-screen overflow-hidden">
             <NavbarShop/>
             {/* Sidebar */}
             <ShopDashboardSidebar />
 
             {/* Main Content */}
-            <div className="w-4/5 bg-white">
+            <div className="w-4/5 bg-white h-full overflow-y-auto">
                 <div className="h-full p-6">
                     <div className="w-full h-full bg-cover bg-center"
                          style={{backgroundImage: `url('https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F883%2FUntitled-6.jpg&w=1920&q=75')`}}>
@@ -150,4 +150,3 @@ export const ShopDashboard = () => {
         </section>
     );
 };
-
