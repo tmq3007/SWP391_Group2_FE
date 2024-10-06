@@ -13,8 +13,14 @@ import {jwtDecode} from "jwt-decode";
 
 export const registerUser = (reqData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST });
-    try{
+
         const {data}=await axios.post(`${API_URL}/api/v1/users/sign-up`,reqData.userData);
+
+        if(data.code === 1000) {
+            console.log("Username already exists");
+        } else if(data.code === 1008) {
+            console.log("Email already exists");
+        }
         if(data.result.token)localStorage.setItem('jwt',data.result.token);
 
         const token = jwtDecode(data.result.token);
@@ -27,17 +33,14 @@ export const registerUser = (reqData) => async (dispatch) => {
         }
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
         console.log("registered",data);
-    } catch (error) {
-        dispatch({ type: REGISTER_FAILURE, payload: error });
-        console.error('Error:', error);
-        throw error;
-    }
+
+
+
 }
 
 export const loginUser = (reqData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST });
 
-    try {
         const { data } = await axios.post("http://localhost:8080/api/v1/auth/login", reqData.userData);
         const token = jwtDecode(data.result.token);
 
@@ -65,10 +68,7 @@ export const loginUser = (reqData) => async (dispatch) => {
 
         dispatch({ type: LOGIN_SUCCESS, payload: data.result.token });
         console.log("logged in", data);
-    } catch (error) {
-        dispatch({ type: LOGIN_FAILURE, payload: error });
-        console.error('Error:', error);
-    }
+
 }
 
 

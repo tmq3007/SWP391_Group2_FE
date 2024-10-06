@@ -358,17 +358,10 @@ small {
     align-items: center;
 }
 
-/*.product-image {*/
-/*    width: 40px;*/
-/*    height: 40px;*/
-/*    object-fit: cover;*/
-/*    border-radius: 50%;*/
-/*    margin-right: 10px;*/
-/*}*/
-
 .product-info {
     display: flex;
     flex-direction: column;
+    margin-left: 5px;
 }
 
 .product-name {
@@ -514,4 +507,8 @@ small {
 .swiper-pagination-bullet-active {
     color: #fff;
     background: #1abc9c;
+}
+
+.container-table {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
