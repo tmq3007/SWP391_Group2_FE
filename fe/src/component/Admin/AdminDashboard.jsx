@@ -5,6 +5,11 @@ import {AdminDashboardSidebar} from "./AdminDashboardSidebar";
     import DashboardPage from "./AdminDashboardDetails/AdminPage/DashboardPage";
     import ShopsPage from "./AdminDashboardDetails/AdminPage/ShopPage";
     import {NavbarAdmin} from "../Navbar/NavbarAdmin";
+import InactiveNewShopsPage from "./AdminDashboardDetails/AdminPage/InactiveNewShopsPage";
+import UsersPage from "./AdminDashboardDetails/AdminPage/UsersPage";
+import VendorsPage from "./AdminDashboardDetails/AdminPage/VendorsPage";
+import CustomersPage from "./AdminDashboardDetails/AdminPage/CustomersPage";
+import SettingPage from "./AdminDashboardDetails/AdminPage/SettingPage";
 
 export const AdminDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -27,11 +32,21 @@ export const AdminDashboard = () => {
                 <Routes>
                     {/* Main layout route with sidebar and navbar */}
 
-                        <Route path="/" element={<DashboardPage />} />
+                    <Route path="/" element={<DashboardPage />} />
 
-                        <Route path="/dashboard-page" element={<DashboardPage />} />
+                    <Route path="/dashboard-page" element={<DashboardPage />} />
 
-                        <Route path="/all-shops" element={<ShopsPage />} />
+                    <Route path="/all-shops" element={<ShopsPage />} />
+
+                    <Route path="/inactive-new-shops" element={<InactiveNewShopsPage />} />
+
+                    <Route path="/all-users" element={<UsersPage />} />
+
+                    <Route path="/all-vendors" element={<VendorsPage />} />
+
+                    <Route path="/all-customers" element={<CustomersPage />} />
+
+                    <Route path="/settings" element={<SettingPage />} />
                         {/* Add more routes here */}
 
                 </Routes>

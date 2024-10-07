@@ -7,6 +7,7 @@ import BookIcon from '@mui/icons-material/Book';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
+import "../../style/ShopDashboardSidebar.css";
 import {
     List,
     ListSubheader,
@@ -55,7 +56,7 @@ export const AdminDashboardSidebar = () => {
     }
 
     return (
-        <div className="w-1/5 bg-gray-100 p-6 sticky">
+        <div className="w-1/5 bg-gray p-6 h-full overflow-y-auto">
             {/* MAIN section */}
             <List
                 subheader={
@@ -94,11 +95,11 @@ export const AdminDashboardSidebar = () => {
                 </ListItemButton>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{pl: 4}}>
+                        <ListItemButton onClick={() => handleNavigate('/all-shops')} sx={{pl: 4}}>
                             <ListItemText primary="All Shops"/>
                         </ListItemButton>
 
-                        <ListItemButton sx={{pl: 4}}>
+                        <ListItemButton onClick={() => handleNavigate('/inactive-new-shops')} sx={{pl: 4}}>
                             <ListItemText primary="Inactive/New shops"/>
                         </ListItemButton>
                     </List>
@@ -114,19 +115,19 @@ export const AdminDashboardSidebar = () => {
                     </ListSubheader>
                 }
             >
-                <ListItem button>
+                <ListItem button onClick={() => handleNavigate('/all-users')}>
                     <ListItemIcon>
                         <StarIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText primary="All Users"/>
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={() => handleNavigate('/all-vendors')}>
                     <ListItemIcon>
                         <VolunteerActivismIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText primary="All Vendors"/>
                 </ListItem>
-                <ListItem button>
+                <ListItem button onClick={() => handleNavigate('/all-customers')}>
                     <ListItemIcon>
                         <VolunteerActivismIcon fontSize="small"/>
                     </ListItemIcon>
@@ -143,7 +144,7 @@ export const AdminDashboardSidebar = () => {
                     </ListSubheader>
                 }
             >
-                <ListItem button>
+                <ListItem button onClick={() => handleNavigate('/settings')}>
                     <ListItemIcon>
                         <Settings fontSize="small"/>
                     </ListItemIcon>
