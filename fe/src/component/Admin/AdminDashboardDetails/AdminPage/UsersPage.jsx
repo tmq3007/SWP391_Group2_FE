@@ -54,10 +54,11 @@ function UsersPage() {
 
                 <div className='flex justify-between mt-3'>
                     <div className='recent-orders-header relative top-3'>
-                        <h2 className='text-2xl font-semibold'>Recent Orders</h2>
+                        <h2 className='text-2xl font-semibold'>Users</h2>
                     </div>
 
-                    <div className="search-container">
+                    <div className='flex justify-end w-3/4'>
+                    <div className="search-container mr-20 top-2">
                         <input
                             type="text"
                             placeholder="Search by Name"
@@ -69,6 +70,10 @@ function UsersPage() {
                         <SearchIcon/>
                 </span>
                     </div>
+                    <button className="add-user-button w-1/10">
+                        + Add User
+                    </button>
+                </div>
                 </div>
             </div>
 

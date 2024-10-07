@@ -25,8 +25,17 @@ const validationSchema = Yup.object({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
     email: Yup.string().email("Invalid email format").required("Email is required"),
-    username: Yup.string().required("Username is required"),
-    password: Yup.string().required("Password is required"),
+    username: Yup.string()
+        .min(6, "Username must be at least 6 characters long")
+        .required("Username is required"),
+
+    password: Yup.string()
+        .min(8, "Password must be at least 8 characters long")
+        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .matches(/\d/, "Password must contain at least one number")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
+        .required("Password is required"),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], "Passwords must match")
         .required("Confirm Password is required"),
@@ -47,11 +56,25 @@ const RegisterForm = () => {
         const [snackBarOpen, setSnackBarOpen] = useState(false);
         const [snackBarMessage, setSnackBarMessage] = useState("");
 
-        const handleSubmit = (values) => {
+        const handleSubmit = async (values) => {
         const { confirmPassword, ...userData } = values;
         dispatch(registerUser({userData, navigate}))
             .catch((error) => {
-                setSnackBarMessage(error.response.data.message);
+                const errorResponse = error.response || {};
+                const errorData = errorResponse.data || {};
+
+                // Check error code or handle missing data
+                const errorCode = errorData.code;
+
+                if (errorCode === 1000) {
+                    setSnackBarMessage("Username already exists");
+                } else if (errorCode === 1008) {
+                    setSnackBarMessage("Email already exists");
+                } else {
+                    console.log("Error response:", errorCode);
+                    navigate("/auth/login");
+                }
+
                 setSnackBarOpen(true);
             });
     };

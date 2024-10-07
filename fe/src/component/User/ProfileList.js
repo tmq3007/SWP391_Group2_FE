@@ -40,7 +40,7 @@ const ProfileList = ({ handleLogout }) => {
                 <img
                     src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
                     alt=""
-                    className="h-8 w-8 rounded-full"
+                    className="h-10 w-10 rounded-full"
                 />
                 {/* <AccountCircleIcon sx={{ fontSize: '1.8rem' }} /> */}
             </IconButton>

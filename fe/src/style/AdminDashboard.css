@@ -512,3 +512,21 @@ small {
 .container-table {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.add-user-button {
+    background-color: #00a884; /* Green background */
+    color: white;              /* White text color */
+    border: none;              /* No border */
+    padding: 5px 20px;        /* Padding around the text */
+    border-radius: 50px;       /* Rounded corners */
+    font-size: 20px;           /* Font size */
+    cursor: pointer;           /* Pointer cursor on hover */
+    display: inline-flex;      /* Center the text and icon */
+    align-items: center;       /* Align icon and text vertically */
+    text-align: center;
+    justify-content: center;
+}
+
+.add-user-button:hover {
+    background-color: #008d74; /* Slightly darker green on hover */
+}
