@@ -53,14 +53,8 @@ export const ShopProduct = () => {
     }
 
     return (
-        <section className='main flex h-screen'>
-            {/* Navbar */}
-            <NavbarShop />
-            {/* Sidebar */}
-            <ShopDashboardSidebar />
-            {/* Main Content */}
-            <div className="w-4/5 bg-white">
-                <div className='h-full p-5 md:p-8'>
+            <div className="w-full bg-white h-screen overflow-y-auto">
+                <div className='h-screen p-6'>
                     <div className='bg-white rounded bg-light p-5 shadow md:p-8 mb-8 flex flex-col'>
                         <div className='flex w-full flex-col items-center md:flex-row justify-between'>
                             <h2 className="relative text-lg font-semibold text-heading text-[#1f2937]">Products</h2>
@@ -103,7 +97,6 @@ export const ShopProduct = () => {
                             </div>
                         </div>
 
-                        {/* Phần filter sẽ được ẩn hiện dựa vào state */}
                         {isFilterVisible && (
                             <div className="flex w-full transition visible h-auto">
                                 <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center md:pt-8">
@@ -137,7 +130,7 @@ export const ShopProduct = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
                                     <td className="px-6 py-4 whitespace-nowrap
                                     text-sm text-gray-500 flex-col cursor-pointer">
-                                        <ModeEditIcon onClick={() => navigate("/shop-edit-product")}/>
+                                        <ModeEditIcon onClick={() => navigate("/shop-dashboard-route/shop-edit-product")}/>
                                         <RemoveRedEyeIcon onClick={() => navigate("/")}/>
                                         <DeleteIcon onClick={() => navigate("/")}/></td>
                                 </tr>
@@ -160,6 +153,5 @@ export const ShopProduct = () => {
                     </div>
                 </div>
             </div>
-        </section>
     );
 };

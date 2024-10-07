@@ -54,7 +54,7 @@ export const ShopDashboardSidebar = () => {
                         <ListItemIcon>
                             <WidgetsIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
-                        <ListItemText primary="Dashboard" onClick={() => navigate("/shop-dashboard")}/>
+                        <ListItemText primary="Dashboard" onClick={() => navigate("/shop-dashboard-route/shop-dashboard")}/>
                     </ListItem>
                 </List>
 
@@ -77,10 +77,10 @@ export const ShopDashboardSidebar = () => {
                     </ListItemButton>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding >
-                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-product")}>
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-dashboard-route/shop-product")}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-add-product")} >
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-dashboard-route/shop-add-product")} >
                                 <ListItemText primary="Add New Product"/>
                             </ListItemButton>
                             <ListItemButton className="pl-8 sidebar-item">

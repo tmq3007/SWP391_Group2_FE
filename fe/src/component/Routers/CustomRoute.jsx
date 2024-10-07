@@ -11,6 +11,7 @@ import VendorDashboard from "../Vendor/VendorDashboard";
 import {ShopEditProduct} from "../Shop/ShopEditProduct";
 import {ShopAddProduct} from "../Shop/ShopAddProduct";
 import {CustomerProfile} from "../User/CustomerProfile/CustomerProfile";
+import {ShopDashboardRoute} from "../Shop/ShopDashboardRoute";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -31,39 +32,19 @@ const CustomRoute = () => {
             <Routes>
                 <Route path='/' element={<Home/>}/>
                 <Route path='/auth/:register' element={<Home/>}/>
-                <Route path="/product-detail" element={<ProductDetail />} />
-                <Route path="/my-profile/*" element={<CustomerProfile/>} />
-                <Route path="/shop-dashboard"
+                <Route path="/product-detail" element={<ProductDetail/>}/>
+                <Route path="/my-profile/*" element={<CustomerProfile/>}/>
+                <Route path="/shop-dashboard-route/*"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
-                               <ShopDashboard/>
+                               <ShopDashboardRoute/>
                            </ProtectedRoute>
-
-                       }/>
-                <Route path="/shop-product"
-                       element={
-                            <ProtectedRoute role="ROLE_VENDOR">
-                                <ShopProduct/>
-                            </ProtectedRoute>
                        }/>
 
-                <Route path="/vendor-dashboard"
+                <Route path="/vendor-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
                                <VendorDashboard/>
-                           </ProtectedRoute>
-                       }/>
-                <Route path="/shop-add-product"
-                       element={
-                           <ProtectedRoute role="ROLE_VENDOR">
-                               <ShopAddProduct/>
-                           </ProtectedRoute>
-                       }/>
-
-                <Route path="/shop-edit-product"
-                       element={
-                           <ProtectedRoute role="ROLE_VENDOR">
-                               <ShopEditProduct/>
                            </ProtectedRoute>
                        }/>
 
@@ -74,10 +55,9 @@ const CustomRoute = () => {
                                <AdminDashboard/>
                            </ProtectedRoute>
                        }/>
-                <Route path="/auth/unauthorized" element={<h1>Unauthorized Access</h1>} />
+
             </Routes>
             <Auth/>
-
         </div>
     );
 };

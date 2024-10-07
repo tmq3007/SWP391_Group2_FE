@@ -32,17 +32,12 @@ export const ShopEditProduct = () => {
     const navigate = useNavigate();
 
     return (
-        <section className={"main flex h-screen"}>{/* Navbar */}
-            <NavbarShop/>
-            {/* Sidebar */}
-            <ShopDashboardSidebar/>
-            {/* Main Content */}
-            <div className="w-4/5 bg-gray-100 h-full overflow-y-auto">
-                <div className={"h-screen p-5 md:pt-8"}>
+            <div className="w-full bg-gray-100 h-screen overflow-y-auto">
+                <div className={"h-screen p-6"}>
                     <div className={"flex border-b border-dashed border-border-base pb-5 md:pb-7"}>
                         <h1 className={"text-lg font-semibold text-heading text-[#1f2937]"}>Create New Product</h1>
                     </div>
-                    <form action="">
+
                         <div className={"flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8"}>
                             <div className={"w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"}>
                                 <h4 className={"text-base font-semibold text-body-dark mb-2"}>Featured Image</h4>
@@ -383,7 +378,6 @@ export const ShopEditProduct = () => {
                                 </div>
                             </div>
                         </div>
-                    </form>
                     <div
                         className="sticky bottom-0 -mx-5 bg-gray-100/10 py-3 px-5 backdrop-blur text-end md:py-5 lg:-mx-8 lg:px-8 z-0">
                         <div className="flex items-center justify-between">
@@ -421,6 +415,5 @@ export const ShopEditProduct = () => {
                     </div>
                 </div>
             </div>
-        </section>
     )
 }
