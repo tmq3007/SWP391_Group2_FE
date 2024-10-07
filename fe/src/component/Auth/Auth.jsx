@@ -4,6 +4,7 @@ import { Modal } from "@mui/material";
 import Box from "@mui/material/Box";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
+import VendorRegisterForm from "./VendorRegisterForm";
 
 const Auth = () => {
     const location = useLocation();
@@ -29,7 +30,7 @@ const Auth = () => {
         <>
             <Modal
                 onClose={handleOnClose}
-                open={location.pathname === '/auth/login' || location.pathname === '/auth/register'}>
+                open={location.pathname === '/auth/login' || location.pathname === '/auth/register' || location.pathname === '/auth/vendor-register'}>
                 <Box sx={{
                     position: "absolute",
                     top: "50%",
@@ -42,7 +43,9 @@ const Auth = () => {
                     p: 4,
                     borderRadius: 2,
                 }}>
-                    {location.pathname === '/auth/register' ? <RegisterForm /> : <LoginForm />}
+                    {location.pathname === '/auth/register' ? <RegisterForm /> :
+                        location.pathname === '/auth/vendor-register' ? <VendorRegisterForm /> :
+                            <LoginForm />}
                 </Box>
             </Modal>
         </>

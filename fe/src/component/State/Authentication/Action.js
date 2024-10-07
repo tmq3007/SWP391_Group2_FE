@@ -1,4 +1,4 @@
-import {
+    import {
     GET_USER_FAILURE,
     GET_USER_REQUEST,
     GET_USER_SUCCESS, LOGIN_FAILURE,
@@ -16,21 +16,7 @@ export const registerUser = (reqData) => async (dispatch) => {
 
         const {data}=await axios.post(`${API_URL}/api/v1/users/sign-up`,reqData.userData);
 
-        if(data.code === 1000) {
-            console.log("Username already exists");
-        } else if(data.code === 1008) {
-            console.log("Email already exists");
-        }
-        if(data.result.token)localStorage.setItem('jwt',data.result.token);
-
-        const token = jwtDecode(data.result.token);
-
-        if(token.scope === "ROLE_VENDOR"){
-            reqData.navigate("/")
-        }
-        else {
-            reqData.navigate("/")
-        }
+        reqData.navigate("/auth/login");
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
         console.log("registered",data);
 

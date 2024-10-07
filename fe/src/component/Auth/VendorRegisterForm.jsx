@@ -18,7 +18,7 @@ const initialValues = {
     password: "",
     confirmPassword: "",
     phone: "",
-    roles: ["CUSTOMER"]
+    roles: ["VENDOR"]
 };
 
 const validationSchema = Yup.object({
@@ -42,7 +42,7 @@ const validationSchema = Yup.object({
     phone: Yup.string().required("Phone number is required"),
 });
 
-const RegisterForm = () => {
+const VendorRegisterForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -53,10 +53,10 @@ const RegisterForm = () => {
 
         setSnackBarOpen(false);
     };
-        const [snackBarOpen, setSnackBarOpen] = useState(false);
-        const [snackBarMessage, setSnackBarMessage] = useState("");
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
 
-        const handleSubmit = async (values) => {
+    const handleSubmit = async (values) => {
         const { confirmPassword, ...userData } = values;
         dispatch(registerUser({userData, navigate}))
             .catch((error) => {
@@ -188,4 +188,4 @@ const RegisterForm = () => {
     );
 };
 
-export default RegisterForm;
+export default VendorRegisterForm;

@@ -20,7 +20,7 @@ export const NavbarHomePage = () => {
 
 
     useEffect(() => {
-        if (token && role) {
+        if (token !== null && role) {
             setIsLoggedIn(true);
             setUserRole(role);
             console.log("Role from localStorage:", role);
@@ -37,7 +37,15 @@ export const NavbarHomePage = () => {
         setIsLoggedIn(false);
         setUserRole(null);
         navigate("/auth/login");
-        console.log('isLoggedIn:', false);
+    };
+
+    const handleVendorRegister = () => {
+        dispatch(logout({token: token}));
+
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('role');
+        setIsLoggedIn(false);
+        navigate("/auth/vendor-register");
     };
 
     const handleJoin = () => {
@@ -65,11 +73,12 @@ export const NavbarHomePage = () => {
             </div>
 
             {/* Search Bar */}
-            <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
+            <div className="relative top-2 hidden w-full max-w-[710px] lg:flex items-center top-3">
                 <SearchIcon className="absolute left-4 text-gray-400 top-2" />
                 <input
                     type="text"
-                    className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"
+                    className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500
+                     focus:bg-white focus:outline-none "
                     placeholder="Search your route..."
                 />
             </div>
@@ -101,6 +110,15 @@ export const NavbarHomePage = () => {
                                 onClick={() => navigate("/admin-dashboard")}
                             >
                                 <span style={{ color: "#FFFFFF" }}>Dash Board</span>
+                            </Button>
+                        )|| userRole === "ROLE_CUSTOMER" && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ backgroundColor: '#019376' }}
+                                onClick={() => handleVendorRegister()}
+                            >
+                                <span style={{ color: "#FFFFFF" }}>Become a seller</span>
                             </Button>
                         )}
                     </>

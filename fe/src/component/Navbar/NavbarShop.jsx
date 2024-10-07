@@ -64,7 +64,7 @@ export const NavbarShop = () => {
     }
 
     return (
-        <div className="navbar-shop-navbar navbar-shop-navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
+        <div className="navbar navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
             {/* Logo and Menu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
@@ -75,10 +75,10 @@ export const NavbarShop = () => {
                 <IconButton className="block lg:hidden">
                     <MenuIcon sx={{ fontSize: '1.5rem' }} />
                 </IconButton>
-
+            <Divider orientation="vertical" variant="middle" flexItem />
             </div>
             {/* Search Bar */}
-            <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
+            <div className="relative hidden w-full max-w-[710px] lg:flex items-center top-3">
                 <SearchIcon className="absolute left-4 text-gray-400 top-2" />
                 <input
                     type="text"
@@ -86,6 +86,7 @@ export const NavbarShop = () => {
                     placeholder="Search your route..."
                 />
             </div>
+            <Divider orientation="vertical" variant="middle" flexItem />
 
             {isLoggedIn ? (
                 <>
@@ -100,7 +101,7 @@ export const NavbarShop = () => {
                             <img
                                 src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
                                 alt="profile"
-                                className="h-9 w-9 rounded-full object-cover"
+                                className="h-10 w-10 rounded-full object-cover"
                             />
                         </IconButton>
 

@@ -54,7 +54,7 @@ function ShopsPage() {
 
                 <div className='flex justify-between mt-3'>
                     <div className='recent-orders-header relative top-3'>
-                        <h2 className='text-2xl font-semibold'>Recent Orders</h2>
+                        <h2 className='text-2xl font-semibold'>Shops</h2>
                     </div>
 
                     <div className="search-container">
