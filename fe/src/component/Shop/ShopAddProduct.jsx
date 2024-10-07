@@ -1,15 +1,32 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {NavbarShop} from "../Navbar/NavbarShop";
 import {ShopDashboardSidebar} from "./ShopDashboardSidebar";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 export const ShopAddProduct = () => {
+
+    //change page
     const [category, setCategory] = React.useState(0);
 
     const handleChange = (event) => {
         setCategory(event.target.value);
     };
+
+    //upload image
+    const fileInputRef = useRef(null);
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            console.log("File uploaded:", file);
+        }
+    };
+
+    const handleDivClick = () => {
+        fileInputRef.current.click();
+    };
+
 
     return (
         <section className={"main flex h-screen overflow-hidden "}>
@@ -30,14 +47,24 @@ export const ShopAddProduct = () => {
                                 <p className={"text-sm text-body"}>Upload your product featured image here
                                     Image size should not be more than <span className={"font-bold"}>2 MB</span></p>
                             </div>
-                            <div className={"rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
-                                <div className="border-dashed border-2 border-border-base h-36 rounded
-                                flex flex-col justify-center items-center cursor-pointer focus:border-accent-400
-                                focus:outline-none relative">
+                            <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
+                                <div
+                                    className="border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer focus:border-accent-400 focus:outline-none relative"
+                                    onClick={handleDivClick}
+                                >
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        className="hidden"
+                                        accept=".png, .jpg, .jpeg"
+                                        onChange={handleFileUpload}
+                                    />
                                     <CloudUploadIcon/>
-                                    <p className={"mt-4 text-sm text-center text-body"}><span
-                                        className={"font-semibold text-accent text-[#009f7f]"}>Upload an image </span>
-                                        or drag and drop PNG, JPG</p>
+                                    <p className="mt-4 text-sm text-center text-body">
+                                        <span
+                                            className="font-semibold text-accent text-[#009f7f]">Upload an image</span> or
+                                        drag and drop PNG, JPG
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -48,14 +75,24 @@ export const ShopAddProduct = () => {
                                 <p className={"text-sm text-body"}>Upload your product image gallery here
                                     Image size should not be more than <span className={"font-bold"}>2 MB</span></p>
                             </div>
-                            <div className={"rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
-                                <div className="border-dashed border-2 border-border-base h-36 rounded
-                                flex flex-col justify-center items-center cursor-pointer focus:border-accent-400
-                                focus:outline-none relative">
+                            <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
+                                <div
+                                    className="border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer focus:border-accent-400 focus:outline-none relative"
+                                    onClick={handleDivClick}
+                                >
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        className="hidden"
+                                        accept=".png, .jpg, .jpeg"
+                                        onChange={handleFileUpload}
+                                    />
                                     <CloudUploadIcon/>
-                                    <p className={"mt-4 text-sm text-center text-body"}><span
-                                        className={"font-semibold text-accent text-[#009f7f]"}>Upload an image </span>
-                                        or drag and drop PNG, JPG</p>
+                                    <p className="mt-4 text-sm text-center text-body">
+                                        <span
+                                            className="font-semibold text-accent text-[#009f7f]">Upload an image</span> or
+                                        drag and drop PNG, JPG
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +102,7 @@ export const ShopAddProduct = () => {
                                 <h4 className={"text-base font-semibold text-body-dark mb-2"}>Group & Category</h4>
                                 <p>Select product group and category from here</p>
                             </div>
-                            <div className={"rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
+                            <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
                                 {/*Group*/}
                                 <div className={"mb-5"}>
                                     <label htmlFor="" className={"flex text-body-dark " +
@@ -221,8 +258,7 @@ export const ShopAddProduct = () => {
                         </div>
 
                         {/*Description*/}
-                        <div
-                            className=" flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+                        <div className=" flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
                             {/*Left*/}
                             <div
                                 className="description-section w-full sm:w-4/12 px-0 pb-5 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
@@ -234,7 +270,7 @@ export const ShopAddProduct = () => {
 
                             {/*Right*/}
                             <div
-                                className=" rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3 ">
+                                className=" rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3 ">
                                 {/*Name*/}
                                 <div className="mb-5">
                                     <input id="name" name="name" type="text"
@@ -262,36 +298,33 @@ export const ShopAddProduct = () => {
                         </div>
 
                         {/*Product Infomation*/}
-                        <div className="product-infomation flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+                        <div className=" flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
                             {/*left*/}
-                            <div className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
-                                <div className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
-                                    <h4 className="text-base font-semibold text-body-dark mb-2"
-                                        data-label-id="0">Product Infomation</h4>
-                                    <p className={"text-sm text-body"}>Add your simple product description and necessary
-                                        information from here</p>
-                                </div>
+                            <div
+                                className="description-section w-full sm:w-4/12 px-0 pb-5 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
+                                <h4 className="text-base font-semibold text-body-dark mb-2"
+                                    data-label-id="0">Description</h4>
+                                <p className="text-sm text-body">Add your product description and necessary information
+                                    from here</p>
                             </div>
 
                             {/*right*/}
-                            <div className="rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3">
+                            <div className="rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3">
                                 {/*Price*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Price*</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           placeholder={"Price"}
                                            aria-invalid="false" data-label-id="0"/>
 
                                 </div>
 
                                 {/*Sale Price*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Sale Price*</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
+                                           placeholder={"Sale Price"}
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
                                            aria-invalid="false" data-label-id="0"/>
 
@@ -299,55 +332,50 @@ export const ShopAddProduct = () => {
 
                                 {/*Quantity*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Quantity*</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           placeholder={"Quantity"}
                                            aria-invalid="false" data-label-id="0"/>
 
                                 </div>
 
                                 {/*SKU*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>SKU*</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           placeholder={"SKU"}
                                            aria-invalid="false" data-label-id="0"/>
 
                                 </div>
 
                                 {/*Width*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Width</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           placeholder={"Width"}
                                            aria-invalid="false" data-label-id="0"/>
 
                                 </div>
 
                                 {/*Height*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Height</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           placeholder={"Height"}
                                            aria-invalid="false" data-label-id="0"/>
 
                                 </div>
 
                                 {/*Length*/}
                                 <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Length</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           placeholder={"Length"}
                                            aria-invalid="false" data-label-id="0"/>
 
                                 </div>

@@ -64,7 +64,7 @@ export const NavbarShop = () => {
     }
 
     return (
-        <div className="navbar_shop-navbar navbar_shop-navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
+        <div className="navbar-shop-navbar navbar-shop-navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
             {/* Logo and Menu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
@@ -75,18 +75,17 @@ export const NavbarShop = () => {
                 <IconButton className="block lg:hidden">
                     <MenuIcon sx={{ fontSize: '1.5rem' }} />
                 </IconButton>
-            <Divider orientation="vertical" variant="middle" flexItem />
+
             </div>
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
-                <SearchIcon className="absolute left-4 text-gray-400" />
+                <SearchIcon className="absolute left-4 text-gray-400 top-2" />
                 <input
                     type="text"
                     className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"
                     placeholder="Search your route..."
                 />
             </div>
-            <Divider orientation="vertical" variant="middle" flexItem />
 
             {isLoggedIn ? (
                 <>
