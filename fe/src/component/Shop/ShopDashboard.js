@@ -2,12 +2,12 @@ import React from 'react';
 import {Route, Routes} from "react-router-dom";
 import {NavbarShop} from "../Navbar/NavbarShop";
 import {ShopDashboardSidebar} from "./ShopDashboardSidebar";
-import {ShopDashboard} from "./ShopDashboard";
+import {ShopPage} from "./ShopPage";
 import {ShopProduct} from "./ShopProduct";
 import {ShopAddProduct} from "./ShopAddProduct";
 import {ShopEditProduct} from "./ShopEditProduct";
 
-export const ShopDashboardRoute = () => {
+export const ShopDashboard = () => {
     const [open, setOpen] = React.useState(true);
 
     const handleClick = () => {
@@ -25,9 +25,9 @@ export const ShopDashboardRoute = () => {
                 <Routes>
                     {/* Main layout route with sidebar and navbar */}
 
-                    <Route path="/" element={<ShopDashboard/>}/>
+                    <Route path="/" element={<ShopPage/>}/>
 
-                    <Route path="/shop-dashboard" element={<ShopDashboard/>}/>
+                    <Route path="/shop-dashboard" element={<ShopPage/>}/>
 
                     <Route path="/shop-product" element={<ShopProduct/>}/>
 

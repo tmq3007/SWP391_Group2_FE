@@ -75,7 +75,7 @@ export const NavbarShop = () => {
                 <IconButton className="block lg:hidden">
                     <MenuIcon sx={{ fontSize: '1.5rem' }} />
                 </IconButton>
-            <Divider orientation="vertical" variant="middle" flexItem />
+
             </div>
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center top-3">
@@ -86,7 +86,6 @@ export const NavbarShop = () => {
                     placeholder="Search your route..."
                 />
             </div>
-            <Divider orientation="vertical" variant="middle" flexItem />
 
             {isLoggedIn ? (
                 <>

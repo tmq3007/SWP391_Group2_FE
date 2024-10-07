@@ -4,14 +4,14 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import ProductDetail from "../Product/ProductDetail";
-import {ShopDashboard} from "../Shop/ShopDashboard";
+import {ShopPage} from "../Shop/ShopPage";
 import {AdminDashboard} from "../Admin/AdminDashboard";
 import {ShopProduct} from "../Shop/ShopProduct";
 import VendorDashboard from "../Vendor/VendorDashboard";
 import {ShopEditProduct} from "../Shop/ShopEditProduct";
 import {ShopAddProduct} from "../Shop/ShopAddProduct";
 import {CustomerProfile} from "../User/CustomerProfile/CustomerProfile";
-import {ShopDashboardRoute} from "../Shop/ShopDashboardRoute";
+import {ShopDashboard} from "../Shop/ShopDashboard";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -34,10 +34,10 @@ const CustomRoute = () => {
                 <Route path='/auth/:register' element={<Home/>}/>
                 <Route path="/product-detail" element={<ProductDetail/>}/>
                 <Route path="/my-profile/*" element={<CustomerProfile/>}/>
-                <Route path="/shop-dashboard-route/*"
+                <Route path="/shop-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
-                               <ShopDashboardRoute/>
+                               <ShopDashboard/>
                            </ProtectedRoute>
                        }/>
 

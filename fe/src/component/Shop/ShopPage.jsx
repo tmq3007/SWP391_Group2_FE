@@ -20,7 +20,7 @@ import "../../style/ShopDashboard.css";
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
 import {NavbarShop} from "../Navbar/NavbarShop";
 
-export const ShopDashboard = () => {
+export const ShopPage = () => {
     const [open, setOpen] = React.useState(true);
 
     const handleClick = () => {
