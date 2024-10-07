@@ -76,7 +76,7 @@ export const ShopDashboardSidebar = () => {
                         {open ? <ExpandLess className="text-gray-600"/> : <ExpandMore className="text-gray-600"/>}
                     </ListItemButton>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
+                        <List component="div" disablePadding >
                             <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-product")}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>

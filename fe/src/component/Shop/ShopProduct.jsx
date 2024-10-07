@@ -18,11 +18,14 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 
 export const ShopProduct = () => {
-    const dispatch = useDispatch();
+    //move to another page
     const navigate = useNavigate();
 
-    const { products } = useSelector(store => store); // Assuming productReducer is the correct name
+    //call api
+    const dispatch = useDispatch();
+    const { products } = useSelector(store => store);
 
+    //pagination
     const productsPerPage = 5;
     const [page, setPage] = useState(1);
 
@@ -133,7 +136,7 @@ export const ShopProduct = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.stock}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
                                     <td className="px-6 py-4 whitespace-nowrap
-                                    text-sm text-gray-500 flex-col">
+                                    text-sm text-gray-500 flex-col cursor-pointer">
                                         <ModeEditIcon onClick={() => navigate("/shop-edit-product")}/>
                                         <RemoveRedEyeIcon onClick={() => navigate("/")}/>
                                         <DeleteIcon onClick={() => navigate("/")}/></td>
