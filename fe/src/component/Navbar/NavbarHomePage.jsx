@@ -20,7 +20,7 @@ export const NavbarHomePage = () => {
 
 
     useEffect(() => {
-        if (token && role) {
+        if (token !== null && role) {
             setIsLoggedIn(true);
             setUserRole(role);
             console.log("Role from localStorage:", role);

@@ -47,11 +47,25 @@ const RegisterForm = () => {
         const [snackBarOpen, setSnackBarOpen] = useState(false);
         const [snackBarMessage, setSnackBarMessage] = useState("");
 
-        const handleSubmit = (values) => {
+        const handleSubmit = async (values) => {
         const { confirmPassword, ...userData } = values;
         dispatch(registerUser({userData, navigate}))
             .catch((error) => {
-                setSnackBarMessage(error.response.data.message);
+                const errorResponse = error.response || {};
+                const errorData = errorResponse.data || {};
+
+                // Check error code or handle missing data
+                const errorCode = errorData.code;
+
+                if (errorCode === 1000) {
+                    setSnackBarMessage("Username already exists");
+                } else if (errorCode === 1008) {
+                    setSnackBarMessage("Email already exists");
+                } else {
+                    console.log("Error response:", errorCode);
+                    navigate("/auth/login");
+                }
+
                 setSnackBarOpen(true);
             });
     };
