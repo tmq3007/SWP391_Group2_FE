@@ -16,6 +16,7 @@ export const registerUser = (reqData) => async (dispatch) => {
 
         const {data}=await axios.post(`${API_URL}/api/v1/users/sign-up`,reqData.userData);
 
+        reqData.navigate("/auth/login");
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
         console.log("registered",data);
 
