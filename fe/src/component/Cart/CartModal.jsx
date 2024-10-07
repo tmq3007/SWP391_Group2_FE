@@ -4,6 +4,8 @@ import {
 } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {useNavigate} from "react-router-dom";
+
 
 const CartModal = ({ open, onClose, cartItems, updateCart }) => {
     const totalPrice = cartItems.reduce((total, item) => {
@@ -23,7 +25,12 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
         updateCart(item, 0);
     };
 
+    const navigate = useNavigate();
+    const handleCreatePayment = () => {
+        navigate("/my-place-order/*");
+    }
     return (
+
         <Dialog
             open={open}
             onClose={onClose}
@@ -65,6 +72,7 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
                         </ListItem>
                     </List>
                 )}
+                <div className='flex gap-2'>
                 <Button
                     variant="contained"
                     onClick={onClose}
@@ -72,6 +80,14 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
                 >
                     Close
                 </Button>
+                <Button//move to payment
+                    variant="contained"
+                    onClick={handleCreatePayment}//current onclose
+                    sx={{ marginTop: 2, backgroundColor: '#019376' }}
+                >
+                    Create payment
+                </Button>
+                </div>
             </DialogContent>
         </Dialog>
     );
