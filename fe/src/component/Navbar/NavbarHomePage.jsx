@@ -37,7 +37,15 @@ export const NavbarHomePage = () => {
         setIsLoggedIn(false);
         setUserRole(null);
         navigate("/auth/login");
-        console.log('isLoggedIn:', false);
+    };
+
+    const handleVendorRegister = () => {
+        dispatch(logout({token: token}));
+
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('role');
+        setIsLoggedIn(false);
+        navigate("/auth/vendor-register");
     };
 
     const handleJoin = () => {
@@ -108,7 +116,7 @@ export const NavbarHomePage = () => {
                                 variant="contained"
                                 color="primary"
                                 sx={{ backgroundColor: '#019376' }}
-                                onClick={() => navigate("/")}
+                                onClick={() => handleVendorRegister()}
                             >
                                 <span style={{ color: "#FFFFFF" }}>Become a seller</span>
                             </Button>
