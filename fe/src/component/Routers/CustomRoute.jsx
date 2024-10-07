@@ -8,6 +8,9 @@ import {ShopDashboard} from "../Shop/ShopDashboard";
 import {AdminDashboard} from "../Admin/AdminDashboard";
 import {ShopProduct} from "../Shop/ShopProduct";
 import VendorDashboard from "../Vendor/VendorDashboard";
+import {ShopEditProduct} from "../Shop/ShopEditProduct";
+import {ShopAddProduct} from "../Shop/ShopAddProduct";
+import {CustomerProfile} from "../User/CustomerProfile/CustomerProfile";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -29,7 +32,7 @@ const CustomRoute = () => {
                 <Route path='/' element={<Home/>}/>
                 <Route path='/auth/:register' element={<Home/>}/>
                 <Route path="/product-detail" element={<ProductDetail />} />
-
+                <Route path="/my-profile/*" element={<CustomerProfile/>} />
                 <Route path="/shop-dashboard"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
@@ -50,9 +53,22 @@ const CustomRoute = () => {
                                <VendorDashboard/>
                            </ProtectedRoute>
                        }/>
+                <Route path="/shop-add-product"
+                       element={
+                           <ProtectedRoute role="ROLE_VENDOR">
+                               <ShopAddProduct/>
+                           </ProtectedRoute>
+                       }/>
+
+                <Route path="/shop-edit-product"
+                       element={
+                           <ProtectedRoute role="ROLE_VENDOR">
+                               <ShopEditProduct/>
+                           </ProtectedRoute>
+                       }/>
 
                 <Route path="/auth/unauthorized" element={<h1>Unauthorized Access</h1>} />
-                <Route path="/admin-dashboard"
+                <Route path="/admin-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_ADMIN">
                                <AdminDashboard/>

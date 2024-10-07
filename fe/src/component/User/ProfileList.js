@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const ProfileList = ({ handleLogout }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -20,6 +22,11 @@ const ProfileList = ({ handleLogout }) => {
         handleMenuClose(); // Close the menu after logout
     };
 
+    const handleProfileClick = () => {
+        navigate('/my-profile'); // Navigate to /my-profile when Profile is clicked
+        handleMenuClose(); // Close the menu after navigation
+    };
+
     return (
         <div>
             {/* Wrap the AccountCircleIcon with IconButton for click functionality */}
@@ -30,13 +37,12 @@ const ProfileList = ({ handleLogout }) => {
                 onClick={handleMenuOpen}
                 color="inherit"
             >
-
-                    <img
-                        src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
-                        alt=""
-                        className="h-8 w-8 rounded-full"
-                    />
-                {/*<AccountCircleIcon sx={{fontSize: '1.8rem'}}/>*/}
+                <img
+                    src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F2449%2Fconversions%2Fman-thumbnail.jpg&w=1920&q=75"
+                    alt=""
+                    className="h-10 w-10 rounded-full"
+                />
+                {/* <AccountCircleIcon sx={{ fontSize: '1.8rem' }} /> */}
             </IconButton>
 
             {/* Menu for profile options */}
@@ -49,10 +55,10 @@ const ProfileList = ({ handleLogout }) => {
                     'aria-labelledby': 'profile-button',
                 }}
             >
-                <MenuItem style={{color: '#019376'}} onClick={handleMenuClose}>
+                <MenuItem style={{ color: '#019376' }} onClick={handleProfileClick}>
                     Profile
                 </MenuItem>
-                <MenuItem style={{color: '#019376' }} onClick={handleMenuClose}>
+                <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
                     My account
                 </MenuItem>
                 <MenuItem style={{ color: '#019376' }} onClick={handleMenuLogout}>

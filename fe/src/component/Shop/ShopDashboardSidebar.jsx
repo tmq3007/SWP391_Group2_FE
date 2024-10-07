@@ -13,6 +13,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import "../../style/ShopDashboardSidebar.css";
+
 import {
     List,
     ListSubheader,
@@ -38,7 +40,7 @@ export const ShopDashboardSidebar = () => {
     };
 
     return (
-            <div className="w-1/5 bg-white p-6">
+            <div className="w-1/5 bg-white p-6 h-full overflow-y-auto">
                 {/* MAIN section */}
                 <List className="cursor-pointer"
                     subheader={
@@ -74,11 +76,11 @@ export const ShopDashboardSidebar = () => {
                         {open ? <ExpandLess className="text-gray-600"/> : <ExpandMore className="text-gray-600"/>}
                     </ListItemButton>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
+                        <List component="div" disablePadding >
                             <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-product")}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item">
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-add-product")} >
                                 <ListItemText primary="Add New Product"/>
                             </ListItemButton>
                             <ListItemButton className="pl-8 sidebar-item">
