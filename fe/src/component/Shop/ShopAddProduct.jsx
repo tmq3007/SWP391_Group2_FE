@@ -12,13 +12,13 @@ export const ShopAddProduct = () => {
     };
 
     return (
-        <section className={"main flex h-screen overflow-hidden"}>
+        <section className={"main flex h-screen overflow-hidden "}>
             {/* Navbar */}
             <NavbarShop/>
             {/* Sidebar */}
             <ShopDashboardSidebar/>
             {/* Main Content */}
-            <div className="w-4/5 bg-white h-full overflow-y-auto">
+            <div className="w-4/5 bg-gray-100 h-full overflow-y-auto">
                 <div className={"h-screen p-5 md:pt-8"}>
                     <div className={"flex border-b border-dashed border-border-base pb-5 md:pb-7"}>
                         <h1 className={"text-lg font-semibold text-heading text-[#1f2937]"}>Create New Product</h1>
@@ -221,59 +221,55 @@ export const ShopAddProduct = () => {
                         </div>
 
                         {/*Description*/}
-                        <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+                        <div
+                            className=" flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
                             {/*Left*/}
-                            <div className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
+                            <div
+                                className="description-section w-full sm:w-4/12 px-0 pb-5 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
                                 <h4 className="text-base font-semibold text-body-dark mb-2"
                                     data-label-id="0">Description</h4>
-                                <p className={"text-sm text-body"}>Add your product description and necessary information from here</p>
+                                <p className="text-sm text-body">Add your product description and necessary information
+                                    from here</p>
                             </div>
 
                             {/*Right*/}
-                            <div className="rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3">
+                            <div
+                                className=" rounded bg-light p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3 ">
                                 {/*Name*/}
-                                <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Name*</label>
+                                <div className="mb-5">
                                     <input id="name" name="name" type="text"
-                                           className="px-4 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent h-12"
-                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"
-                                           aria-invalid="false" data-label-id="0"/>
-
+                                           className="input-field px-4 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent h-10"
+                                           placeholder={"Name"}
+                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"/>
                                 </div>
 
                                 {/*Unit*/}
-                                <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Unit*</label>
-                                    <input id="name" name="name" type="text"
-                                           className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
-                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"
-                                           aria-invalid="false" data-label-id="0"/>
-
+                                <div className="mb-5">
+                                    <input id="unit" name="unit" type="text"
+                                           className="input-field px-4 h-10 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent"
+                                           placeholder={"Unit"}
+                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"/>
                                 </div>
 
                                 {/*Description*/}
-                                <div className={"mb-5"}>
-                                    <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Description</label>
-                                    <input id="name" name="name" type="text"
-                                           className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
-                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"
-                                           aria-invalid="false" data-label-id="0"/>
-
+                                <div className="mb-5">
+                                    <input id="description" name="description" type="text"
+                                           className="input-field px-4 h-10 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent"
+                                           placeholder={"Description"}
+                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"/>
                                 </div>
                             </div>
                         </div>
 
                         {/*Product Infomation*/}
-                        <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+                        <div className="product-infomation flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
                             {/*left*/}
                             <div className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
                                 <div className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5">
                                     <h4 className="text-base font-semibold text-body-dark mb-2"
                                         data-label-id="0">Product Infomation</h4>
-                                    <p className={"text-sm text-body"}>Add your simple product description and necessary information from here</p>
+                                    <p className={"text-sm text-body"}>Add your simple product description and necessary
+                                        information from here</p>
                                 </div>
                             </div>
 
@@ -334,10 +330,21 @@ export const ShopAddProduct = () => {
 
                                 </div>
 
+                                {/*Height*/}
+                                <div className={"mb-5"}>
+                                    <label htmlFor="" className={"flex text-body-dark " +
+                                        "font-semibold text-sm leading-none mb-3"}>Height</label>
+                                    <input id="name" name="name" type="text"
+                                           className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
+                                           autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                           aria-invalid="false" data-label-id="0"/>
+
+                                </div>
+
                                 {/*Length*/}
                                 <div className={"mb-5"}>
                                     <label htmlFor="" className={"flex text-body-dark " +
-                                        "font-semibold text-sm leading-none mb-3"}>Width</label>
+                                        "font-semibold text-sm leading-none mb-3"}>Length</label>
                                     <input id="name" name="name" type="text"
                                            className="px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent "
                                            autoComplete="off" autoCorrect="off" autoCapitalize="off"

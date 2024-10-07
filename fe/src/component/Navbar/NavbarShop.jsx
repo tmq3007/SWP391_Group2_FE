@@ -64,7 +64,7 @@ export const NavbarShop = () => {
     }
 
     return (
-        <div className="navbar navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
+        <div className="navbar_shop-navbar navbar_shop-navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
             {/* Logo and Menu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
