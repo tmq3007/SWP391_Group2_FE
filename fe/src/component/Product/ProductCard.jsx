@@ -44,7 +44,7 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
                         {discount > 0 && <span className="discount-badge">Sale {discountPercentage}%</span>}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {item.weight} lb
+                        {item.measurementUnit} kg
                     </Typography>
                     {discount > 0 && (
                         <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>

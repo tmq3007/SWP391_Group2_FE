@@ -9,16 +9,20 @@ const ProductDetail = ({ item, addToCart }) => {
     const discountPrice = originalPrice * (1 - discount / 100);  // Tính giá giảm
     const productDescription = item.description || "No description available.";  // Mô tả sản phẩm
 
-    // Gán cứng dữ liệu cho rating, category và shop
-    const rating = 3.33;
-    const categories = ['fruits & vegetables', 'vegetables'];
-    const shop = 'Grocery Shop';
-    const piecesAvailable = 10;
+    // Gán cứng dữ liệu cho category và shop
+    const categories = [item.category.categoryName];
+    const shop = item.shop.shopName;
+    const piecesAvailable = item.stock;
+
+    // Tính toán trung bình rating từ mảng review
+    const reviews = item.reviews || [];
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(2) : '';
 
     return (
         <section className="flex flex-col md:flex-row p-8 space-y-6 md:space-y-0 md:space-x-6">
             {/* Phần bên trái: Hình ảnh sản phẩm */}
-            <div className="md:w-2/5 bg-white p-6 flex flex-col items-start rounded-lg  ">
+            <div className="md:w-2/5 bg-white p-6 flex flex-col items-start rounded-lg">
                 <img
                     src={item.pictureUrl}
                     alt={item.productName}
@@ -39,12 +43,14 @@ const ProductDetail = ({ item, addToCart }) => {
                     <Typography variant="subtitle2" sx={{ fontWeight: 'bold', marginTop: 2 }}>
                         Sellers:
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#555' }}>{shop}</Typography>
+                    <Box display="flex" gap={1} mt={1}>
+                        <Chip label={shop} variant="outlined" />
+                    </Box>
                 </Box>
             </div>
 
             {/* Phần bên phải: Thông tin chi tiết sản phẩm */}
-            <div className="md:w-3/5 bg-white p-8 rounded-lg flex flex-col justify-start space-y-6  ">
+            <div className="md:w-3/5 bg-white p-8 rounded-lg flex flex-col justify-start space-y-6">
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
                         {item.productName}
@@ -53,12 +59,11 @@ const ProductDetail = ({ item, addToCart }) => {
                     {/* Phần hiển thị sao đánh giá */}
                     <Box display="flex" alignItems="center">
                         <StarIcon sx={{ color: '#FFD700', fontSize: 30 }} />
-                        <Typography variant="h6" component="div" sx={{ marginLeft: 1, fontWeight: 'medium' }}>
-                            {rating.toFixed(2)}
+                        <Typography variant="h6" component="div" sx={{ marginLeft: 1, fontWeight: 'small' }}>
+                            {averageRating}
                         </Typography>
                     </Box>
                 </Box>
-
 
                 <Typography variant="body1" sx={{ color: '#555', lineHeight: 1.6 }}>
                     {productDescription}
@@ -100,7 +105,6 @@ const ProductDetail = ({ item, addToCart }) => {
                         {piecesAvailable} pieces available
                     </Typography>
                 </Box>
-
             </div>
         </section>
     );
