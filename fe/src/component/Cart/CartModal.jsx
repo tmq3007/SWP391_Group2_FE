@@ -28,6 +28,7 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
     const navigate = useNavigate();
     const handleCreatePayment = () => {
         navigate("/my-place-order/*");
+        return null;
     }
     return (
 
