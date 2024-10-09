@@ -59,7 +59,6 @@ export const loginUser = (reqData) => async (dispatch) => {
 
 
 
-
 export const getUser = (jwt) => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST});
     try{
@@ -70,8 +69,8 @@ export const getUser = (jwt) => async (dispatch) => {
         });
 
         dispatch({ type: GET_USER_SUCCESS, payload: data.token });
-
-        console.log(data);
+        return data;
+        //console.log(data);
     } catch (error) {
         dispatch({ type: GET_USER_FAILURE, payload: error });
         console.error('Error get user:', error);

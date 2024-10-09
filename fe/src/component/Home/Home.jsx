@@ -10,43 +10,61 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsAction } from "../State/Product/Action";
 import CartModal from '../Cart/CartModal';
 import { NavbarHomePage } from "../Navbar/NavbarHomePage";
+import { findCart, addItemToCart } from '../State/Cart/Action';
+import {getUser} from "../State/Authentication/Action"; // Giả sử bạn có các action này cho giỏ hàng
 
 const Home = () => {
     const dispatch = useDispatch();
-    const { products } = useSelector(store => store);  // Lấy products từ store
-    const [cart, setCart] = useState([]);  // Khởi tạo state giỏ hàng
+    const { products, carts } = useSelector(store => store);  // Lấy sản phẩm, giỏ hàng và auth từ store
+    const cart = carts.items || [];  // Assuming your cart reducer has items
+    const  jwt=  localStorage.getItem("jwt");
+
+
     const [openCartModal, setOpenCartModal] = useState(false);  // State để mở/đóng modal giỏ hàng
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState('all');  // State cho danh mục đã chọn
     const [selectedPrice, setSelectedPrice] = useState('all');  // State cho giá đã chọn
-    const [searchQuery, setSearchQuery] = useState(""); // Thêm state cho giá trị tìm kiếm
-
+    const [userId,setUserId] = useState(null);
     // Fetch products
     useEffect(() => {
         dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
     }, [dispatch]);
 
-    // Load cart từ localStorage khi lần đầu render
     useEffect(() => {
-        const savedCart = JSON.parse(localStorage.getItem('cart'));
-        if (savedCart) {
-            setCart(savedCart);  // Load dữ liệu giỏ hàng
-        }
-    }, []);
+        dispatch(getUser(jwt)).then((data)=>{
+            setUserId(data.result.id);
+        });
+    }, [dispatch]);
+    console.log("user:",userId)
+    // useEffect(() => {
+    //     // Dispatch the action to get total shops and handle the response
+    //     dispatch(getTotalShops(token)).then((data) => {
+    //         setTotalShops(data.result); // Set the local state with API response
+    //     });
 
     // Lưu cart vào localStorage khi state cart thay đổi
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart));  // Lưu giỏ hàng vào localStorage
     }, [cart]);
+    console.log("cart:",cart)
 
-    // Hàm thêm sản phẩm vào giỏ hàng
-    const addToCart = (product) => {
-        const updatedCart = [...cart, product];
-        setCart(updatedCart);  // Cập nhật state giỏ hàng
+    const addToCart = (buyUnit, quantity, item) => {
+        if (userId) {
+            const productDetails = {
+                buyUnit,       // e.g. "2kg"
+                quantity,      // e.g. 1
+                productId: item.productId // Assuming item.id is the product ID
+            };
+            dispatch(addItemToCart(userId, productDetails, jwt)); // Dispatch action with new object
+        } else {
+            console.error('User is not logged in');
+        }
     };
 
-    // Lọc sản phẩm dựa trên danh mục, giá trị đã chọn và từ khóa tìm kiếm
+
+
+    // Lọc sản phẩm dựa trên danh mục và giá trị đã chọn
     const filteredProducts = products && products.products ? products.products.filter((product) => {
         // Lọc theo danh mục
         if (selectedCategory !== 'all' && product.category.categoryName !== selectedCategory) {
@@ -57,10 +75,6 @@ const Home = () => {
             return false;
         }
         if (selectedPrice === 'high' && product.unitSellPrice <= 50) { // ví dụ giá lớn hơn 50
-            return false;
-        }
-        // Lọc theo từ khóa tìm kiếm
-        if (searchQuery && !product.productName.toLowerCase().includes(searchQuery.toLowerCase())) {
             return false;
         }
         return true;
@@ -76,7 +90,7 @@ const Home = () => {
         setCurrentPage(value); // Cập nhật trang hiện tại
     };
 
-    // Hàm mở và đóng modal
+    // Hàm mở và đóng modal giỏ hàng
     const handleOpenCart = () => {
         setOpenCartModal(true);
     };
@@ -90,7 +104,7 @@ const Home = () => {
 
     return (
         <div>
-            <NavbarHomePage setSearchQuery={setSearchQuery} />
+            <NavbarHomePage />
             <section className="banner -z-50 relative flex flex-col items-center">
                 <div className="w-[50vw] z-10 text-center">
                     <p className="text-2xl lg:text-5xl font-bold z-10 py-5 mt-9" style={{ color: "#019376" }}>
@@ -122,14 +136,15 @@ const Home = () => {
                             <ProductCard
                                 key={item.id}
                                 item={item}
-                                addToCart={() => addToCart(item)} // Add "Add to Cart" functionality
+                                addToCart={(buyUnit,quantity) => addToCart(buyUnit,quantity,item)} // Pass the additional parameters
                             />
+
                         )  // Dùng item.id làm key
                     }
                 </div>
             </section>
 
-            <Stack spacing={2} className="mt-5" alignItems="center" sx={{ marginBottom: "30px" }}>
+            <Stack spacing={2} className="mt-setBackdropStyle5" alignItems="center" sx={{ marginBottom: "30px" }}>
                 <Pagination
                     count={Math.ceil(filteredProducts.length / itemsPerPage)} // Tính số trang
                     page={currentPage}
