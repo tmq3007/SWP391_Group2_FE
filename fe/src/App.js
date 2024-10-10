@@ -9,9 +9,6 @@ import VendorDashboard from "./component/Vendor/VendorDashboard";
 
 
 function App() {
-    const dispatch = useDispatch();
-    const jwt = localStorage.getItem('jwt');
-    const {auth} = useSelector((store)=>store);
 
     useEffect(() => {
         const isFirstRun = localStorage.getItem('firstRun');
@@ -25,11 +22,6 @@ function App() {
         }
     }, []);
 
-    useEffect(() => {
-        if(jwt) {
-            dispatch(getUser(auth.token || jwt))
-        }
-    }, [auth.token]);
 
     return (
         <ThemeProvider theme={lightTheme}> {/* Directly use lightTheme */}

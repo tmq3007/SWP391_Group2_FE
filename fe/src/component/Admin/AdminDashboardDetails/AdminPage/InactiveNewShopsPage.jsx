@@ -57,7 +57,7 @@ function InactiveNewShopsPage() {
                         <h2 className='text-2xl font-semibold'>Inactive/New shops</h2>
                     </div>
 
-                    <div className="search-container">
+                    <div className="search-container top-2">
                         <input
                             type="text"
                             placeholder="Search by Name"
