@@ -10,6 +10,7 @@
 import axios from "axios";
 import {API_URL} from "../../config/api";
 import {jwtDecode} from "jwt-decode";
+import axiosInstance, {refreshToken} from "../instance";
 
 export const registerUser = (reqData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST });
@@ -25,6 +26,7 @@ export const registerUser = (reqData) => async (dispatch) => {
 }
 
 export const loginUser = (reqData) => async (dispatch) => {
+
     dispatch({ type: LOGIN_REQUEST });
 
         const { data } = await axios.post("http://localhost:8080/api/v1/auth/login", reqData.userData);
@@ -33,14 +35,18 @@ export const loginUser = (reqData) => async (dispatch) => {
         console.log("Response from API:", data);
         console.log("token", token);
 
+
         if (data.result.token) {
             localStorage.setItem('jwt', data.result.token);
+            localStorage.setItem('tokenExpiration', Date.now() + token.exp * 1000);
 
             // Lấy role dưới dạng String, giả sử scope có thể là mảng
             const role = Array.isArray(token.scope) ? token.scope[0] : token.scope;
             localStorage.setItem('role', role );  // Lưu role vào localStorage
             console.log("role", role);
         }
+
+
 
         // Điều hướng dựa trên vai trò
         if (token.scope === "ROLE_VENDOR") {
@@ -54,7 +60,6 @@ export const loginUser = (reqData) => async (dispatch) => {
 
         dispatch({ type: LOGIN_SUCCESS, payload: data.result.token });
         console.log("logged in", data);
-
 }
 
 

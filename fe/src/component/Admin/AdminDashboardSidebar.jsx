@@ -135,7 +135,25 @@ export const AdminDashboardSidebar = () => {
                 </ListItem>
             </List>
 
-            {/* ORDER MANAGEMENT section */}
+
+            {/*CATEGORY MANAGEMENT section*/}
+            <Divider className="mt-4 mb-4"/>
+            <List
+                subheader={
+                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
+                        CATEGORY MANAGEMENT
+                    </ListSubheader>
+                }
+            >
+                <ListItem button onClick={() => handleNavigate('/all-categories')}>
+                    <ListItemIcon>
+                        <Settings fontSize="small"/>
+                    </ListItemIcon>
+                    <ListItemText primary="All Categories"/>
+                </ListItem>
+            </List>
+
+            {/* SETTING MANAGEMENT section */}
             <Divider className="mt-4 mb-4"/>
             <List
                 subheader={

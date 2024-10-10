@@ -15,13 +15,6 @@ const products = [
         rating: 5,
         image: "https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F20%2FVeggiePlatter.jpg&w=1920&q=75"
     },
-    {
-        name: "Brussels Sprout",
-        description: "The Brussels sprout is a member of the Gemmifera Group...",
-        price: "$3.00",
-        rating: 5,
-        image: "https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F20%2FVeggiePlatter.jpg&w=1920&q=75"
-    },
     // Add more product objects here
 ];
 
