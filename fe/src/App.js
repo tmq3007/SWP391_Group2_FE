@@ -10,18 +10,6 @@ import VendorDashboard from "./component/Vendor/VendorDashboard";
 
 function App() {
 
-    useEffect(() => {
-        const isFirstRun = localStorage.getItem('firstRun');
-
-        if (!isFirstRun) {
-            // Clear all local storage data
-            localStorage.clear();
-
-            // Set the firstRun flag to true
-            localStorage.setItem('firstRun', 'true');
-        }
-    }, []);
-
 
     return (
         <ThemeProvider theme={lightTheme}> {/* Directly use lightTheme */}

@@ -31,17 +31,19 @@ const Home = () => {
         dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
     }, [dispatch]);
 
+
     useEffect(() => {
-        dispatch(getUser(jwt)).then((data)=>{
-            setUserId(data.result.id);
+
+            dispatch(getUser(jwt)).then((data) => {
+                setUserId(data.result.id);
+            })
+                .catch((error) => {
+                console.error('Error get user:', error);
         });
+
     }, [dispatch]);
     console.log("user:",userId)
-    // useEffect(() => {
-    //     // Dispatch the action to get total shops and handle the response
-    //     dispatch(getTotalShops(token)).then((data) => {
-    //         setTotalShops(data.result); // Set the local state with API response
-    //     });
+
 
     // Lưu cart vào localStorage khi state cart thay đổi
     useEffect(() => {
