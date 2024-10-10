@@ -13,8 +13,10 @@ export const ShopAddProduct = () => {
     const [discount, setDiscount] = React.useState("");
     const [stock, setStock] = React.useState("");
     const [measurementUnit, setMesurementUnit] = React.useState("");
-    const [pictureUrl, setPictureUrl] = React.useState(null);
+    const [pictureUrl1, setPictureUrl1] = React.useState(null);
     const [pictureUrl2, setPictureUrl2] = React.useState(null);
+    const [previewPictureUrl1, setPreviewPictureUrl1] = React.useState(null);
+    const [previewPictureUrl2, setPreviewPictureUrl2] = React.useState(null);
     const [category, setCategory] = React.useState(null);
 
     const dispatch = useDispatch();
@@ -35,7 +37,7 @@ export const ShopAddProduct = () => {
             discount,
             stock,
             measurementUnit,
-            pictureUrl,
+            pictureUrl1,
             pictureUrl2,
             category
         };
@@ -53,8 +55,8 @@ export const ShopAddProduct = () => {
     const handleFileUpload1 = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setPictureUrl(file);
-            console.log("File 1 uploaded:", file);
+            setPictureUrl1(file);
+            setPreviewPictureUrl1(URL.createObjectURL(file));
         }
     };
 
@@ -62,7 +64,7 @@ export const ShopAddProduct = () => {
         const file = event.target.files[0];
         if (file) {
             setPictureUrl2(file);
-            console.log("File 2 uploaded:", file);
+            setPreviewPictureUrl2(URL.createObjectURL(file));
         }
     };
 
@@ -72,6 +74,16 @@ export const ShopAddProduct = () => {
 
     const handleDivClick2 = () => {
         fileInputRef2.current.click();
+    };
+
+    const handleRemoveImage1 = () => {
+        setPictureUrl1(null);
+        setPreviewPictureUrl1(null);
+    };
+
+    const handleRemoveImage2 = () => {
+        setPictureUrl2(null);
+        setPreviewPictureUrl2(null);
     };
 
 
@@ -107,6 +119,18 @@ export const ShopAddProduct = () => {
                                         drag and drop PNG, JPG
                                     </p>
                                 </div>
+                                {previewPictureUrl1 && (
+                                    <div className="mt-4 relative">
+                                        <img src={previewPictureUrl1} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                                        <button
+                                            type="button"
+                                            className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+                                            onClick={handleRemoveImage1}
+                                        >
+                                            X
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -135,6 +159,18 @@ export const ShopAddProduct = () => {
                                         drag and drop PNG, JPG
                                     </p>
                                 </div>
+                                {previewPictureUrl2 && (
+                                    <div className="mt-4 relative">
+                                        <img src={previewPictureUrl2} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                                        <button
+                                            type="button"
+                                            className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+                                            onClick={handleRemoveImage2}
+                                        >
+                                            X
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
