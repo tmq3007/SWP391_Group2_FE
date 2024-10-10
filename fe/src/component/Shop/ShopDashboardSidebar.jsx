@@ -142,11 +142,11 @@ export const ShopDashboardSidebar = () => {
                         </ListItemIcon>
                         <ListItemText primary="Orders"/>
                     </ListItem>
-                    <ListItem button className="sidebar-item">
+                    <ListItem button className="sidebar-item" onClick={()=>navigate("/shop-dashboard/shop-transaction")}>
                         <ListItemIcon>
                             <SubtitlesIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
-                        <ListItemText primary="Transactions"/>
+                        <ListItemText primary="Transactions" />
                     </ListItem>
                 </List>
 
