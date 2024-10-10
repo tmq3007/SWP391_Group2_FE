@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import "../../style/ShopProduct.css";
-import { NavbarShop } from '../../component/Navbar/NavbarShop';
-import { ShopDashboardSidebar } from './ShopDashboardSidebar';
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ShopFilter } from "./ShopFilter";
