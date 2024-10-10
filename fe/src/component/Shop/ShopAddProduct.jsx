@@ -15,11 +15,10 @@ export const ShopAddProduct = () => {
     const [measurementUnit, setMesurementUnit] = React.useState("");
     const [pictureUrl, setPictureUrl] = React.useState(null);
     const [pictureUrl2, setPictureUrl2] = React.useState(null);
-    const [category, setCategory] = React.useState(0);
+    const [category, setCategory] = React.useState(null);
 
     const dispatch = useDispatch();
-    const categoryList = useSelector((state) => state.categoryList);
-    const categories = categoryList && categoryList.categories ? categoryList.categories : [];
+    const { categories } = useSelector(store => store.categories);
 
 
     useEffect(() => {
@@ -154,17 +153,23 @@ export const ShopAddProduct = () => {
                                             id="shop-select"
                                             onChange={handleCategoryChange}
                                             value={category}
+
                                             className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left text-gray-900 text-lg shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             style={{
                                                 height: '50px',
                                                 fontSize: '18px'
                                             }}
                                         >
-                                            {categories.map((categorys) => (
-                                                <option key={categorys.categoryId} value={categorys.categoryId}>
-                                                    {categorys.categoryName}
-                                                </option>
-                                            ))}
+                                            {categories && categories.length > 0 ? (
+                                                categories.map((categoryItem) => (
+                                                    <option key={categoryItem.categoryId} value={categoryItem.categoryId}>
+                                                        {categoryItem.categoryName}
+                                                    </option>
+                                                ))
+                                            ) : (
+                                                <option disabled>Loading categories...</option>
+                                            )}
+
                                         </select>
                                     </div>
                                 </div>
