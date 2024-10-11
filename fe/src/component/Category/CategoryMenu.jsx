@@ -1,63 +1,140 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListSubheader from '@mui/material/ListSubheader';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import { Collapse } from "@mui/material";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
 import { getAllCategoriesAction } from "../State/Category/Action";
+import { List, ListItem, ListSubheader } from "@mui/material";
 
-const CategoryMenu = () => {
+const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
+    const [valueCategory, setValueCategory] = React.useState('all'); // Giá trị mặc định cho radio category
+    const [valuePrice, setValuePrice] = React.useState('all'); // Giá trị mặc định cho radio price
     const dispatch = useDispatch();
-    const categories = useSelector((store) => store.categories.categories); // Lấy categories từ store
-    const [openIndex, setOpenIndex] = React.useState(null);
+    const categories = useSelector((store) => store.categories.categories); // Lấy danh mục từ store
 
     useEffect(() => {
-        dispatch(getAllCategoriesAction());
+        dispatch(getAllCategoriesAction()); // Gọi action lấy danh mục khi component mount
     }, [dispatch]);
 
-    const handleClick = (index) => {
-        setOpenIndex(openIndex === index ? null : index);
+    const handleCategoryChange = (event) => {
+        setValueCategory(event.target.value); // Cập nhật khi người dùng chọn danh mục
+        setSelectedCategory(event.target.value);  // Gửi giá trị danh mục đã chọn về Home
+    };
+
+    const handlePriceChange = (event) => {
+        setValuePrice(event.target.value); // Cập nhật khi người dùng chọn giá
+        setSelectedPrice(event.target.value);  // Gửi giá trị giá đã chọn về Home
     };
 
     return (
-        <List
-            subheader={
-                <ListSubheader
-                    style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }}
-                    component="div"
-                    className="text-sm font-semibold text-center text-gray-400"
-                >
-                    CATEGORY LIST
-                </ListSubheader>
-            }
-        >
-            {categories.length === 0 ? ( // Kiểm tra xem có danh mục không
-                <ListItemText primary="No categories available." />
-            ) : (
-                categories.map((category, index) => (
-                    <React.Fragment key={category.id}>
-                        <ListItemButton onClick={() => handleClick(index)}>
-                            <ListItemIcon>
-                                <ShoppingBagIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={category.categoryName} />
-                            {openIndex === index ? <ExpandLess /> : <ExpandMore />}
-                        </ListItemButton>
-                        <Collapse in={openIndex === index} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
-                                <ListItemText primary={category.description} sx={{ pl: 4 }} /> {/* Hiển thị mô tả của category */}
-                            </List>
-                        </Collapse>
-                    </React.Fragment>
-                ))
-            )}
-        </List>
+        <FormControl component="fieldset">
+            {/* Danh mục Category */}
+            <List
+                className="cursor-pointer w-[230px]"
+                subheader={
+                    <ListSubheader
+                        style={{
+                            borderRadius: '8px',
+                            backgroundColor: '#019376',  // Màu nền đậm hơn
+                            color: '#ffffff',  // Màu chữ trắng
+                            fontWeight: 'bold',
+                            fontSize: '18px',
+                            padding: '10px 16px',
+                            border: '1px solid #ccc',
+                        }}
+                    >
+                        Filter by Category
+                    </ListSubheader>
+                }
+            >
+                <RadioGroup value={valueCategory} onChange={handleCategoryChange}>
+                    <ListItem>
+                        <FormControlLabel
+                            value="all"
+                            control={<Radio sx={{
+                                '&.Mui-checked': {
+                                    color: '#019376',
+                                }
+                            }} />}
+                            label="All"
+                        />
+                    </ListItem>
+                    {
+                        categories.map((category) => (
+                            <ListItem key={category.id}>
+                                <FormControlLabel
+                                    value={category.categoryName}
+                                    control={<Radio sx={{
+                                        '&.Mui-checked': {
+                                            color: '#019376',
+                                        }
+                                    }} />}
+                                    label={category.categoryName}
+                                />
+                            </ListItem>
+                        ))
+                    }
+                </RadioGroup>
+            </List>
+
+            {/* Lọc theo giá */}
+            <List
+                className="cursor-pointer w-[230px] mt-5"
+                subheader={
+                    <ListSubheader
+                        style={{
+                            borderRadius: '8px',
+                            backgroundColor: '#019376',
+                            color: '#ffffff',
+                            fontWeight: 'bold',
+                            fontSize: '18px',
+                            padding: '10px 16px',
+                            border: '1px solid #ccc',
+                        }}
+                    >
+                        Filter by Price
+                    </ListSubheader>
+                }
+            >
+                <RadioGroup value={valuePrice} onChange={handlePriceChange}>
+                    <ListItem>
+                        <FormControlLabel
+                            value="all"
+                            control={<Radio sx={{
+                                '&.Mui-checked': {
+                                    color: '#019376',
+                                }
+                            }} />}
+                            label="All"
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <FormControlLabel
+                            value="low"
+                            control={<Radio sx={{
+                                '&.Mui-checked': {
+                                    color: '#019376',
+                                }
+                            }} />}
+                            label="Under $50"
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <FormControlLabel
+                            value="high"
+                            control={<Radio sx={{
+                                '&.Mui-checked': {
+                                    color: '#019376',
+                                }
+                            }} />}
+                            label="Above $50"
+                        />
+                    </ListItem>
+                </RadioGroup>
+            </List>
+        </FormControl>
     );
-};
+}
 
 export default CategoryMenu;

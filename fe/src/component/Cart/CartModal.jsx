@@ -1,6 +1,16 @@
 import React from 'react';
 import {
-    Dialog, DialogTitle, DialogContent, Typography, Button, List, ListItem, ListItemText, Divider, Avatar, IconButton
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    Typography,
+    Button,
+    List,
+    ListItem,
+    ListItemText,
+    Divider,
+    Avatar,
+    IconButton
 } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 
 
 const CartModal = ({ open, onClose, cartItems, updateCart }) => {
+    // Calculate total price and unique item count
     const totalPrice = cartItems.reduce((total, item) => {
         const originalPrice = item.unitSellPrice || 0;
         const discount = item.discount || 0;
@@ -17,10 +28,16 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
 
     const uniqueItemCount = cartItems.length;
 
+    // Handler to decrease item quantity
     const handleDecreaseQuantity = (item) => {
-        updateCart(item, item.quantity - 1);
+        if (item.quantity > 1) {
+            updateCart(item, item.quantity - 1);
+        } else {
+            handleRemoveItem(item);
+        }
     };
 
+    // Handler to remove item
     const handleRemoveItem = (item) => {
         updateCart(item, 0);
     };
@@ -38,7 +55,7 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
             maxWidth="sm"
             fullWidth
         >
-            <DialogTitle>Shopping Cart ({uniqueItemCount} items)</DialogTitle>
+            <DialogTitle>Shopping Cart ({uniqueItemCount} item{uniqueItemCount !== 1 ? 's' : ''})</DialogTitle>
             <DialogContent>
                 {cartItems.length === 0 ? (
                     <Typography variant="body1">Your cart is empty.</Typography>
@@ -57,10 +74,18 @@ const CartModal = ({ open, onClose, cartItems, updateCart }) => {
                                             primary={item.productName}
                                             secondary={`Price: $${discountPrice.toFixed(2)} | Quantity: ${item.quantity}`}
                                         />
-                                        <IconButton onClick={() => handleDecreaseQuantity(item)} size="small">
+                                        <IconButton
+                                            onClick={() => handleDecreaseQuantity(item)}
+                                            size="small"
+                                            aria-label={`Decrease quantity of ${item.productName}`}
+                                        >
                                             <RemoveIcon />
                                         </IconButton>
-                                        <IconButton onClick={() => handleRemoveItem(item)} size="small">
+                                        <IconButton
+                                            onClick={() => handleRemoveItem(item)}
+                                            size="small"
+                                            aria-label={`Remove ${item.productName} from cart`}
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </ListItem>

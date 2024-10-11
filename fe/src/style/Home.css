@@ -12,17 +12,17 @@
     background-color: black;
     opacity: 0.4;
 }
-.pagination-item {
+.pagination-item-home-page {
     color: #019376;
     transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng khi hover */
 }
 
-.pagination-item:hover {
+.pagination-item-home-page:hover {
     background-color: #019376; /* Màu nền khi hover */
     color: white;
 }
 
-.pagination-item.Mui-selected {
+.pagination-item-home-page.Mui-selected {
     background-color: #019376 !important; /* Màu nền cho trang hiện tại */
     color: white !important; /* Màu chữ cho trang hiện tại */
 }

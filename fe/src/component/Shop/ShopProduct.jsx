@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import "../../style/ShopProduct.css";
-import { NavbarShop } from '../../component/Navbar/NavbarShop';
-import { ShopDashboardSidebar } from './ShopDashboardSidebar';
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ShopFilter } from "./ShopFilter";
@@ -53,27 +51,21 @@ export const ShopProduct = () => {
     }
 
     return (
-        <section className='main flex h-screen'>
-            {/* Navbar */}
-            <NavbarShop />
-            {/* Sidebar */}
-            <ShopDashboardSidebar />
-            {/* Main Content */}
-            <div className="w-4/5 bg-white">
-                <div className='h-full p-5 md:p-8'>
+            <div className="w-full bg-white h-screen overflow-y-auto">
+                <div className='h-screen p-6'>
                     <div className='bg-white rounded bg-light p-5 shadow md:p-8 mb-8 flex flex-col'>
                         <div className='flex w-full flex-col items-center md:flex-row justify-between'>
-                            <h2 className="relative text-lg font-semibold text-heading text-[#1f2937]">Products</h2>
+                            <h2 className="relative text-lg font-semibold text-heading text-[#1f2937] top-3">Products</h2>
 
                             <div className='flex w-full flex-col items-center md:w-3/4 md:flex-row justify-between'>
                                 <div className='flex w-full items-center'>
-                                    <div className="relative hidden w-full max-w-[710px] lg:flex items-center">
-                                        <SearchIcon className="absolute left-4 text-gray-400"/>
+                                    <div className=" relative hidden w-full max-w-[710px] lg:flex items-center top-3">
+                                        <SearchIcon className="absolute left-4 text-gray-400 top-3 "/>
                                         <input
                                             type="text"
                                             id="search"
                                             name="searchText"
-                                            className="ps-10 pe-4 h-12 flex items-center w-full rounded-md
+                                            className="ps-10 pe-4 h-12 flex items-center w-full rounded-lg
                                             appearance-none transition duration-300 ease-in-out text-heading
                                             text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent"
                                             placeholder="Search by Name"
@@ -81,12 +73,13 @@ export const ShopProduct = () => {
                                             autoComplete="off"
                                         />
                                     </div>
-                                    <button className="inline-flex items-center justify-center flex-shrink-0 font-medium bg-[#019376]
+                                    <button className=" inline-flex items-center justify-center flex-shrink-0 font-medium bg-[#019376]
                                     leading-none rounded-full outline-none transition duration-300 ease-in-out
-                                    text-white px-5 py-0 h-12 text-[15px] lg:text-base ms-4" onClick={() => navigate("/shop-add-product")}>
+                                    text-white px-5 py-0 h-12 text-[15px] lg:text-base ms-4" onClick={() => navigate("/shop-dashboard/shop-add-product")}>
                                         <span className='hidden md:block'>+Add Product</span>
                                     </button>
 
+                                </div>
                                     <button
                                         onClick={toggleFilter}
                                         className="mt-5 flex items-center whitespace-nowrap
@@ -99,11 +92,9 @@ export const ShopProduct = () => {
                                             <ArrowUpwardIcon className="text-[#019376]"/>
                                         )}
                                     </button>
-                                </div>
                             </div>
                         </div>
 
-                        {/* Phần filter sẽ được ẩn hiện dựa vào state */}
                         {isFilterVisible && (
                             <div className="flex w-full transition visible h-auto">
                                 <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center md:pt-8">
@@ -117,18 +108,18 @@ export const ShopProduct = () => {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Type</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price/Unit</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Product Type</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Price/Unit</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                             {currentProducts.map((product) => (
-                                <tr key={product.productId}>
+                                <tr key={product.productId} className={"text-center"}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.productId}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.productName}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.category.categoryName}</td>
@@ -137,7 +128,7 @@ export const ShopProduct = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
                                     <td className="px-6 py-4 whitespace-nowrap
                                     text-sm text-gray-500 flex-col cursor-pointer">
-                                        <ModeEditIcon onClick={() => navigate("/shop-edit-product")}/>
+                                        <ModeEditIcon onClick={() => navigate("/shop-dashboard/shop-edit-product")}/>
                                         <RemoveRedEyeIcon onClick={() => navigate("/")}/>
                                         <DeleteIcon onClick={() => navigate("/")}/></td>
                                 </tr>
@@ -160,6 +151,5 @@ export const ShopProduct = () => {
                     </div>
                 </div>
             </div>
-        </section>
     );
 };

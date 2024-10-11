@@ -78,14 +78,11 @@ export const ShopDashboardSidebar = () => {
                     </ListItemButton>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding >
-                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-product")}>
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-dashboard/shop-product")}>
                                 <ListItemText primary="All Product"/>
                             </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-add-product")} >
+                            <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-dashboard/shop-add-product")} >
                                 <ListItemText primary="Add New Product"/>
-                            </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item">
-                                <ListItemText primary="My Draft"/>
                             </ListItemButton>
                             <ListItemButton className="pl-8 sidebar-item">
                                 <ListItemText primary="All Low & Out of Stock Product"/>
@@ -146,11 +143,11 @@ export const ShopDashboardSidebar = () => {
                         </ListItemIcon>
                         <ListItemText primary="Orders"/>
                     </ListItem>
-                    <ListItem button className="sidebar-item">
+                    <ListItem button className="sidebar-item" onClick={()=>navigate("/shop-dashboard/shop-transaction")}>
                         <ListItemIcon>
                             <SubtitlesIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
-                        <ListItemText primary="Transactions"/>
+                        <ListItemText primary="Transactions" />
                     </ListItem>
                 </List>
 
