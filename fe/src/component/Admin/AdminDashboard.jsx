@@ -11,8 +11,8 @@ import VendorsPage from "./AdminDashboardDetails/AdminPage/VendorsPage";
 import CustomersPage from "./AdminDashboardDetails/AdminPage/CustomersPage";
 import SettingPage from "./AdminDashboardDetails/AdminPage/SettingPage";
 import CategoriesPage from "./AdminDashboardDetails/AdminPage/CategoriesPage";
-import CreateCategoryForm from "./Form/CreateCategoryForm";
 import UpdateCategoryForm from "./Form/UpdateCategoryForm";
+import {CreateCategoryForm} from "./Form/CreateCategoryForm";
 
 export const AdminDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -53,7 +53,7 @@ export const AdminDashboard = () => {
 
                     <Route path="/all-categories" element={<CategoriesPage />} />
 
-                    <Route path="/create-category/" element={<CreateCategoryForm />} />
+                    <Route path="/create-category" element={<CreateCategoryForm />} />
 
                     <Route path="/edit-category/:categoryId" element={<UpdateCategoryForm />} />
 

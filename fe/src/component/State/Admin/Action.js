@@ -30,3 +30,53 @@ export const getTotalOrders = async () => {
         throw error;
     }
 }
+
+export const getAllUsers = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/users`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching users", error);
+        throw error;
+    }
+}
+
+export const getAllVendors = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/users/all-vendors`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching vendors", error);
+        throw error;
+    }
+}
+
+export const getAllCustomers = async (jwt) => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/users/all-customers`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching customers", error);
+        throw error;
+    }
+}
+
+export const banUser = async (userId) => {
+    try {
+        const response = await axiosInstance.put(`/api/v1/users/ban/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error banning user", error);
+        throw error;
+    }
+}
+
+export const unbanUser = async (userId) => {
+    try {
+        const response = await axiosInstance.put(`/api/v1/users/unban/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error unbanning user", error);
+        throw error;
+    }
+}

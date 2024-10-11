@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import '../../../../style/AdminDashboard.css';
 import SearchIcon from "@mui/icons-material/Search";
@@ -6,37 +6,7 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-
-const usersData = [
-    {
-        id: '1',
-        name: 'Jhon Doe',
-        email: 'admin@demo.com',
-        avatar: 'https://via.placeholder.com/40',
-        permissions: ['super_admin', 'customer', 'store_owner'],
-        walletPoints: '',
-        status: 'Active',
-    },
-    {
-        id: '2',
-        name: 'Customer',
-        email: 'customer@demo.com',
-        avatar: 'https://via.placeholder.com/40',
-        permissions: ['customer'],
-        walletPoints: '1090',
-        status: 'Active',
-    },
-    {
-        id: '3',
-        name: 'Store Owner',
-        email: 'store_owner@demo.com',
-        avatar: 'https://via.placeholder.com/40',
-        permissions: ['customer', 'store_owner'],
-        walletPoints: '',
-        status: 'Active',
-    },
-    // Add more users as needed
-];
+import {banUser, unbanUser, getAllCustomers} from "../../../State/Admin/Action";
 
 const PER_PAGE = 4;
 
@@ -45,7 +15,32 @@ function CustomersPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null); // For tracking the user being blocked/unblocked
+    const [usersData, setUsersData] = useState([]); // Store fetched users data
 
+    useEffect(() => {
+        // Async function to fetch users data
+        const fetchSummaryData = async () => {
+            try {
+                const response = await getAllCustomers();  // Fetch data
+                const transformedData = response.result.map((user) => ({
+                    id: user.id,
+                    name: `${user.firstName} ${user.lastName}`, // Combine first and last names
+                    email: user.email,
+                    avatar: 'https://via.placeholder.com/40', // Placeholder image for now
+                    permissions: user.roles.map((role) => role.name), // Extract roles
+                    walletPoints: '', // No wallet points in the original data
+                    status: user.isActive ? 'Active' : 'Inactive' // Determine status from `isActive`
+                }));
+                setUsersData(transformedData); // Update state with transformed data
+            } catch (e) {
+                console.log('Error fetching summary data', e);
+            }
+        };
+
+        fetchSummaryData(); // Fetch data when the component mounts
+    }, []);
+
+    // Filter users based on search term
     const filteredUsers = usersData.filter(
         (user) =>
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,19 +58,28 @@ function CustomersPage() {
     };
 
     // Confirm block/unblock user and toggle the status
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (selectedUser) {
-            // Toggle the user status between Active and Inactive
-            const updatedUsers = usersData.map((user) =>
-                user.id === selectedUser.id
-                    ? { ...user, status: user.status === 'Active' ? 'Inactive' : 'Active' }
-                    : user
-            );
+            try {
+                // Call the appropriate function based on the user's current status
+                if (selectedUser.status === 'Active') {
+                    await banUser(selectedUser.id);  // Ban the user
+                } else {
+                    await unbanUser(selectedUser.id);  // Unban the user
+                }
 
-            // Update the users data (this would normally be done by updating state or sending a request to a backend)
-            usersData.splice(0, usersData.length, ...updatedUsers);
+                // Update local state with the new status
+                const updatedUsers = usersData.map((user) =>
+                    user.id === selectedUser.id
+                        ? { ...user, status: user.status === 'Active' ? 'Inactive' : 'Active' }
+                        : user
+                );
+                setUsersData(updatedUsers); // Update users data
+                handleCloseModal(); // Close the modal after confirming
 
-            handleCloseModal(); // Close the modal after confirming
+            } catch (error) {
+                console.error(`Error ${selectedUser.status === 'Active' ? 'banning' : 'unbanning'} user:`, error);
+            }
         }
     };
 
@@ -145,14 +149,14 @@ function CustomersPage() {
                                 {user.permissions.map((perm, i) => (
                                     <span key={i} className="permission-badge">
                                             {perm}
-                                        </span>
+                                    </span>
                                 ))}
                             </td>
                             <td>{user.walletPoints || 'N/A'}</td>
                             <td>
-                                    <span className={user.status === 'Active' ? 'active-status' : 'inactive-status'}>
-                                        {user.status}
-                                    </span>
+                                <span className={user.status === 'Active' ? 'active-status' : 'inactive-status'}>
+                                    {user.status}
+                                </span>
                             </td>
                             <td>
                                 <button className='eye' onClick={() => handleOpenModal(user)}>
