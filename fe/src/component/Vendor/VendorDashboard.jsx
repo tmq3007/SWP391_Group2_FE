@@ -12,7 +12,7 @@ const VendorDashboard = () => {
       {/* Left Sidebar */}
       <VendorNavbar className="w-[100vw] h-[10vh] px-5 z-50  lg:px-20 flex items-center"/>
       <div className='flex w-full h-[90vh] overflow-hidden'>
-      <VendorLeftBar onSelect={setSelectedPage} />
+      <VendorLeftBar onSelect={setSelectedPage}/>
       {/* Right Content Area */}
       <VendorRightBar selectedPage={selectedPage}/>
       </div>

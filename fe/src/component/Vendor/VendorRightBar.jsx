@@ -16,6 +16,15 @@ import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 
 
+/*
+* get the data out
+*
+* data include
+*
+* order
+*
+* shop information
+* */
 const products = [
   {
     id: 1,
@@ -27,63 +36,63 @@ const products = [
   {
     id: 2,
     name: 'Product 2',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 3,
     name: 'Product 3',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 4,
     name: 'Product 4',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 5,
     name: 'Product 5',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 6,
     name: 'Product 6',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 7,
     name: 'Product 7',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 8,
     name: 'Product 8',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 9,
     name: 'Product 9',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 10,
     name: 'Product 10',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.JDa_1X-NqdM1K-bZxp99DQHaEo?w=265&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
@@ -126,7 +135,7 @@ const notificationData = [
 const VendorRightBar = ({ selectedPage }) => {
   const navigate = useNavigate();
   return (
-    <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll">
+    <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll mt-6">
       {selectedPage === 1 && (
         <div>
           <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
