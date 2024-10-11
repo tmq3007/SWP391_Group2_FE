@@ -26,6 +26,7 @@ const Home = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');  // State cho danh mục đã chọn
     const [selectedPrice, setSelectedPrice] = useState('all');  // State cho giá đã chọn
     const [userId,setUserId] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     // Fetch products
     useEffect(() => {
         dispatch(getAllProductsAction()); // Gọi action để lấy dữ liệu sản phẩm
@@ -68,18 +69,11 @@ const Home = () => {
 
     // Lọc sản phẩm dựa trên danh mục và giá trị đã chọn
     const filteredProducts = products && products.products ? products.products.filter((product) => {
-        // Lọc theo danh mục
-        if (selectedCategory !== 'all' && product.category.categoryName !== selectedCategory) {
-            return false;
-        }
-        // Lọc theo giá
-        if (selectedPrice === 'low' && product.unitSellPrice > 50) { // ví dụ giá nhỏ hơn 50
-            return false;
-        }
-        if (selectedPrice === 'high' && product.unitSellPrice <= 50) { // ví dụ giá lớn hơn 50
-            return false;
-        }
-        return true;
+        const matchesCategory = selectedCategory === 'all' || product.category.categoryName === selectedCategory;
+        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice <= 50) || (selectedPrice === 'high' && product.unitSellPrice > 50) || selectedPrice === 'all';
+        const matchesSearch = product.productName.toLowerCase().includes(searchQuery);  // Lọc theo từ khóa tìm kiếm
+
+        return matchesCategory && matchesPrice && matchesSearch;
     }) : [];
 
     // Sản phẩm hiện tại dựa trên trang và itemsPerPage
@@ -106,7 +100,7 @@ const Home = () => {
 
     return (
         <div>
-            <NavbarHomePage />
+            <NavbarHomePage setSearchQuery={setSearchQuery}/>
             <section className="banner -z-50 relative flex flex-col items-center">
                 <div className="w-[50vw] z-10 text-center">
                     <p className="text-2xl lg:text-5xl font-bold z-10 py-5 mt-9" style={{ color: "#019376" }}>
@@ -146,14 +140,14 @@ const Home = () => {
                 </div>
             </section>
 
-            <Stack spacing={2} className="mt-setBackdropStyle5" alignItems="center" sx={{ marginBottom: "30px" }}>
+            <Stack spacing={2} className="mt-setBackdropStyle5 " alignItems="center" sx={{ marginBottom: "30px",marginTop: "15px" }}>
                 <Pagination
                     count={Math.ceil(filteredProducts.length / itemsPerPage)} // Tính số trang
                     page={currentPage}
                     onChange={handleChange}
                     color="primary"
                     renderItem={(item) => (
-                        <PaginationItem {...item} className="pagination-item" />
+                        <PaginationItem {...item} className="pagination-item-home-page" />
                     )}
                 />
             </Stack>
