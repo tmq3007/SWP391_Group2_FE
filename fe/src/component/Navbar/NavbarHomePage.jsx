@@ -80,8 +80,8 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 <input
                     type="text"
                     className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500
-                     focus:bg-white focus:outline-none "
-                    placeholder="Search your route..."
+                    focus:bg-white focus:outline-none "
+                    placeholder="Search products..."
                     onChange={handleSearchChange}  // Xử lý thay đổi giá trị tìm kiếm
                 />
             </div>
