@@ -159,13 +159,15 @@ function UsersPage() {
                                 </span>
                             </td>
                             <td>
-                                <button className='eye' onClick={() => handleOpenModal(user)}>
-                                    {user.status === 'Active' ? (
-                                        <PersonOffIcon style={{ color: 'red' }} />
-                                    ) : (
-                                        <PersonIcon style={{ color: 'green' }} />
-                                    )}
-                                </button>
+                                {!user.permissions.includes("ADMIN") && (
+                                    <button className='eye' onClick={() => handleOpenModal(user)}>
+                                        {user.status === 'Active' ? (
+                                            <PersonOffIcon style={{ color: 'red' }} />
+                                        ) : (
+                                            <PersonIcon style={{ color: 'green' }} />
+                                        )}
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}
