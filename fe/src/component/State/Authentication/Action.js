@@ -62,10 +62,10 @@ export const loginUser = (reqData) => async (dispatch) => {
         console.log("logged in", data);
 }
 
-    export const updateUserById = (userId, profileData, jwt) => async (dispatch) => {
+    export const updateUserById = (userId, user, jwt) => async (dispatch) => {
         dispatch({ type: UPDATE_PROFILE_REQUEST });
         try {
-            const { data } = await axios.put(`${API_URL}/api/v1/users/${userId}`, profileData, {
+            const { data } = await axios.put(`${API_URL}/api/v1/users/${userId}`, user, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
