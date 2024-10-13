@@ -5,7 +5,10 @@
     LOGIN_REQUEST,
     LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE,
     REGISTER_REQUEST,
-    REGISTER_SUCCESS
+    REGISTER_SUCCESS,
+    UPDATE_PROFILE_SUCCESS,
+        UPDATE_PROFILE_FAILURE,
+        UPDATE_PROFILE_REQUEST
 } from "./ActionType";
 import axios from "axios";
 import {API_URL} from "../../config/api";
@@ -20,9 +23,6 @@ export const registerUser = (reqData) => async (dispatch) => {
         reqData.navigate("/auth/login");
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
         console.log("registered",data);
-
-
-
 }
 
 export const loginUser = (reqData) => async (dispatch) => {
@@ -62,7 +62,22 @@ export const loginUser = (reqData) => async (dispatch) => {
         console.log("logged in", data);
 }
 
+    export const updateUserById = (userId, profileData, jwt) => async (dispatch) => {
+        dispatch({ type: UPDATE_PROFILE_REQUEST });
+        try {
+            const { data } = await axios.put(`${API_URL}/api/v1/users/${userId}`, profileData, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
 
+            dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: data });
+            return data; // Return the data if further handling is needed
+        } catch (error) {
+            dispatch({ type: UPDATE_PROFILE_FAILURE, payload: error.message });
+            console.error('Error updating user:', error);
+        }
+    };
 
 export const getUser = (jwt) => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST});

@@ -1,13 +1,41 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { TextField, Button, Paper, Box, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { AddressProfile } from "./AddressProfile";
+import {getUser} from "../../State/Authentication/Action";
+import {getAllProductsAction} from "../../State/Product/Action";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function ProfileInfo() {
+  const dispatch = useDispatch();
+  const [user, setUser] = useState(null);
+
+  const jwt = localStorage.getItem("jwt");
+  const { auth } = useSelector(store => store);
+
+  useEffect(() => {
+    dispatch(getUser(jwt))
+        .then((data) => {
+          setUser(data.result); // Set the entire user object
+          // Update formData with the fetched user data
+          setFormData({
+            firstname: data.result.firstName || '', // Set name or default to empty string
+            lastname: data.result.lastName|| '',   // Set bio or default to empty string
+            email: data.result.email || '' ,// Set email or default to empty string
+            phone: data.result.phone
+          });
+          console.log(data.result)
+        })
+        .catch((error) => {
+          console.error('Error getting user:', error);
+        });
+  }, [dispatch, jwt]);
+
   const [formData, setFormData] = useState({
-    name: '',
-    bio: '',
-    email: ''
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone:''
   });
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -87,22 +115,20 @@ export default function ProfileInfo() {
               </Box>
 
               <TextField
-                  label="Name"
-                  name="name"
+                  label="First Name"
+                  name="firstname"
                   variant="outlined"
-                  value={formData.name}
+                  value={formData.firstname}
                   onChange={handleChange}
                   fullWidth
               />
 
               <TextField
-                  label="Bio"
-                  name="bio"
+                  label="Last Name"
+                  name="firstname"
                   variant="outlined"
-                  value={formData.bio}
+                  value={formData.lastname}
                   onChange={handleChange}
-                  multiline
-                  rows={3}
                   fullWidth
               />
 
@@ -111,6 +137,14 @@ export default function ProfileInfo() {
                   name="email"
                   variant="outlined"
                   value={formData.email}
+                  onChange={handleChange}
+                  fullWidth
+              />
+              <TextField
+                  label="Phone"
+                  name="phone"
+                  variant="outlined"
+                  value={formData.phone}
                   onChange={handleChange}
                   fullWidth
               />
