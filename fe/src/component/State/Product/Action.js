@@ -15,19 +15,30 @@ import {
 import {api} from "../../config/api";
 import axios from "axios";
 
-export const createProductAction = () => {
-    return async (dispatch) => {
-        dispatch({ type: CREATE_PRODUCT_REQUEST });
-        try {
-            const { data } = await axios.post("http://localhost:8080/api/v1/products");
-            dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
-            console.log("all products", data);
-        } catch (error) {
-            console.log("all err", error);
-            dispatch({ type: CREATE_PRODUCT_FAILURE, payload: error });
-        }
-    };
+export const createProductAction = (reqData) => async (dispatch) => {
+    const jwt = localStorage.getItem('jwt');
+
+    if (!jwt) {
+        console.error("No JWT found. Please log in.");
+        return;
+    }
+
+    dispatch({ type: CREATE_PRODUCT_REQUEST });
+    try {
+        const { data } = await axios.post("http://localhost:8080/api/v1/products", reqData, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
+        console.log("Product created successfully", data);
+    } catch (error) {
+        console.error("Error creating product:", error.response ? error.response.data : error.message);
+        dispatch({ type: CREATE_PRODUCT_FAILURE, payload: error });
+    }
 };
+
 
 export const getAllProductsAction = () => {
     return async (dispatch) => {
