@@ -28,12 +28,12 @@ const VendorProductDisplay = ({ products }) => {
   return (
     <div {...handlers} className='w-[90%] h-[90%] pb-8'>
       <Grid className=' justify-center items-center'>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        <Grid>
           <Card>
             <CardMedia
               component="img"
-              height="140"
-              width="140"
+              height="140px"
+              width="140px"
               image={product.image}
               alt={product.name}
             />
