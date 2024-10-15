@@ -6,7 +6,13 @@ import {NavbarShop} from "../Navbar/NavbarShop";
 
 const VendorDashboard = () => {
   const[selectedPage,setSelectedPage] = useState(1);
-  
+  const[data1,setDate1] = useState([]);
+    setDate1(async => {
+
+    })
+  const[data2,setDate2] = useState([]);
+  const[data3,setDate3] = useState([]);
+
   return (
     <div className="w-full h-full overflow-hidden m-0">
       {/* Left Sidebar */}
