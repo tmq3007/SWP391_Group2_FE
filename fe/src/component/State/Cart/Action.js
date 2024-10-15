@@ -99,7 +99,7 @@ export const clearCart = () => async (dispatch) => {
 export const getAllCartItems = (userId,jwt) => async (dispatch) => {
     dispatch({ type: GET_ALL_CART_ITEMS_REQUEST });
     try {
-        const response = await axios.get(`${API_URL}/${userId}/items`,{
+        const response = await axios.get(`${API_URL}/${userId}`,{
             headers:{
                 Authorization: `Bearer ${jwt}`
             }
