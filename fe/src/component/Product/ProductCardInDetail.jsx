@@ -1,45 +1,45 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import CloseIcon from '@mui/icons-material/Close'; // Import Close icon
 import ProductDetail from './ProductDetail';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../../style/ProductCard.css';
 
-const ProductCard = ({ item, addToCart, addToWishlist }) => {
+const ProductCardInDetail = ({ item, addToCart, addToWishlist }) => {
     const originalPrice = item.unitSellPrice || 0;
-    const discount = item.discount * 100 || 0;
-    const discountPrice = originalPrice * (1 - discount / 100);
-    const discountPercentage = Math.round(discount);
+    const discount = item.discount * 100 || 0; // Get discount value from item
+    const discountPrice = originalPrice * (1 - discount / 100); // Calculate discounted price
+    const discountPercentage = Math.round(discount); // Discount percentage
 
     const [isFavorite, setIsFavorite] = React.useState(false);
     const [open, setOpen] = React.useState(false);
-    const [quantity, setQuantity] = React.useState(1);
+    const [backdropStyle, setBackdropStyle] = React.useState({
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+    });
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleFavoriteToggle = () => {
         setIsFavorite((prev) => !prev);
     };
 
     const handleProductClick = () => {
-        setOpen(true);
+        setOpen(true);  // Open the product detail dialog
+        handleBackground();
     };
 
     const handleClose = () => {
-        setOpen(false);
-        // Optionally navigate if needed; comment out if not desired
-        // navigate('/');
+        setOpen(false);  // Close the product detail dialog
+        navigate(''); // Navigate to home page
     };
 
-    const handleAddToCart = () => {
-        if (quantity > 0) {
-            const buyUnit = item.measurementUnit; // Get measurement unit from item
-            addToCart(buyUnit, quantity,item ); // Pass the item, quantity, and measurement unit to addToCart
-            setQuantity(1); // Reset quantity to 1 after adding to cart
-        }
+    const handleBackground = () => {
+        setBackdropStyle({
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+        });
     };
 
     return (
@@ -70,20 +70,7 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
                         <Typography variant="h6" component="div" sx={{ color: "#019376", fontWeight: 'bold', marginBottom: 2, marginLeft: 0.5 }}>
                             ${discountPrice.toFixed(2)}
                         </Typography>
-                        <Button
-                            variant="contained"
-                            onClick={handleFavoriteToggle}
-                            className={`favorite-button ${isFavorite ? 'active' : ''}`}
-                        >
-                            {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }} /> : <FavoriteBorderIcon />}
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={handleAddToCart} // Call handleAddToCart when clicked
-                            className="cart-button"
-                        >
-                            <AddShoppingCartIcon sx={{ color: '#019376' }} />
-                        </Button>
+                        {/* Your buttons here if needed */}
                     </div>
                 </CardContent>
             </Card>
@@ -94,10 +81,13 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
                 onClose={handleClose}
                 maxWidth="md"
                 fullWidth
-                disableScrollLock={true}
+                disableScrollLock={true} // Prevent background scroll
+                BackdropProps={{
+                    style: backdropStyle, // Use the state for backdrop style
+                }}
             >
                 <DialogTitle>
-                    <span>Product Details</span>
+                    Product Details
                     <IconButton
                         edge="end"
                         color="inherit"
@@ -116,4 +106,4 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
     );
 };
 
-export default ProductCard;
+export default ProductCardInDetail;

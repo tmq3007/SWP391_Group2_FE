@@ -9,27 +9,7 @@ import VendorDashboard from "./component/Vendor/VendorDashboard";
 
 
 function App() {
-    const dispatch = useDispatch();
-    const jwt = localStorage.getItem('jwt');
-    const {auth} = useSelector((store)=>store);
 
-    useEffect(() => {
-        const isFirstRun = localStorage.getItem('firstRun');
-
-        if (!isFirstRun) {
-            // Clear all local storage data
-            localStorage.clear();
-
-            // Set the firstRun flag to true
-            localStorage.setItem('firstRun', 'true');
-        }
-    }, []);
-
-    useEffect(() => {
-        if(jwt) {
-            dispatch(getUser(auth.token || jwt))
-        }
-    }, [auth.token]);
 
     return (
         <ThemeProvider theme={lightTheme}> {/* Directly use lightTheme */}
