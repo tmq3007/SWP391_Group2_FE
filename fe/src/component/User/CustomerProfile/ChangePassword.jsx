@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import {getUser, updateUserById} from '../../State/Authentication/Action'; // Adjust this path to your action file
 
-const ChangePassword = () => {
+const ChangePassword = ({ userId, jwt }) => { // Receive userId and jwt as props
+    const dispatch = useDispatch();
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
         confirmPassword: '',
     });
-
+    const [user, setUser] = useState(null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
@@ -19,10 +22,22 @@ const ChangePassword = () => {
         });
         setError('');
     };
+    useEffect(() => {
+        dispatch(getUser(jwt))
+            .then((data) => {
+                setUser(data.result);
 
-    const handleSubmit = () => {
+            })
+            .catch((error) => {
+                console.error('Error getting user:', error);
+            });
+    }, [dispatch, jwt]);
+
+
+    const handleSubmit = async () => {
         const { currentPassword, newPassword, confirmPassword } = passwordData;
 
+        // Validation checks
         if (!currentPassword || !newPassword || !confirmPassword) {
             setError('Please fill in all fields');
             return;
@@ -32,15 +47,28 @@ const ChangePassword = () => {
             setError('New password and confirmation do not match');
             return;
         }
+        
 
-        // Add logic to update password here, such as an API call
-        setSuccess('Password updated successfully');
+        // Create a user object to update
+        const userUpdateData = {
+            // Current password for validation
+            // Include other user properties if necessary, e.g., email, phone
+        };
+
+        try {
+            await dispatch(updateUserById(userId, userUpdateData, jwt)); // Dispatch action to update user
+            setSuccess('Password updated successfully');
+            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' }); // Clear the form
+        } catch (error) {
+            setError('Error updating password'); // Handle errors
+            console.error('Error updating password:', error);
+        }
     };
 
     return (
         <div className="flex flex-col items-center justify-center w-full">
             <Box
-                className="bg-white rounded-lg p-8 w-[70%] space-y-6" // Using space-y-6 to apply consistent spacing between elements
+                className="bg-white rounded-lg p-8 w-[70%] space-y-6"
                 component="form"
             >
                 <Typography variant="h5" className="text-center font-semibold">
@@ -94,7 +122,6 @@ const ChangePassword = () => {
                     color="success"
                     onClick={handleSubmit}
                     className="bg-green-500 hover:bg-green-600"
-
                 >
                     Update Password
                 </Button>
