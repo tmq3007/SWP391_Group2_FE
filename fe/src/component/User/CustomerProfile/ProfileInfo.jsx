@@ -17,7 +17,7 @@ export default function ProfileInfo() {
     email: '',
     phone: ''
   });
-
+    //get user data
   useEffect(() => {
     dispatch(getUser(jwt))
         .then((data) => {
@@ -49,12 +49,13 @@ export default function ProfileInfo() {
         if (user && user.id) {
             // Create the payload based on the expected structure
             const updatedUser = {
-                id: user.id, // Include the user ID if needed by the server
+                ...user,
+                //id: user.id, // Include the user ID if needed by the server
                 firstName: formData.firstname,
                 lastName: formData.lastname,
                 email: formData.email,
-                username: user.username, // Presuming username is not being changed
-                password: user.password,// You might want to set this dynamically based on your form input or make it optional
+                //username: user.username, // Presuming username is not being changed
+                //password: user.password,// You might want to set this dynamically based on your form input or make it optional
                 phone: formData.phone,
                 roles: ["CUSTOMER"] // Ensure you provide the expected role(s)
             };

@@ -10,7 +10,7 @@ import TopCategories from "../TopCategories";
 const DashboardPage = () => {
     return (
 
-        <div style={{flex: 1, padding: '20px'}}>
+        <div className='h-screen overflow-y-auto' style={{flex: 1, padding: '20px'}}>
             <div className='mt-10'>
                 <Summary/>
             </div>
