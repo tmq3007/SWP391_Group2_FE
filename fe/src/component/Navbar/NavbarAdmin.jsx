@@ -120,12 +120,6 @@ export const NavbarAdmin = () => {
                             'aria-labelledby': 'profile-button',
                         }}
                     >
-                        <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
-                            Profile
-                        </MenuItem>
-                        <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
-                            My account
-                        </MenuItem>
                         <MenuItem style={{ color: '#019376' }} onClick={handleLogout}>
                             Logout
                         </MenuItem>
