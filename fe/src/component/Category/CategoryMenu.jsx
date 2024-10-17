@@ -13,13 +13,13 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
     const dispatch = useDispatch();
 
     // Access categories from the Redux store
-    const categories = useSelector((store) => store.categories.result || []); // Updated to access result
+    const {categories} = useSelector((store) => store.categories || {}); // Ensure categories is an object
 
-    console.log("cate:", categories); // Check data from store
+    //console.log("cate:", categories); // Check data from store
 
     useEffect(() => {
         dispatch(getAllCategoriesAction());
-    }, [dispatch]);
+    }, []);
 
     const handleCategoryChange = (event) => {
         setValueCategory(event.target.value); // Update selected category
@@ -64,31 +64,29 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
                             label="All"
                         />
                     </ListItem>
-                    {
-                        Array.isArray(categories) && categories.length > 0 ? (
-                            categories.map((category) => (
-                                <ListItem key={category.categoryId}> {/* Changed to categoryId */}
-                                    <FormControlLabel
-                                        value={category.categoryName}
-                                        control={<Radio sx={{
-                                            '&.Mui-checked': {
-                                                color: '#019376',
-                                            }
-                                        }} />}
-                                        label={category.categoryName}
-                                    />
-                                </ListItem>
-                            ))
-                        ) : (
-                            <ListItem>
+                    {Array.isArray(categories.result) && categories.result.length > 0 ? (
+                        categories.result.map((category) => (
+                            <ListItem key={category.categoryId}>
                                 <FormControlLabel
-                                    value="none"
-                                    control={<Radio disabled />}
-                                    label="No categories available"
+                                    value={category.categoryName}
+                                    control={<Radio sx={{
+                                        '&.Mui-checked': {
+                                            color: '#019376',
+                                        }
+                                    }} />}
+                                    label={category.categoryName}
                                 />
                             </ListItem>
-                        )
-                    }
+                        ))
+                    ) : (
+                        <ListItem>
+                            <FormControlLabel
+                                value="none"
+                                control={<Radio disabled />}
+                                label="No categories available"
+                            />
+                        </ListItem>
+                    )}
                 </RadioGroup>
             </List>
 
