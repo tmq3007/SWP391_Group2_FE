@@ -89,8 +89,9 @@ export const getUser = (jwt) => async (dispatch) => {
         });
 
         dispatch({ type: GET_USER_SUCCESS, payload: data.token });
+        console.log("user data", data);
         return data;
-        //console.log(data);
+
     } catch (error) {
         dispatch({ type: GET_USER_FAILURE, payload: error });
         console.error('Error get user:', error);

@@ -7,10 +7,9 @@ import cartReducer from "./Cart/Reducer";
 
 const rootReducer = combineReducers({
     auth:authReducer,
-    products:productReducer,
+    products: productReducer,
     categories: categoryReducer,
-    carts:cartReducer,
-
+    carts: cartReducer,
 })
 
 export const store=legacy_createStore(rootReducer, applyMiddleware(thunk));

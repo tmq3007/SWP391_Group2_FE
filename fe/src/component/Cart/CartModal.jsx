@@ -19,56 +19,48 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateCartItem, removeCartItem, getAllCartItems } from '../State/Cart/Action';
 import { getUser } from "../State/Authentication/Action";
 
-const CartModal = ({ open, onClose }) => {
+const CartModal = ({ open, onClose, cart }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-
-    // Get cartItems from the Redux store
-    const cartItems = useSelector(store => store.carts.cartItems) || []; // Default to empty array
-
     const [userId, setUserId] = useState(null);
+    useEffect(() => {
+        if (userId) {
+            dispatch(getAllCartItems(userId, jwt));
+        }
+    }, [userId, dispatch, jwt]);
 
     useEffect(() => {
-        // Fetch user details and then load the cart items
         dispatch(getUser(jwt))
             .then((data) => {
                 setUserId(data.result.id);
-                dispatch(getAllCartItems(data.result.id, jwt)); // Fetch cart items after getting user ID
+                dispatch(getAllCartItems(data.result.id, jwt));
             })
-            .catch((error) => {
-                console.error('Error getting user:', error);
-            });
+            .catch((error) => console.error('Error getting user:', error));
     }, [dispatch, jwt]);
 
-    console.log("user:", userId);
-    console.log("cart:", cartItems); // Ensure cartItems is logged
-
-    // Calculate total price
-    const totalPrice = cartItems.reduce((total, item) => {
-        const originalPrice = item.unitSellPrice || 0;
-        const discount = item.discount || 0;
-        const discountPrice = originalPrice * (1 - discount);
-        return total + (discountPrice * item.quantity);
-    }, 0); // Default to 0 if cartItems is empty
-
-    // Decrease product quantity in the cart
-    const handleDecreaseQuantity = (item) => {
-        if (item.quantity > 1) {
-            dispatch(updateCartItem(item.userId, item.cartItemId, { ...item, quantity: item.quantity - 1 }, jwt));
-        } else {
+    const handleQuantityChange = (item, change) => {
+        if (change < 0 && item.quantity === 1) {
             handleRemoveItem(item);
+        } else {
+            dispatch(updateCartItem(item.measurementUnit, change, item, jwt));
         }
     };
 
-    // Increase product quantity in the cart
-    const handleIncreaseQuantity = (item) => {
-        dispatch(updateCartItem(item.userId, item.cartItemId, { ...item, quantity: item.quantity + 1 }, jwt));
+    const handleRemoveItem = (item) => {
+        dispatch(removeCartItem(userId, item.id, jwt))
+            .then(() => {
+                // Cập nhật lại giỏ hàng sau khi xóa
+                dispatch(getAllCartItems(userId, jwt));
+            })
+            .catch((error) => console.error('Error removing item:', error));
     };
 
-    // Remove product from cart
-    const handleRemoveItem = (item) => {
-        dispatch(removeCartItem(item.userId, item.cartItemId, jwt));
-    };
+
+    const newTotalPrice = cart.reduce((total, item) => {
+        const originalPrice = item.product.unitSellPrice || 0;
+        const discount = item.product.discount || 0;
+        return total + (originalPrice * (1 - discount) * item.quantity);
+    }, 0);
 
     return (
         <Dialog
@@ -77,56 +69,64 @@ const CartModal = ({ open, onClose }) => {
             maxWidth="sm"
             fullWidth
             PaperProps={{
-                sx: { borderRadius: '16px' } // Design rounded corners
+                sx: { borderRadius: '16px', padding: '24px', boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)' }
             }}
         >
-            <DialogTitle>{`${cartItems.length} Items`}</DialogTitle>
+            <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '24px', color: '#019376' }}>
+                {`${cart.length} Items`}
+            </DialogTitle>
             <DialogContent>
                 <List>
-                    {cartItems.map((item) => {
-                        const originalPrice = item.unitSellPrice || 0;
-                        const discount = item.discount || 0;
-                        const discountPrice = originalPrice * (1 - discount);
-
-                        return (
-                            <div key={item.cartItemId}> {/* Ensure you have a unique key */}
-                                <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 0' }}>
-                                    {/* Decrease/Increase quantity button and product image */}
-                                    <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
-                                        <IconButton onClick={() => handleDecreaseQuantity(item)} size="small">
-                                            <RemoveIcon />
-                                        </IconButton>
-                                        <Typography>{item.quantity}</Typography>
-                                        <IconButton onClick={() => handleIncreaseQuantity(item)} size="small">
-                                            <AddIcon />
-                                        </IconButton>
-                                    </Box>
-
-                                    <Avatar alt={item.productName} src={item.pictureUrl} sx={{ width: 56, height: 56, marginRight: 2 }} />
-
-                                    {/* Product details */}
-                                    <Box sx={{ flexGrow: 1 }}>
-                                        <Typography>{item.productName}</Typography>
-                                        <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${discountPrice.toFixed(2)}</Typography>
-                                        <Typography variant="body2">{`${item.quantity} X ${originalPrice.toFixed(2)}`}</Typography>
-                                    </Box>
-
-                                    {/* Price and remove button */}
-                                    <Typography sx={{ fontWeight: 'bold' }}>${(discountPrice * item.quantity).toFixed(2)}</Typography>
-                                    <IconButton onClick={() => handleRemoveItem(item)} size="small">
-                                        <DeleteIcon />
+                    {cart.map((item) => (
+                        <div key={item.cartItemId}>
+                            <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 0', justifyContent: 'space-between' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
+                                    <IconButton
+                                        onClick={() => handleQuantityChange(item.product, -1)}
+                                        size="small"
+                                        sx={{ '&:hover': { backgroundColor: '#01937620' } }}
+                                    >
+                                        <RemoveIcon />
                                     </IconButton>
-                                </ListItem>
-                                <Divider />
-                            </div>
-                        );
-                    })}
+                                    <Typography>{item.quantity}</Typography>
+                                    <IconButton
+                                        onClick={() => handleQuantityChange(item, 1)}
+                                        size="small"
+                                        sx={{ '&:hover': { backgroundColor: '#01937620' } }}
+                                    >
+                                        <AddIcon />
+                                    </IconButton>
+                                </Box>
 
-                    {/* Total price and checkout button */}
+                                <Avatar
+                                    alt={item.product.pictureUrl2}
+                                    src={item.product.pictureUrl}
+                                    sx={{ width: 48, height: 48, marginRight: 2, marginLeft: 4, border: '1px solid #f0f0f0' }}
+                                />
+
+                                <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
+                                    <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.productName}</Typography>
+                                    <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}</Typography>
+                                    <Typography variant="body2" color="textSecondary">{`${item.quantity} x ${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}`}</Typography>
+                                </Box>
+
+                                <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}</Typography>
+                                <IconButton
+                                    onClick={() => handleRemoveItem(item)}
+                                    size="small"
+                                    sx={{ '&:hover': { color: '#ff1744' }, marginLeft: 'auto' }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItem>
+                            <Divider />
+                        </div>
+                    ))}
+
                     <ListItem>
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="h6" sx={{ textAlign: 'right', fontWeight: 'bold' }}>
-                                Total: ${totalPrice.toFixed(2)}
+                        <Box sx={{ flexGrow: 1, textAlign: 'right' }}>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '20px', color: '#333' }}>
+                                Total: ${newTotalPrice.toFixed(2)}
                             </Typography>
                         </Box>
                     </ListItem>
@@ -137,15 +137,17 @@ const CartModal = ({ open, onClose }) => {
                             sx={{
                                 backgroundColor: '#019376',
                                 borderRadius: '24px',
-                                padding: '10px 0',
+                                padding: '12px 0',
                                 fontWeight: 'bold',
                                 fontSize: '16px',
-                                display: 'flex',
-                                justifyContent: 'space-between'
+                                '&:hover': {
+                                    backgroundColor: '#017f63',
+                                },
+                                alignItems:"center"
                             }}
                         >
                             Checkout
-                            <Typography variant="body1" sx={{ color: '#fff' }}>${totalPrice.toFixed(2)}</Typography>
+                            <Typography variant="body1" sx={{ color: '#fff', fontWeight: 'bold', marginLeft: '100px' }}>${newTotalPrice.toFixed(2)}</Typography>
                         </Button>
                     </ListItem>
                 </List>
