@@ -23,6 +23,8 @@ const CartModal = ({ open, onClose, cart }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const [userId, setUserId] = useState(null);
+    const [localCart, setLocalCart] = useState(cart);
+
     useEffect(() => {
         if (userId) {
             dispatch(getAllCartItems(userId, jwt));
@@ -38,6 +40,10 @@ const CartModal = ({ open, onClose, cart }) => {
             .catch((error) => console.error('Error getting user:', error));
     }, [dispatch, jwt]);
 
+    useEffect(() => {
+        setLocalCart(cart);
+    }, [cart]);
+
     const handleQuantityChange = (item, change) => {
         if (change < 0 && item.quantity === 1) {
             handleRemoveItem(item);
@@ -47,20 +53,30 @@ const CartModal = ({ open, onClose, cart }) => {
     };
 
     const handleRemoveItem = (item) => {
+        // Update the local cart to hide the item instead of removing it
+        setLocalCart(prevCart => prevCart.map(cartItem => {
+            if (cartItem.id === item.id) {
+                return { ...cartItem, deleted: true }; // Mark item as deleted
+            }
+            return cartItem;
+        }));
         dispatch(removeCartItem(userId, item.id, jwt))
-            .then(() => {
-                // Cập nhật lại giỏ hàng sau khi xóa
-                dispatch(getAllCartItems(userId, jwt));
-            })
             .catch((error) => console.error('Error removing item:', error));
     };
 
-
-    const newTotalPrice = cart.reduce((total, item) => {
+    const newTotalPrice = localCart.reduce((total, item) => {
+        if (item.deleted) return total; // Skip deleted items
         const originalPrice = item.product.unitSellPrice || 0;
         const discount = item.product.discount || 0;
         return total + (originalPrice * (1 - discount) * item.quantity);
     }, 0);
+
+    const totalItems = new Set(
+        localCart
+            .filter(item => !item.deleted) // Filter out deleted items
+            .map(item => item.id) // Extract product IDs
+    ).size; // Get the size of the Set, which gives the count of unique products
+
 
     return (
         <Dialog
@@ -73,54 +89,56 @@ const CartModal = ({ open, onClose, cart }) => {
             }}
         >
             <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '24px', color: '#019376' }}>
-                {`${cart.length} Items`}
+                {`${totalItems} Items`}
             </DialogTitle>
             <DialogContent>
                 <List>
-                    {cart.map((item) => (
-                        <div key={item.cartItemId}>
-                            <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 0', justifyContent: 'space-between' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
+                    {localCart.map((item) => (
+                        !item.deleted && ( // Only render if not deleted
+                            <div key={item.cartItemId}>
+                                <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 0', justifyContent: 'space-between' }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
+                                        <IconButton
+                                            onClick={() => handleQuantityChange(item.product, -1)}
+                                            size="small"
+                                            sx={{ '&:hover': { backgroundColor: '#01937620' } }}
+                                        >
+                                            <RemoveIcon />
+                                        </IconButton>
+                                        <Typography>{item.quantity}</Typography>
+                                        <IconButton
+                                            onClick={() => handleQuantityChange(item, 1)}
+                                            size="small"
+                                            sx={{ '&:hover': { backgroundColor: '#01937620' } }}
+                                        >
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Box>
+
+                                    <Avatar
+                                        alt={item.product.pictureUrl2}
+                                        src={item.product.pictureUrl}
+                                        sx={{ width: 48, height: 48, marginRight: 2, marginLeft: 4, border: '1px solid #f0f0f0' }}
+                                    />
+
+                                    <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
+                                        <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.product.productName}</Typography>
+                                        <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}</Typography>
+                                        <Typography variant="body2" color="textSecondary">{`${item.quantity} x ${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}`}</Typography>
+                                    </Box>
+
+                                    <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}</Typography>
                                     <IconButton
-                                        onClick={() => handleQuantityChange(item.product, -1)}
+                                        onClick={() => handleRemoveItem(item)}
                                         size="small"
-                                        sx={{ '&:hover': { backgroundColor: '#01937620' } }}
+                                        sx={{ '&:hover': { color: '#ff1744' }, marginLeft: 'auto' }}
                                     >
-                                        <RemoveIcon />
+                                        <DeleteIcon />
                                     </IconButton>
-                                    <Typography>{item.quantity}</Typography>
-                                    <IconButton
-                                        onClick={() => handleQuantityChange(item, 1)}
-                                        size="small"
-                                        sx={{ '&:hover': { backgroundColor: '#01937620' } }}
-                                    >
-                                        <AddIcon />
-                                    </IconButton>
-                                </Box>
-
-                                <Avatar
-                                    alt={item.product.pictureUrl2}
-                                    src={item.product.pictureUrl}
-                                    sx={{ width: 48, height: 48, marginRight: 2, marginLeft: 4, border: '1px solid #f0f0f0' }}
-                                />
-
-                                <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
-                                    <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.productName}</Typography>
-                                    <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}</Typography>
-                                    <Typography variant="body2" color="textSecondary">{`${item.quantity} x ${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}`}</Typography>
-                                </Box>
-
-                                <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}</Typography>
-                                <IconButton
-                                    onClick={() => handleRemoveItem(item)}
-                                    size="small"
-                                    sx={{ '&:hover': { color: '#ff1744' }, marginLeft: 'auto' }}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItem>
-                            <Divider />
-                        </div>
+                                </ListItem>
+                                <Divider />
+                            </div>
+                        )
                     ))}
 
                     <ListItem>
@@ -143,7 +161,7 @@ const CartModal = ({ open, onClose, cart }) => {
                                 '&:hover': {
                                     backgroundColor: '#017f63',
                                 },
-                                alignItems:"center"
+                                alignItems: "center"
                             }}
                         >
                             Checkout

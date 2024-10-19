@@ -71,6 +71,8 @@ const Home = () => {
                 productId: item.productId
             };
             dispatch(addItemToCart(userId, productDetails, jwt));
+
+            window.location.reload();
         } else {
             console.error('User is not logged in');
         }
