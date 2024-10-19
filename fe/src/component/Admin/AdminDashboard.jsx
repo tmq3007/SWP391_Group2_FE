@@ -11,8 +11,8 @@ import VendorsPage from "./AdminDashboardDetails/AdminPage/VendorsPage";
 import CustomersPage from "./AdminDashboardDetails/AdminPage/CustomersPage";
 import SettingPage from "./AdminDashboardDetails/AdminPage/SettingPage";
 import CategoriesPage from "./AdminDashboardDetails/AdminPage/CategoriesPage";
-import UpdateCategoryForm from "./Form/UpdateCategoryForm";
 import {CreateCategoryForm} from "./Form/CreateCategoryForm";
+import {UpdateCategoryForm} from "./Form/UpdateCategoryForm";
 
 export const AdminDashboard = () => {
     const [open, setOpen] = React.useState(true);
