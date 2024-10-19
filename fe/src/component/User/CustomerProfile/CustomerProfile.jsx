@@ -6,32 +6,36 @@ import {Route, Routes} from "react-router-dom";
 import ChangePassword from "./ChangePassword";
 import {MyOrder} from "./MyOrder";
 import {Wishlist} from "./Wishlist";
+import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
 
 export const CustomerProfile = () => {
   return (
-      <div className='sticky  lg:flex justify-between '>
+      <div>
+        <NavbarHomePage/>
+        <div className='sticky  lg:flex justify-between '>
           <div className='sticky h-[70vh] lg:w-[20%] bg-white mt-10 mr-4 rounded-lg'>
-              <ProfileNav />
+            <ProfileNav/>
           </div>
 
           <div className='lg:w-[80%] bg-white mt-10 rounded-lg'>
-              <Routes>
-                  <Route path="/" element={<ProfileInfo/>}/>
-                  {/* Route for Profile Info */}
-                  <Route path="/profileinfo" element={<ProfileInfo/>}/>
+            <Routes>
+              <Route path="/" element={<ProfileInfo/>}/>
+              {/* Route for Profile Info */}
+              <Route path="/profileinfo" element={<ProfileInfo/>}/>
 
-                  {/* Route for Change Password */}
-                  <Route path="/change-pass" element={<ChangePassword/>}/>
+              {/* Route for Change Password */}
+              <Route path="/change-pass" element={<ChangePassword/>}/>
 
-                  {/* Route for My Orders */}
-                  <Route path="/orders" element={<MyOrder/>}/>
+              {/* Route for My Orders */}
+              <Route path="/orders" element={<MyOrder/>}/>
 
-                  <Route path="/wishlist" element={<Wishlist/>}/>
+              <Route path="/wishlist" element={<Wishlist/>}/>
 
-              </Routes>
+            </Routes>
           </div>
 
 
+        </div>
       </div>
   )
 }

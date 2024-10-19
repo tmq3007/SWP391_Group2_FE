@@ -40,11 +40,11 @@ const LoginForm = () => {
     // Handle form submission
     const handleSubmit = (values) => {
 
-            dispatch(loginUser({userData: values, navigate}))
-                .catch((error) => {
-                    setSnackBarMessage(error.response.data.message);
-                    setSnackBarOpen(true);
-                });
+        dispatch(loginUser({userData: values, navigate}))
+            .catch((error) => {
+                setSnackBarMessage(error.response.data.message);
+                setSnackBarOpen(true);
+            });
 
     };
 

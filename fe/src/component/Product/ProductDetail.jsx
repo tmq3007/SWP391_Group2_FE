@@ -109,7 +109,7 @@ const ProductDetail = ({ item, addToCart }) => {
                                     backgroundColor: "#017c65",
                                 }
                             }}
-                            onClick={() => addToCart(item)}  // Add product to cart
+                            onClick={() => addToCart(item.measurementUnit, 1, item)}  // Add product to cart
                         >
                             <AddShoppingCartIcon sx={{ marginRight: 1 }} />
                             Add to Cart
