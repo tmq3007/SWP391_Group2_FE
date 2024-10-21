@@ -25,6 +25,14 @@ export const registerUser = (reqData) => async (dispatch) => {
         console.log("registered",data);
 }
 
+export const resetPassword = (reqData) => async (dispatch) => {
+
+
+    const {data}=await axios.post(`${API_URL}/api/v1/reset-password`,reqData.userData);
+
+    console.log("registered",data);
+}
+
 export const loginUser = (reqData) => async (dispatch) => {
 
     dispatch({ type: LOGIN_REQUEST });
