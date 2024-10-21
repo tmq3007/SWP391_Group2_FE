@@ -1,49 +1,64 @@
 import React, { useEffect } from 'react';
-import { Typography, Button, Box, Chip, Divider } from '@mui/material';
+import { Typography, Button, Box, Chip, Divider, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import StarIcon from '@mui/icons-material/Star';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProductsAction } from '../State/Product/Action';
-import ProductCard from "./ProductCard";
 import ProductCardInDetail from "./ProductCardInDetail";
 
-const ProductDetail = ({ item, addToCart }) => {
+const ProductDetail = ({ cart, item, addToCart }) => {
     const dispatch = useDispatch();
     const { products } = useSelector(store => store.products);  // Access products from the store
 
-    // Handle discount and price safely
-    const originalPrice = item?.unitSellPrice || 0;  // Safely access the price
-    const discount = item?.discount || 0;            // Safely access the discount (use 0 if not available)
-    const discountPrice = originalPrice * (1 - discount);  // Calculate the discounted price
+    const originalPrice = item?.unitSellPrice || 0;
+    const discount = item?.discount || 0;
+    const discountPrice = originalPrice * (1 - discount);
+    const productDescription = item?.description || "No description available.";
+    const stock = item.stock - (cart.find(cartItem => cartItem.product.productId === item.productId)?.quantity || 0);
 
-    const productDescription = item?.description || "No description available.";  // Safe fallback for description
-
-    // Filter related products by category or shop, ensuring `products` is an array
     const relatedProducts = Array.isArray(products)
         ? products.filter((product) =>
             (product.category?.categoryName === item.category?.categoryName ||
                 product.shop?.shopName === item.shop?.shopName) &&
             product.productId !== item.productId
-        ).slice(0, 8)  // Limit to 8 related products
+        ).slice(0, 8)
         : [];
 
     useEffect(() => {
-        dispatch(getAllProductsAction());  // Dispatch action to fetch all products
+        dispatch(getAllProductsAction());
     }, [dispatch]);
 
-    // Calculate average rating from reviews
     const reviews = item?.reviews || [];
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
     const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(2) : 'No reviews';
+
+    const [openDialog, setOpenDialog] = React.useState(false); // State for dialog
+    const [dialogMessage, setDialogMessage] = React.useState(""); // State for dialog message
+
+    const handleAddToCart = () => {
+        if (stock <= 0) {
+            // If stock is 0 or less, show error message
+            setDialogMessage("Cannot add to cart because it is all in cart.");
+            setOpenDialog(true);
+        } else {
+            // Add product to cart
+            addToCart(item.measurementUnit, 1, item);
+        }
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setDialogMessage(""); // Clear the message when closing
+    };
 
     return (
         <div>
             {/* Product detail section */}
             <section className="flex flex-col md:flex-row p-8 space-y-6 md:space-y-0 md:space-x-6">
                 {/* Left side: Product image */}
-                <div className="md:w-2/5 bg-white p-6 flex flex-col items-start  ">
+                <div className="md:w-2/5 bg-white p-6 flex flex-col items-start">
                     <img
-                        src={item?.pictureUrl || '/path/to/default-image.jpg'}  // Use a fallback image
+                        src={item?.pictureUrl || '/path/to/default-image.jpg'}
                         alt={item?.productName || 'Product Image'}
                         className="max-w-full h-auto rounded-lg mb-4"
                     />
@@ -65,7 +80,7 @@ const ProductDetail = ({ item, addToCart }) => {
                 </div>
 
                 {/* Right side: Product information */}
-                <div className="md:w-3/5 bg-white p-8  flex flex-col justify-start space-y-6  ">
+                <div className="md:w-3/5 bg-white p-8 flex flex-col justify-start space-y-6">
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
                             {item?.productName || 'Product Name'}
@@ -109,7 +124,7 @@ const ProductDetail = ({ item, addToCart }) => {
                                     backgroundColor: "#017c65",
                                 }
                             }}
-                            onClick={() => addToCart(item.measurementUnit, 1, item)}  // Add product to cart
+                            onClick={handleAddToCart}  // Use the new function
                         >
                             <AddShoppingCartIcon sx={{ marginRight: 1 }} />
                             Add to Cart
@@ -128,11 +143,12 @@ const ProductDetail = ({ item, addToCart }) => {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
                     Related Products
                 </Typography>
-                <div className="grid grid-cols-1 sm:grid-cols-2   lg:grid-cols-4 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     {relatedProducts.map((relatedItem) => (
                         <ProductCardInDetail
                             key={relatedItem.productId}
                             item={relatedItem}
+                            cart={cart}
                             addToCart={addToCart}  // Pass addToCart function for related products
                             selectedProductId={null}  // No selected product id for related products
                             setSelectedProductId={() => {}}  // No operation for related products
@@ -140,6 +156,19 @@ const ProductDetail = ({ item, addToCart }) => {
                     ))}
                 </div>
             </section>
+
+            {/* Popup for error message */}
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>Error</DialogTitle>
+                <DialogContent>
+                    <Typography>{dialogMessage}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
