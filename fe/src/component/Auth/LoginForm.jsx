@@ -101,10 +101,18 @@ const LoginForm = () => {
                             component={PasswordInput} // Render PasswordInput with Field
                         />
 
+                        <Button
+                            sx={{color: '#039375'}}
+                            size='small'
+                            onClick={() => navigate("/auth/reset-password")}
+                        >
+                            Forget Password?
+                        </Button>
+
                         {/* Submit Button */}
                         <Button
                             sx={{
-                                mt: 3, padding: "1rem", backgroundColor: '#019376', '&:hover': {
+                                mt: 2, padding: "1rem", backgroundColor: '#019376', '&:hover': {
                                     color: 'white',
                                 }
                             }}
