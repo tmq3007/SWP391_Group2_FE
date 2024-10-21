@@ -50,7 +50,9 @@ export const loginUser = (reqData) => async (dispatch) => {
 
             // Lấy role dưới dạng String, giả sử scope có thể là mảng
             const role = Array.isArray(token.scope) ? token.scope[0] : token.scope;
-            localStorage.setItem('role', role );  // Lưu role vào localStorage
+            const userId = token.userId;
+            localStorage.setItem('role', role );
+            localStorage.setItem('userId', userId);
             console.log("role", role);
         }
 
