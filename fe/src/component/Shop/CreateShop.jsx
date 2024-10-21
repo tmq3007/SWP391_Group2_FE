@@ -1,6 +1,9 @@
 import React, {useEffect, useRef} from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useDispatch, useSelector} from "react-redux";
+import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {useNavigate} from "react-router-dom";
 
 
 export const CreateShop = () => {
@@ -77,6 +80,8 @@ export const CreateShop = () => {
         setCountry(event.target.value);
     };
 
+    const navigate = useNavigate();
+
     return (
         <div className="w-full bg-gray-100 h-screen overflow-y-auto mt-8">
             <div className={"h-screen p-6"}>
@@ -91,17 +96,23 @@ export const CreateShop = () => {
                         <p className={"text-sm text-body"}>Upload your shop logo here</p>
                     </div>
                     <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
-                        <div className="border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer" onClick={() => fileInputLogoRef.current.click()}>
-                            <input ref={fileInputLogoRef} type="file" className="hidden" accept=".png, .jpg, .jpeg" onChange={handleFileUploadLogo} />
+                        <div
+                            className="border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer"
+                            onClick={() => fileInputLogoRef.current.click()}>
+                            <input ref={fileInputLogoRef} type="file" className="hidden" accept=".png, .jpg, .jpeg"
+                                   onChange={handleFileUploadLogo}/>
                             <CloudUploadIcon/>
                             <p className="mt-4 text-sm text-center text-body">
-                                <span className="font-semibold text-accent text-[#009f7f]">Upload logo</span> or drag and drop
+                                <span className="font-semibold text-accent text-[#009f7f]">Upload logo</span> or drag
+                                and drop
                             </p>
                         </div>
                         {previewLogo && (
                             <div className="mt-4 relative">
-                                <img src={previewLogo} alt="Preview Logo" className="w-20 h-20 object-cover rounded" />
-                                <button className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full" onClick={handleRemoveLogo}>X</button>
+                                <img src={previewLogo} alt="Preview Logo" className="w-20 h-20 object-cover rounded"/>
+                                <button className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+                                        onClick={handleRemoveLogo}>X
+                                </button>
                             </div>
                         )}
                     </div>
@@ -114,17 +125,24 @@ export const CreateShop = () => {
                         <p className={"text-sm text-body"}>Upload your shop cover image here</p>
                     </div>
                     <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
-                        <div className="border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer" onClick={() => fileInputCoverRef.current.click()}>
-                            <input ref={fileInputCoverRef} type="file" className="hidden" accept=".png, .jpg, .jpeg" onChange={handleFileUploadCover} />
+                        <div
+                            className="border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer"
+                            onClick={() => fileInputCoverRef.current.click()}>
+                            <input ref={fileInputCoverRef} type="file" className="hidden" accept=".png, .jpg, .jpeg"
+                                   onChange={handleFileUploadCover}/>
                             <CloudUploadIcon/>
                             <p className="mt-4 text-sm text-center text-body">
-                                <span className="font-semibold text-accent text-[#009f7f]">Upload cover image</span> or drag and drop
+                                <span className="font-semibold text-accent text-[#009f7f]">Upload cover image</span> or
+                                drag and drop
                             </p>
                         </div>
                         {previewCoverImage && (
                             <div className="mt-4 relative">
-                                <img src={previewCoverImage} alt="Preview Cover" className="w-20 h-20 object-cover rounded" />
-                                <button className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full" onClick={handleRemoveCoverImage}>X</button>
+                                <img src={previewCoverImage} alt="Preview Cover"
+                                     className="w-20 h-20 object-cover rounded"/>
+                                <button className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+                                        onClick={handleRemoveCoverImage}>X
+                                </button>
                             </div>
                         )}
                     </div>
@@ -138,10 +156,16 @@ export const CreateShop = () => {
                     </div>
                     <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
                         <div className="mb-5">
-                            <input type="text" className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent" placeholder={"Shop Name"} value={shopName} onChange={(e) => setShopName(e.target.value)} />
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"Shop Name"} value={shopName}
+                                   onChange={(e) => setShopName(e.target.value)}/>
                         </div>
                         <div className="mb-5">
-                            <input type="text" className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent" placeholder={"Description"} value={description} onChange={(e) => setDescription(e.target.value)} />
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"Description"} value={description}
+                                   onChange={(e) => setDescription(e.target.value)}/>
                         </div>
                     </div>
                 </div>
@@ -157,21 +181,41 @@ export const CreateShop = () => {
 
                         </div>
                         <div className="mb-5">
-                            <input type="text" className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent" placeholder={"State"} value={state} onChange={(e) => setState(e.target.value)} />
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"State"} value={state} onChange={(e) => setState(e.target.value)}/>
                         </div>
                         <div className="mb-5">
-                            <input type="text" className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent" placeholder={"City"} value={city} onChange={(e) => setCity(e.target.value)} />
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"City"} value={city} onChange={(e) => setCity(e.target.value)}/>
                         </div>
                         <div className="mb-5">
-                            <input type="text" className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent" placeholder={"Address"} value={address} onChange={(e) => setAddress(e.target.value)} />
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"Address"} value={address}
+                                   onChange={(e) => setAddress(e.target.value)}/>
                         </div>
                         <div className="mb-5">
-                            <input type="text" className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent" placeholder={"Contact Number"} value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} />
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"Contact Number"} value={contactNumber}
+                                   onChange={(e) => setContactNumber(e.target.value)}/>
                         </div>
                     </div>
                 </div>
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center cursor-pointer" onClick={() => navigate("/vendor-dashboard")}>
+                        <ArrowBackIcon className="mr-2"/>
+                        <span className="text-sm font-medium text-gray-600">Back</span>
+                    </div>
+                    <button
+                        className="bg-[#009f7f] text-white py-2 px-6 rounded-md shadow hover:bg-[#007f63] transition duration-300 ease-in-out"
+                        onClick={handleCreateShop}>
+                        Create Shop
+                    </button>
+                </div>
 
-                <button className="mt-4 py-2 px-6 bg-accent text-white rounded" onClick={handleCreateShop}>Create Shop</button>
             </div>
         </div>
     );

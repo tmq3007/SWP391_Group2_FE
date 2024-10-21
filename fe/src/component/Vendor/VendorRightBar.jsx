@@ -14,6 +14,7 @@ import VendorDisplayNotification from "./VendorDisplayNotification";
 import { useNavigate } from "react-router-dom";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import AddIcon from '@mui/icons-material/Add';
 
 
 /*
@@ -134,16 +135,27 @@ const notificationData = [
 
 const VendorRightBar = ({ selectedPage }) => {
   const navigate = useNavigate();
+
   return (
     <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll mt-6">
       {selectedPage === 1 && (
         <div>
-          <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
+          <div className="w-full h-full  mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
             <div className="mb-7 flex items-center justify-between">
-              <span className='font-semibold cursor-pointer hover:text-green-500 hover:border hover:border-solid hover:border-green-400 p-1 rounded-full'>Summary</span>
+              <span
+                  className='font-semibold cursor-pointer hover:text-green-500 hover:border hover:border-solid hover:border-green-400 p-1 rounded-full'>Summary</span>
+              <button className={"bg-[#009f7f] inline-flex items-center justify-center flex-shrink-0 text-white" +
+                  " font-semibold rounded outline-none transition duration-300 ease-in-out" +
+                  " focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 bg-accent" +
+                  " border border-transparent hover:bg-accent-hover px-5 py-0 h-12 text-sm md:text-base"}
+              onClick={() => navigate("/create-shop")}>
+                <AddIcon/>Add Shop
+              </button>
             </div>
+
             <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
+              <div
+                  className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
                     <KeyboardDoubleArrowUpIcon className="h-8 w-8 text-green-500" />
