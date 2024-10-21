@@ -205,7 +205,7 @@ export const CreateShop = () => {
                     </div>
                 </div>
                 <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate("/vendor-dashboard")}>
+                    <div className="flex items-center cursor-pointer" onClick={() => navigate("/auth/login")}>
                         <ArrowBackIcon className="mr-2"/>
                         <span className="text-sm font-medium text-gray-600">Back</span>
                     </div>
