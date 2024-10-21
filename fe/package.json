@@ -32,6 +32,7 @@
     "redux-thunk": "^3.1.0",
     "rive-react": "^4.14.4",
     "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.13",
     "swiper": "^11.1.14",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
