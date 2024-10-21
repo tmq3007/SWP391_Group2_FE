@@ -1,27 +1,40 @@
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Card, CardContent, CardMedia, Typography, Button, TextField, IconButton, Box } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ProductDetail from './ProductDetail';
-import { useNavigate } from 'react-router-dom';
-import '../../style/ProductCard.css';
+import ProductDetail from "./ProductDetail";
+import CloseIcon from "@mui/icons-material/Close";
 
-const ProductCard = ({ item, addToCart, addToWishlist }) => {
+const ProductCard = ({ item, addToCart }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0;
     const discountPrice = originalPrice * (1 - discount / 100);
     const discountPercentage = Math.round(discount);
 
     const [isFavorite, setIsFavorite] = React.useState(false);
-    const [open, setOpen] = React.useState(false);
+    const [isAddingToCart, setIsAddingToCart] = React.useState(false);
     const [quantity, setQuantity] = React.useState(1);
-
-    const navigate = useNavigate();
+    const [open, setOpen] = React.useState(false);
 
     const handleFavoriteToggle = () => {
         setIsFavorite((prev) => !prev);
+    };
+
+    const handleAddToCartClick = () => {
+        setIsAddingToCart(true);
+    };
+
+    const handleConfirmAddToCart = () => {
+        if (quantity > 0) {
+            // Pass the quantity to addToCart function
+            addToCart(item.measurementUnit, quantity, item);
+            setIsAddingToCart(false);
+            setQuantity(1); // Reset quantity after adding to cart
+        } else {
+            setIsAddingToCart(false); // Close the modal if quantity is invalid
+        }
     };
 
     const handleProductClick = () => {
@@ -30,33 +43,63 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
 
     const handleClose = () => {
         setOpen(false);
-        // Optionally navigate if needed; comment out if not desired
-        // navigate('/');
     };
 
-    const handleAddToCart = () => {
-        if (quantity > 0) {
-            const buyUnit = item.measurementUnit; // Get measurement unit from item
-            addToCart(buyUnit, quantity,item ); // Pass the item, quantity, and measurement unit to addToCart
-            setQuantity(1); // Reset quantity to 1 after adding to cart
+    const handleCancelAddToCart = () => {
+        setIsAddingToCart(false);
+        setQuantity(1); // Reset quantity when canceling
+    };
+
+    const handleQuantityChange = (e) => {
+        const newQuantity = Math.max(0, e.target.value); // Ensure quantity cannot be negative
+        setQuantity(newQuantity);
+        if (newQuantity === 0) {
+            setIsAddingToCart(false); // Optionally close add to cart modal if quantity is zero
+            setQuantity(1);
         }
     };
 
     return (
         <>
-            <Card className="product-card">
+            <Card sx={{
+                maxWidth: 300,
+                margin: 2,
+                borderRadius: 2,
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                position: 'relative',
+                '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.15)',
+                }
+            }}>
                 <CardMedia
                     component="img"
                     height="140"
                     image={item.pictureUrl}
                     alt={item.productName}
                     onClick={handleProductClick}
-                    className="product-image"
+                    sx={{ borderRadius: '15px 15px 0 0', objectFit: 'cover', cursor: "pointer" }}
                 />
+                {discount > 0 && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            backgroundColor: '#ff4d4f',
+                            color: 'white',
+                            padding: '3px 8px',
+                            borderRadius: 1,
+                            fontSize: 12,
+                        }}
+                    >
+                        Sale {discountPercentage}%
+                    </Box>
+                )}
                 <CardContent>
-                    <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
+                    <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 2 }}>
                         {item.productName}
-                        {discount > 0 && <span className="discount-badge">Sale {discountPercentage}%</span>}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         {item.measurementUnit} kg
@@ -66,29 +109,70 @@ const ProductCard = ({ item, addToCart, addToWishlist }) => {
                             ${originalPrice.toFixed(2)}
                         </Typography>
                     )}
-                    <div className="product-price">
-                        <Typography variant="h6" component="div" sx={{ color: "#019376", fontWeight: 'bold', marginBottom: 2, marginLeft: 0.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
+                        <Typography variant="h6" component="div" sx={{ color: "#019376", fontWeight: 'bold', mb: 2 }}>
                             ${discountPrice.toFixed(2)}
                         </Typography>
-                        <Button
-                            variant="contained"
-                            onClick={handleFavoriteToggle}
-                            className={`favorite-button ${isFavorite ? 'active' : ''}`}
-                        >
-                            {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }} /> : <FavoriteBorderIcon />}
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={handleAddToCart} // Call handleAddToCart when clicked
-                            className="cart-button"
-                        >
-                            <AddShoppingCartIcon sx={{ color: '#019376' }} />
-                        </Button>
-                    </div>
+                    </Box>
+
+                    {isAddingToCart ? (
+                        <Box sx={{ mt: 2 }}>
+                            <TextField
+                                label="Quantity"
+                                type="number"
+                                value={quantity}
+                                onChange={handleQuantityChange}
+                                fullWidth
+                                margin="normal"
+                                inputProps={{ min: 0 }} // Prevent negative input
+                            />
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleConfirmAddToCart}
+                                    fullWidth
+                                >
+                                    Confirm
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleCancelAddToCart}
+                                    fullWidth
+                                >
+                                    Cancel
+                                </Button>
+                            </Box>
+                        </Box>
+                    ) : (
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, textAlign: "center" }}>
+                            <Button
+                                variant="contained"
+                                onClick={handleAddToCartClick}
+                                sx={{
+                                    flexGrow: 1,
+                                    mr: 1,
+                                    transition: 'background-color 0.3s ease',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(1, 147, 118, 0.2)',
+                                    }
+                                }}
+                            >
+                                <AddShoppingCartIcon sx={{ mr: 1 }} />
+                                Add to Cart
+                            </Button>
+                            <IconButton onClick={handleFavoriteToggle} sx={{
+                                backgroundColor: isFavorite ? 'rgba(1, 147, 118, 0.1)' : 'transparent',
+                                transition: 'background-color 0.3s ease',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(1, 147, 118, 0.2)',
+                                }
+                            }}>
+                                {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }} /> : <FavoriteBorderIcon />}
+                            </IconButton>
+                        </Box>
+                    )}
                 </CardContent>
             </Card>
-
-            {/* Product Detail Dialog */}
             <Dialog
                 open={open}
                 onClose={handleClose}

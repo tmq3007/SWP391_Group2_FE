@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import {AccountBox, Logout, RecentActors} from "@mui/icons-material";
+import LogoutIcon from '@mui/icons-material/Logout';
 const ProfileList = ({ handleLogout }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
@@ -56,13 +59,11 @@ const ProfileList = ({ handleLogout }) => {
                 }}
             >
                 <MenuItem style={{ color: '#019376' }} onClick={handleProfileClick}>
-                    Profile
+                   <AccountBox sx={{ marginRight:"10px" }} /> Profile
                 </MenuItem>
-                <MenuItem style={{ color: '#019376' }} onClick={handleMenuClose}>
-                    My account
-                </MenuItem>
+
                 <MenuItem style={{ color: '#019376' }} onClick={handleMenuLogout}>
-                    Logout
+                   <Logout sx={{ marginRight:"10px" }}/> Logout
                 </MenuItem>
             </Menu>
         </div>

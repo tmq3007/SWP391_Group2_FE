@@ -65,7 +65,7 @@ export const loginUser = (reqData) => async (dispatch) => {
     export const updateUserById = (userId, user, jwt) => async (dispatch) => {
         dispatch({ type: UPDATE_PROFILE_REQUEST });
         try {
-            const { data } = await axios.put(`${API_URL}/api/v1/users/${userId}`, user, {
+            const { data } = await axios.put(`${API_URL}/api/v1/users/profile/${userId}`, user, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -89,8 +89,9 @@ export const getUser = (jwt) => async (dispatch) => {
         });
 
         dispatch({ type: GET_USER_SUCCESS, payload: data.token });
+        console.log("user data", data);
         return data;
-        //console.log(data);
+
     } catch (error) {
         dispatch({ type: GET_USER_FAILURE, payload: error });
         console.error('Error get user:', error);

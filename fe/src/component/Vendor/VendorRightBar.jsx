@@ -12,10 +12,19 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import VendorShopDisplay from "./VendorShopDisplay";
 import VendorDisplayNotification from "./VendorDisplayNotification";
 import { useNavigate } from "react-router-dom";
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 
 
-
-
+/*
+* get the data out
+*
+* data include
+*
+* order
+*
+* shop information
+* */
 const products = [
   {
     id: 1,
@@ -27,63 +36,63 @@ const products = [
   {
     id: 2,
     name: 'Product 2',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 3,
     name: 'Product 3',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 4,
     name: 'Product 4',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 5,
     name: 'Product 5',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 6,
     name: 'Product 6',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 7,
     name: 'Product 7',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 8,
     name: 'Product 8',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
   {
     id: 9,
     name: 'Product 9',
-    image: '/path/to/image1.jpg',
+    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'This is a great product',
     price: 29.99,
   },
   {
     id: 10,
     name: 'Product 10',
-    image: '/path/to/image2.jpg',
+    image: 'https://th.bing.com/th/id/OIP.JDa_1X-NqdM1K-bZxp99DQHaEo?w=265&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
     description: 'Another fantastic product',
     price: 19.99,
   },
@@ -126,18 +135,18 @@ const notificationData = [
 const VendorRightBar = ({ selectedPage }) => {
   const navigate = useNavigate();
   return (
-    <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll">
+    <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll mt-6">
       {selectedPage === 1 && (
         <div>
           <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
             <div className="mb-7 flex items-center justify-between">
-              Summary
+              <span className='font-semibold cursor-pointer hover:text-green-500 hover:border hover:border-solid hover:border-green-400 p-1 rounded-full'>Summary</span>
             </div>
             <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <KeyboardDoubleArrowUpIcon className="h-8 w-8 text-gray-700" />
+                    <KeyboardDoubleArrowUpIcon className="h-8 w-8 text-green-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -150,10 +159,10 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-red-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <KeyboardDoubleArrowDownIcon className="h-8 w-8 text-gray-700" />
+                    <KeyboardDoubleArrowDownIcon className="h-8 w-8 text-red-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -166,10 +175,10 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <FormatListNumberedIcon className="h-8 w-8 text-gray-700" />
+                    <FormatListNumberedIcon className="h-8 w-8 text-green-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -182,10 +191,10 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <MonetizationOnIcon className="h-8 w-8 text-gray-700" />
+                    <MonetizationOnIcon className="h-8 w-8 text-green-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -203,27 +212,33 @@ const VendorRightBar = ({ selectedPage }) => {
 
           <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
             <div className="mb-7 flex items-center justify-between">
-              Order status
+              <span
+                  className='font-semibold cursor-pointer hover:text-green-500 hover:border hover:border-solid hover:border-green-400 p-1 rounded-full'>Order status</span>
               <div className="mt-3.5 inline-flex rounded-full bg-gray-100/80 p-1.5 sm:mt-0">
-                <button className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
+                <button
+                    className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
                   Today
                 </button>
-                <button className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
+                <button
+                    className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
                   Week
                 </button>
-                <button className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
+                <button
+                    className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
                   Month
                 </button>
-                <button className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
+                <button
+                    className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
                   Year
                 </button>
               </div>
             </div>
             <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div
+                  className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <KeyboardDoubleArrowUpIcon className="h-8 w-8 text-gray-700" />
+                    <KeyboardDoubleArrowUpIcon className="h-8 w-8 text-green-500"/>
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -236,10 +251,10 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <KeyboardDoubleArrowDownIcon className="h-8 w-8 text-gray-700" />
+                    <HourglassTopIcon className="h-8 w-8 text-green-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -252,10 +267,10 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <FormatListNumberedIcon className="h-8 w-8 text-gray-700" />
+                    <FormatListNumberedIcon className="h-8 w-8 text-green-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -268,10 +283,10 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6">
+              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-red-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <MonetizationOnIcon className="h-8 w-8 text-gray-700" />
+                    <MoneyOffIcon className="h-8 w-8 text-red-500" />
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
@@ -287,7 +302,7 @@ const VendorRightBar = ({ selectedPage }) => {
           </div>
           <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
             Sale history
-            <div className="mb-5 flex items-center justify-between">
+            <div className="mb-5 flex items-center justify-center">
               <Bar
                 data={{
                   labels: [

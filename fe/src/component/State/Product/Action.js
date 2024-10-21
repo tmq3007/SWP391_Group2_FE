@@ -59,7 +59,8 @@ export const getProductById = (productId) => {
     return async (dispatch) => {
         dispatch({ type: GET_PRODUCT_BY_ID_REQUEST });
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/products/${productId}`);
+            const response = await
+                axios.get(`http://localhost:8080/api/v1/products/${productId}`);
             dispatch({ type: GET_PRODUCT_BY_ID_SUCCESS, payload: response.data });
         } catch (error) {
             console.log("all err", error);

@@ -1,43 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import '../../../../style/AdminDashboard.css';
 import SearchIcon from "@mui/icons-material/Search";
 import {ChevronLeft, ChevronRight, Edit} from "@mui/icons-material";
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';   // For active status
-import ToggleOffIcon from '@mui/icons-material/ToggleOff'; // For inactive status
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import {Route, Routes, useNavigate} from "react-router-dom";
-import CreateCategoryForm from "../../Form/CreateCategoryForm";
+import {useNavigate} from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-// Sample category data
-const categoriesData = [
-    {
-        id: 'cat001',
-        name: 'Electronics',
-        icon: 'https://via.placeholder.com/40',  // Placeholder for category icon
-        status: 'Active',
-    },
-    {
-        id: 'cat002',
-        name: 'Fashion',
-        icon: 'https://via.placeholder.com/40',
-        status: 'Inactive',
-    },
-    {
-        id: 'cat003',
-        name: 'Home Appliances',
-        icon: 'https://via.placeholder.com/40',
-        status: 'Active',
-    },
-    {
-        id: 'cat004',
-        name: 'Books',
-        icon: 'https://via.placeholder.com/40',
-        status: 'Inactive',
-    },
-    // More categories can be added here
-];
+import {deleteCategory, getAllCategoriesAdmin} from "../../../State/Admin/Action";
 
 const PER_PAGE = 4;
 
@@ -45,10 +16,31 @@ function CategoriesPage() {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-    const [categories, setCategories] = useState(categoriesData);
+    const [categories, setCategories] = useState([]);  // Initialize as an empty array
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    // Fetch categories from the API on component mount
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await getAllCategoriesAdmin();  // API call
+                // Map API response to match your table data format
+                const mappedCategories = response.result.map(cat => ({
+                    id: cat.categoryId,  // Map categoryId to id
+                    name: cat.categoryName,  // Map categoryName to name
+                    icon: cat.picture || 'https://via.placeholder.com/40',  // Use picture or placeholder
+                    status: cat.isActive ? 'Active' : 'Inactive'  // Convert boolean to status string
+                }));
+                setCategories(mappedCategories);  // Set categories in state
+            } catch (error) {
+                console.error("Error fetching categories", error);
+            }
+        };
+
+        fetchCategories();  // Call the fetch function
+    }, []);  // Empty dependency array to run this effect only once on mount
 
     const filteredCategories = categories.filter(
         (category) =>
@@ -78,7 +70,7 @@ function CategoriesPage() {
                 )
             );
         }
-        setIsModalOpen(false); // Close modal after confirmation
+        setIsModalOpen(false);
     };
 
     const handleDelete = (category) => {
@@ -86,17 +78,25 @@ function CategoriesPage() {
         setIsDeleteModalOpen(true);
     };
 
-    // Confirm delete
-    const confirmDelete = () => {
-        setCategories(prevCategories =>
-            prevCategories.filter(category => category.id !== selectedCategory.id)
-        );
-        setIsDeleteModalOpen(false);
+    const confirmDelete = async () => {
+        try {
+            // Call the deleteCategory API function
+            await deleteCategory(selectedCategory.id);
+
+            // Update local state to remove the deleted category
+            setCategories(prevCategories =>
+                prevCategories.filter(category => category.id !== selectedCategory.id)
+            );
+
+            // Close the delete modal
+            setIsDeleteModalOpen(false);
+        } catch (error) {
+            console.error("Error deleting category", error);
+        }
     };
 
-
     const handleCloseModal = () => {
-        setIsModalOpen(false); // Close modal without making changes
+        setIsModalOpen(false);
     };
 
     const handleCloseDeleteModal = () => {
@@ -109,8 +109,6 @@ function CategoriesPage() {
 
     return (
         <div style={{ flex: 1, padding: '20px', marginTop: '36px' }}>
-
-
             <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
                 <div className='flex justify-between mt-3'>
                     <div className='recent-orders-header relative top-3'>
@@ -126,17 +124,17 @@ function CategoriesPage() {
                                 className="search-input"
                             />
                             <span className="search-icon">
-                            <SearchIcon/>
-                        </span>
+                                <SearchIcon/>
+                            </span>
                         </div>
-                            <button onClick={() => handleNavigate('/create-category')} className="add-user-button w-1/10 h-12 relative top-2">
-                                + Add Category
-                            </button>
-                        </div>
+                        <button onClick={() => handleNavigate('/create-category')} className="add-user-button w-1/10 h-12 relative top-2">
+                            + Add Category
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                <div className="container-table overflow-hidden rounded-lg bg-white col-span-full mt-10 mb-5">
+            <div className="container-table overflow-hidden rounded-lg bg-white col-span-full mt-10 mb-5">
                 <table>
                     <thead>
                     <tr>
@@ -151,7 +149,7 @@ function CategoriesPage() {
                         <tr key={category.id}>
                             <td>{category.id}</td>
                             <td>
-                                <div className="category-info flex relative left-56">
+                                <div className="category-info flex relative left-40">
                                     <img src={category.icon} alt="Category Icon" className="avatar" />
                                     <div className="category-details">
                                         <span className="category-name relative top-2">{category.name}</span>

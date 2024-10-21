@@ -6,7 +6,7 @@ import CustomRoute from "./component/Routers/CustomRoute";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./component/State/Authentication/Action";
 import VendorDashboard from "./component/Vendor/VendorDashboard";
-import {CreateShop} from "./component/Shop/CreateShop";
+import CustomerPayment from "./component/User/CustomerProfile/CustomerPayment";
 
 
 function App() {
@@ -19,8 +19,12 @@ function App() {
             {/*<Divider />*/}
             {/*<Home />*/}
             {/*<VendorDashboard/>*/}
-            <CustomRoute/>
+            <CustomRoute />
+
+            {/*<CustomerPayment/>*/}
             {/*for testing*/}
+            {/*<CustomerPayment/>*/}
+            {/*<VendorDashboard/>*/}
         </ThemeProvider>
     );
 }

@@ -12,7 +12,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const VendorLeftBar = ({ onSelect }) => {
   return (
-    <div  className="w-[18.3%] h-[90vh] border-r-2 border-gray-200 bg-white block">
+    <div  className="w-[20%] h-[90vh] border-r-2 border-gray-200 bg-white block mt-7">
       <div className="block border-b border-t border-b-gray-300 pt-5 pl-5 pb-5">
         <div className="flex items-center mb-2">
           <div className="w-[4rem] h-[4rem] border border-black rounded-full">

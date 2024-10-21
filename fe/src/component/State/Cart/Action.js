@@ -21,43 +21,48 @@ import {
 import axios from 'axios';
 
 // API URL
-const API_URL = 'http://localhost:8080/api/v1/cart';
+const API_URL_CART = 'http://localhost:8080/api/v1/cart';
 
 // Thêm hàm để tìm giỏ hàng
-export const findCart = (userId,jwt) => async (dispatch) => {
+export const findCart = (userId, jwt) => async (dispatch) => {
     dispatch({ type: FIND_CART_REQUEST });
     try {
-        const response = await axios.get(`${API_URL}/${userId}`,{
-            headers:{
+        const { data } = await axios.get(`${API_URL_CART}/${userId}`, {
+            headers: {
                 Authorization: `Bearer ${jwt}`
             }
         });
-        dispatch({ type: FIND_CART_SUCCESS, payload: response.data });
+        dispatch({ type: FIND_CART_SUCCESS, payload: data });
+        console.log("cart find", data);
+        return data;  // Correctly return the data here
     } catch (error) {
-        dispatch({ type: FIND_CART_FAILURE, payload: error.response.data.message });
+        dispatch({ type: FIND_CART_FAILURE, payload: error });
+        console.error("Error finding cart:", error); // Log errors for better debugging
     }
 };
+
 
 // Thêm hàm để thêm sản phẩm vào giỏ hàng
 export const addItemToCart = (userId,item, jwt) => async (dispatch) => {
     dispatch({ type: ADD_ITEM_TO_CART_REQUEST });
     try {
-        const response = await axios.put(`${API_URL}/add/${userId}`, item,{
+        const {response} = await axios.put(`${API_URL_CART}/add/${userId}`, item,{
             headers:{
                 Authorization: `Bearer ${jwt}`
             }
         });
         dispatch({ type: ADD_ITEM_TO_CART_SUCCESS, payload: response.data });
+        return response;
     } catch (error) {
-        dispatch({ type: ADD_ITEM_TO_CART_FAILURE, payload: error.response.data.message });
+        dispatch({ type: ADD_ITEM_TO_CART_FAILURE, payload: error.message  });
     }
 };
 
-// Thêm hàm để cập nhật sản phẩm trong giỏ hàng
+//Thêm hàm để cập nhật sản phẩm trong giỏ hàng
 export const updateCartItem = (userId, cartItemId, item,jwt) => async (dispatch) => {
     dispatch({ type: UPDATE_CARTITEM_REQUEST });
     try {
-        const response = await axios.put(`${API_URL}/delete/user/${userId}/cartItem/${cartItemId}`, item,{
+        const response = await axios.put(`${API_URL_CART}/delete/user/${userId}/cartItem/${cartItemId}`, item,{
             headers:{
                 Authorization: `Bearer ${jwt}`
             }
@@ -69,26 +74,28 @@ export const updateCartItem = (userId, cartItemId, item,jwt) => async (dispatch)
 };
 
 // Thêm hàm để xóa sản phẩm trong giỏ hàng
-export const removeCartItem = (userId, cartItemId,jwt) => async (dispatch) => {
+// Action to remove a cart item
+export const removeCartItem = (userId, cartItemId, jwt) => async (dispatch) => {
     dispatch({ type: REMOVE_CARTITEM_REQUEST });
     try {
-        const response = await axios.delete(`${API_URL}/delete/user/${userId}/cartItem/${cartItemId}`,{
-            headers:{
+        await axios.delete(`${API_URL_CART}/delete/user/${userId}/cartItem/${cartItemId}`, {
+            headers: {
                 Authorization: `Bearer ${jwt}`
             }
         });
-        dispatch({ type: REMOVE_CARTITEM_SUCCESS, payload: cartItemId });
+        dispatch({ type: REMOVE_CARTITEM_SUCCESS, payload: cartItemId }); // Remove cart item ID
     } catch (error) {
-        dispatch({ type: REMOVE_CARTITEM_FAILURE, payload: error.response.data.message });
+        dispatch({ type: REMOVE_CARTITEM_FAILURE, payload: error.response?.data?.message || 'Error removing item' });
     }
 };
+
 
 // Thêm hàm để xóa giỏ hàng (nếu cần)
 export const clearCart = () => async (dispatch) => {
     dispatch({ type: CLEAR_CART_REQUEST });
     try {
         // Gọi API xóa giỏ hàng nếu có
-        // const response = await axios.delete(`${API_URL}/clear`);
+        const response = await axios.delete(`${API_URL_CART}/clear`);
         dispatch({ type: CLEAR_CART_SUCCESS });
     } catch (error) {
         dispatch({ type: CLEAR_CART_FAILURE, payload: error.response.data.message });
@@ -99,13 +106,14 @@ export const clearCart = () => async (dispatch) => {
 export const getAllCartItems = (userId,jwt) => async (dispatch) => {
     dispatch({ type: GET_ALL_CART_ITEMS_REQUEST });
     try {
-        const response = await axios.get(`${API_URL}/${userId}/items`,{
+        const {response} = await axios.get(`${API_URL_CART}/${userId}`,{
             headers:{
                 Authorization: `Bearer ${jwt}`
             }
         });
         dispatch({ type: GET_ALL_CART_ITEMS_SUCCESS, payload: response.data });
+        return response;
     } catch (error) {
-        dispatch({ type: GET_ALL_CART_ITEMS_FAILURE, payload: error.response.data.message });
+        dispatch({ type: GET_ALL_CART_ITEMS_FAILURE, payload: error});
     }
 };

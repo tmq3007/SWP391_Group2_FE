@@ -80,3 +80,54 @@ export const unbanUser = async (userId) => {
         throw error;
     }
 }
+
+export const addCategory = async (newCategory) => {
+    try {
+        const response = await axiosInstance.post(`/api/v1/categories`, newCategory);
+        return response.data;
+    } catch (error) {
+        console.error("Error adding category", error);
+        throw error;
+    }
+}
+
+export const getAllCategoriesAdmin = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/categories`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching categories", error);
+        throw error;
+    }
+}
+
+export const updateCategory = async (categoryId, updatedCategory) => {
+    try {
+        const response = await axiosInstance.put(`/api/v1/categories/${categoryId}`, updatedCategory);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating category", error);
+        throw error;
+    }
+}
+
+export const getCategoryById = async (categoryId) => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/categories/${categoryId}`);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching category", error);
+        throw error;
+    }
+}
+
+export const deleteCategory = async (categoryId) => {
+    try {
+        const response = await axiosInstance.delete(`/api/v1/categories/${categoryId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting category", error);
+        throw error;
+    }
+}
