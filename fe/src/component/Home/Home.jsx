@@ -127,11 +127,11 @@ const Home = () => {
             </section>
 
             <section className="pt-[2rem] lg:flex relative">
-                <div className="space-y-10 w-[300px] filter" style={{ backgroundColor: '#ffffff', padding: '1rem' }}>
-                    <div className="box spacey-8 items-center lg:sticky top-28">
-                        <CategoryMenu setSelectedCategory={setSelectedCategory} setSelectedPrice={setSelectedPrice} />
-                    </div>
-                </div>
+                {/*<div className="space-y-10 w-[300px] filter" style={{ backgroundColor: '#ffffff', padding: '1rem' }}>*/}
+                {/*    <div className="box spacey-8 items-center lg:sticky top-28">*/}
+                {/*        <CategoryMenu setSelectedCategory={setSelectedCategory} setSelectedPrice={setSelectedPrice} />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
                     {currentProducts.map((item) => (

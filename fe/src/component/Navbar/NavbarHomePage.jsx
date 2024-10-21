@@ -14,9 +14,11 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const token = localStorage.getItem('jwt');
     const [userRole, setUserRole] = useState(null);
+    const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
+    const id = localStorage.getItem('userId');
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);  // Cập nhật giá trị tìm kiếm
     };
@@ -26,6 +28,14 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             setIsLoggedIn(true);
             setUserRole(role);
             console.log("Role from localStorage:", role);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (token !== null && id) {
+            setIsLoggedIn(true);
+            setUserId(id);
+            console.log("ID from localStorage:", id);
         }
     }, [token]);
 
