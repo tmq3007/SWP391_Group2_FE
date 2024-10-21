@@ -137,11 +137,20 @@ const ProductCard = ({ cart, item, addToCart }) => {
                             {quantity > stock && (
                                 <Typography color="error" variant="body2">Quantity cannot exceed {stock}.</Typography>
                             )}
-                            <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                                 <Button
                                     variant="contained"
                                     onClick={handleConfirmAddToCart}
                                     fullWidth
+                                    sx={{
+                                        backgroundColor: '#019376', // Màu nền
+                                        '&:hover': {
+                                            backgroundColor: '#01755b', // Màu khi hover
+                                        },
+                                        borderRadius: 2, // Bo tròn
+                                        fontWeight: 'bold', // Đậm chữ
+                                        transition: 'background-color 0.3s ease',
+                                    }}
                                 >
                                     Confirm
                                 </Button>
@@ -149,10 +158,22 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                     variant="outlined"
                                     onClick={handleCancelAddToCart}
                                     fullWidth
+                                    sx={{
+                                        borderColor: '#019376', // Màu viền
+                                        color: '#019376', // Màu chữ
+                                        '&:hover': {
+                                            borderColor: '#01755b', // Màu viền khi hover
+                                            color: '#01755b', // Màu chữ khi hover
+                                        },
+                                        borderRadius: 2, // Bo tròn
+                                        fontWeight: 'bold', // Đậm chữ
+                                        transition: 'all 0.3s ease',
+                                    }}
                                 >
                                     Cancel
                                 </Button>
                             </Box>
+
                         </Box>
                     ) : (
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, textAlign: "center" }}>
@@ -162,10 +183,16 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                 sx={{
                                     flexGrow: 1,
                                     mr: 1,
-                                    transition: 'background-color 0.3s ease',
+                                    backgroundColor: '#019376', // Customize background color
+                                    color: 'white', // Customize text color
+                                    padding: '10px 15px', // Add padding
+                                    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)', // Add shadow
                                     '&:hover': {
-                                        backgroundColor: 'rgba(1, 147, 118, 0.2)',
-                                    }
+                                        backgroundColor: '#01755b', // Customize hover background color
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', // Adjust shadow on hover
+                                    },
+                                    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+                                    borderRadius: 2,
                                 }}
                             >
                                 <AddShoppingCartIcon sx={{ mr: 1 }} />
