@@ -29,6 +29,11 @@ const Home = () => {
     const [userId, setUserId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
+    const [localCart, setLocalCart] = useState(cart);
+    useEffect(() => {
+        // Ensure that cart prop is updated properly in the local state
+        if (cart) setLocalCart(cart);
+    }, [cart]);
     // Fetch products
     useEffect(() => {
         dispatch(getAllProductsAction());
@@ -72,7 +77,7 @@ const Home = () => {
             };
             dispatch(addItemToCart(userId, productDetails, jwt));
 
-            window.location.reload();
+           // window.location.reload();
         } else {
             console.error('User is not logged in');
         }
@@ -132,6 +137,7 @@ const Home = () => {
                     {currentProducts.map((item) => (
                         <ProductCard
                             key={item.id}
+                            cart={localCart?.result?.cartItems || []}
                             item={item}
                             addToCart={(buyUnit, quantity) => addToCart(buyUnit, quantity, item)}
                         />
