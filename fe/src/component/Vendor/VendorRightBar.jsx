@@ -176,7 +176,10 @@ const VendorRightBar = ({ selectedPage, orderList, productList, thisShopInfo}) =
     return todayRevenue;
   };
   const todaysRevenue = calculateTotalRevenue(orderList);
-
+  productList.sort((a,b) => b.stock - a.stock);
+  console.log("Here your sort products list", productList);
+  const finalProductList = productList.slice(0,10);
+  console.log("Here your slice products list",finalProductList);
   // SET DATA FOR THE CHART
   /*const orderList1 = [ example data
     { paymentDate: '2024-01-15', isPaid: true },
@@ -193,6 +196,8 @@ const VendorRightBar = ({ selectedPage, orderList, productList, thisShopInfo}) =
     { paymentDate: null, isPaid: false }*/ // Example of unpaid order
   // ];
   const paidOrdersPerMonth = getPaidOrdersPerMonth(orderList);
+
+  // GET ALL PRODUCTS BY STOCK FROM HIGHEST TO LOWEST
 
 
   const navigate = useNavigate();
@@ -389,10 +394,10 @@ const VendorRightBar = ({ selectedPage, orderList, productList, thisShopInfo}) =
             
               <div className="grid gap-2 xl:grid-cols-12">
                 <div className=" overflow-hidden rounded-lg bg-white p-6 md:p-7 xl:col-span-5 2xl:me-20 flex justify-center items-center ">
-                  <VendorProductDisplay products={products}/></div>
+                  <VendorProductDisplay products={finalProductList}/></div>
 
                 <div className="overflow-hidden rounded-lg bg-white p-7 xl:col-span-7 2xl:ltr:-ml-20 2xl:rtl:-mr-20">
-                  <VendorProductTable products={products}/>
+                  <VendorProductTable products={finalProductList}/>
                 </div>
               </div>
                 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const VendorProductTable = ({ products }) => {
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -14,14 +15,14 @@ const VendorProductTable = ({ products }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id}>
+          {products.map((product,index) => (
+            <TableRow key={product.productId}>
               <TableCell>
-                {product.id}
+                {index + 1}
               </TableCell>
-              <TableCell>{product.name}</TableCell>
+              <TableCell>{product.productName}</TableCell>
               <TableCell>{product.description}</TableCell>
-              <TableCell>${product.price.toFixed(2)}</TableCell>
+              <TableCell>{product.unitSellPrice + "$"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
