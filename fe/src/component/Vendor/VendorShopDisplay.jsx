@@ -3,7 +3,7 @@ import { Avatar, Box, Typography, Grid, Divider } from '@mui/material';
 import { LocationOn, Phone } from '@mui/icons-material';
 
 const ShopDisplay = ({ shop }) => {
-  const { name, address, phone, avatar, commission, sale, balance, withdraw } = shop;
+    console.log("Address >> ",shop);
 
   return (
     <Box
@@ -28,17 +28,16 @@ const ShopDisplay = ({ shop }) => {
             marginRight: 2,
             backgroundColor: '#d2691e',
           }}
-          src={avatar} // Shop's avatar
         />
         <Box>
-          <Typography variant="h6">{name}</Typography>
+          <Typography variant="h6">{}</Typography>
           <Typography variant="body2" color="text.secondary">
             <LocationOn fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {address}
+            {shop.address + ", "+ shop.city}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             <Phone fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {phone}
+            {shop.phone}
           </Typography>
         </Box>
       </Box>
@@ -47,36 +46,29 @@ const ShopDisplay = ({ shop }) => {
 
       {/* Statistics Grid */}
       <Grid container spacing={2} justifyContent="space-between">
+
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {commission}
+            {}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
-            Commission
+            Paid Orders
           </Typography>
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {sale}
+            {}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
-            Sale
+            Total Orders
           </Typography>
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {balance}
+            {}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
-            Balance
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography align="center" variant="h6">
-            {withdraw}
-          </Typography>
-          <Typography align="center" variant="body2" color="text.secondary">
-            Withdraw
+            Total Revenue
           </Typography>
         </Grid>
       </Grid>

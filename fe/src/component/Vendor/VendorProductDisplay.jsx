@@ -31,11 +31,10 @@ const VendorProductDisplay = ({ products }) => {
         <Grid>
           <Card>
             <CardMedia
-              component="img"
-              height="140px"
-              width="140px"
-              image={product.image}
-              alt={product.name}
+                component="img"
+                style={{ width: '400px', height: '350px', objectFit: 'cover' }}
+                image={product.image}
+                alt={product.name}
             />
             <CardContent>
               <Typography gutterBottom variant="h6" component="div">

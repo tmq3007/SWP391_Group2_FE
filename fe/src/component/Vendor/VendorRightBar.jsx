@@ -14,6 +14,7 @@ import VendorDisplayNotification from "./VendorDisplayNotification";
 import { useNavigate } from "react-router-dom";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import {padding} from "@mui/system";
 
 
 /*
@@ -25,6 +26,17 @@ import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 *
 * shop information
 * */
+const getPaidOrdersPerMonth = (orderList) => {
+  const paidOrdersCount = Array(12).fill(0);
+  orderList.forEach(order => {
+    if (order.paymentDate) {
+      const paymentDate = new Date(order.paymentDate);
+      const month = paymentDate.getMonth();
+      paidOrdersCount[month]++;
+    }
+  });
+  return paidOrdersCount;
+};
 const products = [
   {
     id: 1,
@@ -132,7 +144,57 @@ const notificationData = [
 ];
 
 
-const VendorRightBar = ({ selectedPage }) => {
+const VendorRightBar = ({ selectedPage, orderList, productList, thisShopInfo}) => {
+  // SHOW THE PAID - UNPAID - TOTAL ORDERS
+  const paidOrders = orderList.filter(order => order.isPaid === true).length;
+  const unPaidOrders = orderList.filter(order => order.isPaid === false).length;
+  const totalOrders = orderList.length;
+
+  // SOLVE TODAY REVENUE - TOTAL REVENUE
+  const calculateTotalRevenue = (orderList) => {
+    let totalRevenue = 0;
+    orderList.forEach(order => {
+      if(order.isPaid){ // only paid order add to the
+      order.ordersDetails.forEach(orderDetail => {
+        totalRevenue += orderDetail.quantity * orderDetail.product.price;
+      })}
+    })
+    return totalRevenue;
+  }
+  const totalRevenue = calculateTotalRevenue(orderList);
+  // TODAY REVENUE
+  const calculateTodayRevenue = (orderList) => {
+    let todayRevenue = 0;
+    const today = new Date().toISOString().split('T')[0];
+    orderList.forEach(order => {
+      if (order.paymentDate === today) {
+        order.ordersDetails.forEach(orderDetail => {
+          todayRevenue += orderDetail.quantity * orderDetail.product.price;
+        });
+      }
+    });
+    return todayRevenue;
+  };
+  const todaysRevenue = calculateTotalRevenue(orderList);
+
+  // SET DATA FOR THE CHART
+  /*const orderList1 = [ example data
+    { paymentDate: '2024-01-15', isPaid: true },
+    { paymentDate: '2024-02-20', isPaid: true },
+    { paymentDate: '2024-03-05', isPaid: true },
+    { paymentDate: '2024-03-21', isPaid: true },
+    { paymentDate: '2024-04-17', isPaid: true },
+    { paymentDate: '2024-05-30', isPaid: true },
+    { paymentDate: '2024-06-12', isPaid: true },
+    { paymentDate: '2024-06-25', isPaid: true },
+    { paymentDate: '2024-07-10', isPaid: true },
+    { paymentDate: '2024-10-15', isPaid: true },
+    { paymentDate: '2024-10-30', isPaid: true },
+    { paymentDate: null, isPaid: false }*/ // Example of unpaid order
+  // ];
+  const paidOrdersPerMonth = getPaidOrdersPerMonth(orderList);
+
+
   const navigate = useNavigate();
   return (
     <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll mt-6">
@@ -142,7 +204,7 @@ const VendorRightBar = ({ selectedPage }) => {
             <div className="mb-7 flex items-center justify-between">
               <span className='font-semibold cursor-pointer hover:text-green-500 hover:border hover:border-solid hover:border-green-400 p-1 rounded-full'>Summary</span>
             </div>
-            <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
@@ -150,10 +212,10 @@ const VendorRightBar = ({ selectedPage }) => {
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
-                      Total revenue
+                      Today revenue
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      ${0}
+                      ${todaysRevenue}
                     </span>
                   </div>
                 </div>
@@ -175,7 +237,7 @@ const VendorRightBar = ({ selectedPage }) => {
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
+              {/*<div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
                     <FormatListNumberedIcon className="h-8 w-8 text-green-500" />
@@ -189,7 +251,7 @@ const VendorRightBar = ({ selectedPage }) => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </div>*/}
 
               <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
@@ -198,10 +260,10 @@ const VendorRightBar = ({ selectedPage }) => {
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
-                      Today revenue
+                      Total revenue
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      ${0}
+                      ${totalRevenue}
                     </span>
                   </div>
                 </div>
@@ -221,10 +283,6 @@ const VendorRightBar = ({ selectedPage }) => {
                 </button>
                 <button
                     className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
-                  Week
-                </button>
-                <button
-                    className="inline-flex items-center justify-center flex-shrink-0 outline-none transition duration-300 ease-in-out focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 p-5 !focus:ring-0 relative z-10 !h-7 rounded-full !pk-2 text-sm font-medium text-accent border-[#31a965] border-2 ml-1 mr-1 text-[#31a965]">
                   Month
                 </button>
                 <button
@@ -233,7 +291,7 @@ const VendorRightBar = ({ selectedPage }) => {
                 </button>
               </div>
             </div>
-            <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               <div
                   className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-green-500">
                 <div className="mb-auto flex w-full items-center justify-between">
@@ -242,10 +300,10 @@ const VendorRightBar = ({ selectedPage }) => {
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
-                      Pending order
+                      Unpaid Orders
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {0}
+                      {unPaidOrders}
                     </span>
                   </div>
                 </div>
@@ -258,10 +316,10 @@ const VendorRightBar = ({ selectedPage }) => {
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
-                      Processing order
+                      Paid Orders
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {0}
+                      {paidOrders}
                     </span>
                   </div>
                 </div>
@@ -274,69 +332,63 @@ const VendorRightBar = ({ selectedPage }) => {
                   </div>
                   <div className="flex w-full flex-col text-end">
                     <span className="mb-1 text-base font-normal text-body">
-                      Completed order
+                      Total Orders
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {0}
+                      {totalOrders}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex h-full w-full flex-col rounded-lg border border-b-4 border-border-200 bg-light p-5 md:p-6 border-b-red-500">
-                <div className="mb-auto flex w-full items-center justify-between">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-gray-100">
-                    <MoneyOffIcon className="h-8 w-8 text-red-500" />
-                  </div>
-                  <div className="flex w-full flex-col text-end">
-                    <span className="mb-1 text-base font-normal text-body">
-                      Cancel order
-                    </span>
-                    <span className="mb-2 text-2xl font-semibold text-heading">
-                      {0}
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
             Sale history
-            <div className="mb-5 flex items-center justify-center">
+            <div className="mb-5 flex items-center justify-center padding-20">
               <Bar
-                data={{
-                  labels: [
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12",
-                  ],
-                  datasets: [
-                    {
-                      label: "Revenue",
-                      data: [2, 3, 4, 5, 6, 7, 8, 9, 9, 1, 2, 3],
-                    },
-                    {
-                      label: "Refund",
-                      data: [1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-                    },
-                  ],
-                }}
+                  data={{
+                    labels: [
+                      "January",
+                      "February",
+                      "March",
+                      "April",
+                      "May",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December"
+                    ],
+                    datasets: [
+                      {
+                        label: "Paid Orders per Month",
+                        data: paidOrdersPerMonth, // Data from the function
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)', // Adjusted bar color for better visibility
+                        borderColor: 'rgba(75, 192, 192, 1)', // Bar border color
+                        borderWidth: 0,
+                      }
+                    ],
+                  }}
+              options={{ // SET Y - AXIS TO INTEGER
+              scales: {
+                y: {
+                  ticks: {
+                    stepSize: 1,        // Ensure the y-axis increments by 1 (integers only)
+                    beginAtZero: true,   // Ensure the y-axis starts at 0
+                  },
+                }
+              }
+            }}
               ></Bar>
             </div>
           </div>
           
             
               <div className="grid gap-2 xl:grid-cols-12">
-                <div className="overflow-hidden rounded-lg bg-white p-6 md:p-7 xl:col-span-5 2xl:me-20 flex justify-center items-center ">
+                <div className=" overflow-hidden rounded-lg bg-white p-6 md:p-7 xl:col-span-5 2xl:me-20 flex justify-center items-center ">
                   <VendorProductDisplay products={products}/></div>
 
                 <div className="overflow-hidden rounded-lg bg-white p-7 xl:col-span-7 2xl:ltr:-ml-20 2xl:rtl:-mr-20">
@@ -370,8 +422,7 @@ const VendorRightBar = ({ selectedPage }) => {
         <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
           <div className="h-full w-full overflow-hidden rounded-lg bg-gray-200 p-6 shadow-sm md:p-7">
             <div className="overflow-hidden rounded-lg bg-gray-200 hover:bg[#fff] cursor-pointer" onClick={() => navigate("/shop-dashboard")}>
-                <VendorShopDisplay shop={shopData} />
-              
+                <VendorShopDisplay shop={thisShopInfo} />
             </div>
           </div>
         </div>
