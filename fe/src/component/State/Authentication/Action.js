@@ -1,4 +1,4 @@
-    import {
+import {
     GET_USER_FAILURE,
     GET_USER_REQUEST,
     GET_USER_SUCCESS, LOGIN_FAILURE,
@@ -25,6 +25,14 @@ export const registerUser = (reqData) => async (dispatch) => {
         console.log("registered",data);
 }
 
+export const resetPassword = (reqData) => async (dispatch) => {
+
+
+    const {data}=await axios.post(`${API_URL}/api/v1/reset-password`,reqData.userData);
+
+    console.log("registered",data);
+}
+
 export const loginUser = (reqData) => async (dispatch) => {
 
     dispatch({ type: LOGIN_REQUEST });
@@ -42,7 +50,9 @@ export const loginUser = (reqData) => async (dispatch) => {
 
             // Lấy role dưới dạng String, giả sử scope có thể là mảng
             const role = Array.isArray(token.scope) ? token.scope[0] : token.scope;
-            localStorage.setItem('role', role );  // Lưu role vào localStorage
+            const userId = token.userId;
+            localStorage.setItem('role', role );
+            localStorage.setItem('userId', userId);
             console.log("role", role);
         }
 

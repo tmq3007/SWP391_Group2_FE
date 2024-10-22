@@ -7,6 +7,7 @@ import {ShopProduct} from "./ShopProduct";
 import {ShopAddProduct} from "./ShopAddProduct";
 import {ShopEditProduct} from "./ShopEditProduct";
 import {ShopTransaction} from "./ShopTransaction";
+import Processing from "./Processing";
 
 export const ShopDashboard = () => {
     const [open, setOpen] = React.useState(true);

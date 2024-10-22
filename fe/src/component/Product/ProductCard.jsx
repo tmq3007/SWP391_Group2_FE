@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Button, TextField, IconButton, Box } from '@mui/material';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -7,16 +7,17 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ProductDetail from "./ProductDetail";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ProductCard = ({ item, addToCart }) => {
+const ProductCard = ({ cart, item, addToCart }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0;
     const discountPrice = originalPrice * (1 - discount / 100);
     const discountPercentage = Math.round(discount);
 
-    const [isFavorite, setIsFavorite] = React.useState(false);
-    const [isAddingToCart, setIsAddingToCart] = React.useState(false);
-    const [quantity, setQuantity] = React.useState(1);
-    const [open, setOpen] = React.useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [quantity, setQuantity] = useState(1);
+    const [open, setOpen] = useState(false);
+    const stock = item.stock - (cart.find(cartItem => cartItem.product.productId === item.productId)?.quantity || 0);
 
     const handleFavoriteToggle = () => {
         setIsFavorite((prev) => !prev);
@@ -27,13 +28,12 @@ const ProductCard = ({ item, addToCart }) => {
     };
 
     const handleConfirmAddToCart = () => {
-        if (quantity > 0) {
-            // Pass the quantity to addToCart function
+        if (quantity > 0 && quantity <= stock) {
             addToCart(item.measurementUnit, quantity, item);
             setIsAddingToCart(false);
             setQuantity(1); // Reset quantity after adding to cart
         } else {
-            setIsAddingToCart(false); // Close the modal if quantity is invalid
+            alert('Please enter a valid quantity.'); // Show alert for invalid quantity
         }
     };
 
@@ -51,11 +51,16 @@ const ProductCard = ({ item, addToCart }) => {
     };
 
     const handleQuantityChange = (e) => {
-        const newQuantity = Math.max(0, e.target.value); // Ensure quantity cannot be negative
-        setQuantity(newQuantity);
-        if (newQuantity === 0) {
-            setIsAddingToCart(false); // Optionally close add to cart modal if quantity is zero
-            setQuantity(1);
+        const newQuantity = e.target.value; // Lấy giá trị nhập vào từ input
+        setQuantity(newQuantity); // Cập nhật state quantity với giá trị mới
+
+        // Kiểm tra và hiển thị thông báo lỗi nếu cần
+        if (newQuantity === '' || isNaN(newQuantity) || Number(newQuantity) < 1) {
+            // Nếu không nhập gì, hoặc không phải là số, hoặc nhỏ hơn 1
+            // Không cần phải làm gì, quantity sẽ vẫn là giá trị nhập vào
+        } else if (Number(newQuantity) > stock) {
+            // Nếu số lượng nhập vào lớn hơn số lượng trong kho
+            //setQuantity(stock); // Cập nhật về giới hạn stock
         }
     };
 
@@ -124,13 +129,28 @@ const ProductCard = ({ item, addToCart }) => {
                                 onChange={handleQuantityChange}
                                 fullWidth
                                 margin="normal"
-                                inputProps={{ min: 0 }} // Prevent negative input
+                                inputProps={{ min: 1, max: stock }} // Prevent negative input and limit to stock
                             />
-                            <Box sx={{ display: 'flex', gap: 1 }}>
+                            {quantity < 1 && (
+                                <Typography color="error" variant="body2">Quantity must be at least 1.</Typography>
+                            )}
+                            {quantity > stock && (
+                                <Typography color="error" variant="body2">Quantity cannot exceed {stock}.</Typography>
+                            )}
+                            <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                                 <Button
                                     variant="contained"
                                     onClick={handleConfirmAddToCart}
                                     fullWidth
+                                    sx={{
+                                        backgroundColor: '#019376', // Màu nền
+                                        '&:hover': {
+                                            backgroundColor: '#01755b', // Màu khi hover
+                                        },
+                                        borderRadius: 2, // Bo tròn
+                                        fontWeight: 'bold', // Đậm chữ
+                                        transition: 'background-color 0.3s ease',
+                                    }}
                                 >
                                     Confirm
                                 </Button>
@@ -138,10 +158,22 @@ const ProductCard = ({ item, addToCart }) => {
                                     variant="outlined"
                                     onClick={handleCancelAddToCart}
                                     fullWidth
+                                    sx={{
+                                        borderColor: '#019376', // Màu viền
+                                        color: '#019376', // Màu chữ
+                                        '&:hover': {
+                                            borderColor: '#01755b', // Màu viền khi hover
+                                            color: '#01755b', // Màu chữ khi hover
+                                        },
+                                        borderRadius: 2, // Bo tròn
+                                        fontWeight: 'bold', // Đậm chữ
+                                        transition: 'all 0.3s ease',
+                                    }}
                                 >
                                     Cancel
                                 </Button>
                             </Box>
+
                         </Box>
                     ) : (
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, textAlign: "center" }}>
@@ -151,10 +183,16 @@ const ProductCard = ({ item, addToCart }) => {
                                 sx={{
                                     flexGrow: 1,
                                     mr: 1,
-                                    transition: 'background-color 0.3s ease',
+                                    backgroundColor: '#019376', // Customize background color
+                                    color: 'white', // Customize text color
+                                    padding: '10px 15px', // Add padding
+                                    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)', // Add shadow
                                     '&:hover': {
-                                        backgroundColor: 'rgba(1, 147, 118, 0.2)',
-                                    }
+                                        backgroundColor: '#01755b', // Customize hover background color
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', // Adjust shadow on hover
+                                    },
+                                    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+                                    borderRadius: 2,
                                 }}
                             >
                                 <AddShoppingCartIcon sx={{ mr: 1 }} />
@@ -193,7 +231,7 @@ const ProductCard = ({ item, addToCart }) => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <ProductDetail item={item} addToCart={addToCart} onClose={handleClose} />
+                    <ProductDetail cart={cart} item={item} addToCart={addToCart} onClose={handleClose} />
                 </DialogContent>
             </Dialog>
         </>

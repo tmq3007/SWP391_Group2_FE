@@ -23,7 +23,7 @@ const CartModal = ({ open, onClose, cart }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const [userId, setUserId] = useState(null);
-    const [localCart, setLocalCart] = useState(cart);
+    const [localCart, setLocalCart] = useState(cart || []);  // Initialize localCart to avoid undefined error
 
     useEffect(() => {
         if (userId) {
@@ -41,25 +41,35 @@ const CartModal = ({ open, onClose, cart }) => {
     }, [dispatch, jwt]);
 
     useEffect(() => {
-        setLocalCart(cart);
+        // Ensure that cart prop is updated properly in the local state
+        if (cart) setLocalCart(cart);
     }, [cart]);
 
     const handleQuantityChange = (item, change) => {
         if (change < 0 && item.quantity === 1) {
             handleRemoveItem(item);
         } else {
-            dispatch(updateCartItem(item.measurementUnit, change, item, jwt));
+            dispatch(updateCartItem(item.measurementUnit, change, item, jwt))
+                .then(() => {
+                    // Reflect the updated quantity in localCart
+                    setLocalCart(prevCart =>
+                        prevCart.map(cartItem =>
+                            cartItem.id === item.id
+                                ? { ...cartItem, quantity: cartItem.quantity + change }
+                                : cartItem
+                        )
+                    );
+                });
         }
     };
 
     const handleRemoveItem = (item) => {
         // Update the local cart to hide the item instead of removing it
-        setLocalCart(prevCart => prevCart.map(cartItem => {
-            if (cartItem.id === item.id) {
-                return { ...cartItem, deleted: true }; // Mark item as deleted
-            }
-            return cartItem;
-        }));
+        setLocalCart(prevCart =>
+            prevCart.map(cartItem =>
+                cartItem.id === item.id ? { ...cartItem, deleted: true } : cartItem
+            )
+        );
         dispatch(removeCartItem(userId, item.id, jwt))
             .catch((error) => console.error('Error removing item:', error));
     };
@@ -76,7 +86,6 @@ const CartModal = ({ open, onClose, cart }) => {
             .filter(item => !item.deleted) // Filter out deleted items
             .map(item => item.id) // Extract product IDs
     ).size; // Get the size of the Set, which gives the count of unique products
-
 
     return (
         <Dialog
@@ -99,7 +108,7 @@ const CartModal = ({ open, onClose, cart }) => {
                                 <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 0', justifyContent: 'space-between' }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
                                         <IconButton
-                                            onClick={() => handleQuantityChange(item.product, -1)}
+                                            onClick={() => handleQuantityChange(item, -1)}
                                             size="small"
                                             sx={{ '&:hover': { backgroundColor: '#01937620' } }}
                                         >
@@ -123,11 +132,17 @@ const CartModal = ({ open, onClose, cart }) => {
 
                                     <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
                                         <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.product.productName}</Typography>
-                                        <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}</Typography>
-                                        <Typography variant="body2" color="textSecondary">{`${item.quantity} x ${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}`}</Typography>
+                                        <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>
+                                            ${((item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2))}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {`${item.quantity} x ${(item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2)}`}
+                                        </Typography>
                                     </Box>
 
-                                    <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}</Typography>
+                                    <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>
+                                        ${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}
+                                    </Typography>
                                     <IconButton
                                         onClick={() => handleRemoveItem(item)}
                                         size="small"
@@ -165,7 +180,9 @@ const CartModal = ({ open, onClose, cart }) => {
                             }}
                         >
                             Checkout
-                            <Typography variant="body1" sx={{ color: '#fff', fontWeight: 'bold', marginLeft: '100px' }}>${newTotalPrice.toFixed(2)}</Typography>
+                            <Typography variant="body1" sx={{ color: '#fff', fontWeight: 'bold', marginLeft: '100px' }}>
+                                ${newTotalPrice.toFixed(2)}
+                            </Typography>
                         </Button>
                     </ListItem>
                 </List>

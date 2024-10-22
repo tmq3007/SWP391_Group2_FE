@@ -8,7 +8,7 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { getAllUsers, banUser, unbanUser } from "../../../State/Admin/Action";
 
-const PER_PAGE = 4;
+const PER_PAGE = 5;
 
 function UsersPage() {
     const [currentPage, setCurrentPage] = useState(0);

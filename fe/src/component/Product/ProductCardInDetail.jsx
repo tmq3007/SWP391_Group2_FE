@@ -8,7 +8,7 @@ import ProductDetail from './ProductDetail';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../../style/ProductCard.css';
 
-const ProductCardInDetail = ({ item, addToCart, addToWishlist }) => {
+const ProductCardInDetail = ({ cart, item, addToCart, addToWishlist }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0; // Get discount value from item
     const discountPrice = originalPrice * (1 - discount / 100); // Calculate discounted price
@@ -99,7 +99,7 @@ const ProductCardInDetail = ({ item, addToCart, addToWishlist }) => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <ProductDetail item={item} addToCart={addToCart} onClose={handleClose} />
+                    <ProductDetail cart={cart} item={item} addToCart={addToCart} onClose={handleClose} />
                 </DialogContent>
             </Dialog>
         </>

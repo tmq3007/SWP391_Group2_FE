@@ -9,14 +9,22 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import {logout} from "../State/Authentication/Action";
 import {useDispatch} from "react-redux";
+import axios from "axios";
+import config from "tailwindcss/defaultConfig";
 
 export const NavbarHomePage = ({ setSearchQuery }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const token = localStorage.getItem('jwt');
     const [userRole, setUserRole] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const [shopId, setShopId] = useState(null);
+    const [unverifiedShopId, setUnverifiedShopId] = useState(null);
+    const [shopError, setShopError] = useState(null);
+    const [unverifiedShopError, setUnverifiedShopError] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
+    const id = localStorage.getItem('userId');
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);  // Cập nhật giá trị tìm kiếm
     };
@@ -26,6 +34,14 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             setIsLoggedIn(true);
             setUserRole(role);
             console.log("Role from localStorage:", role);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (token !== null && id) {
+            setIsLoggedIn(true);
+            setUserId(id);
+            console.log("ID from localStorage:", id);
         }
     }, [token]);
 
@@ -49,6 +65,54 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
         setIsLoggedIn(false);
         navigate("/auth/vendor-register");
     };
+
+    const handleVendorDashboard = () => {
+        if (userId) {
+            axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    setShopId(response.data.result);
+                    setShopError(false);
+                })
+                .catch(error => {
+                    console.error("Error fetching shopId:", error);
+                    setShopError(true);
+                });
+
+            axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    setUnverifiedShopId(response.data);
+                    setUnverifiedShopError(false);
+                })
+                .catch(error => {
+                    console.error("Error fetching UnshopId:", error);
+                    setUnverifiedShopError(true);
+                });
+        }
+    }
+
+    useEffect(() => {
+        if (shopError && unverifiedShopError) {
+            console.log('Both ShopID and UnverifiedShopID are null or have errors');
+            navigate("/create-shop");
+        }
+        else if (shopError && !unverifiedShopError) {
+            console.log("ShopID Error but Unverified ShopID is valid");
+            navigate("/processing");
+        }
+        else if (!shopError && unverifiedShopError) {
+            console.log("Unverified ShopID Error but ShopID is valid");
+            navigate("/vendor-dashboard");
+        }
+    }, [shopError, unverifiedShopError, shopId, unverifiedShopId, navigate]);
+
 
     const handleJoin = () => {
         navigate("/auth/login");
@@ -101,7 +165,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                                 variant="contained"
                                 color="primary"
                                 sx={{ backgroundColor: '#019376' }}
-                                onClick={() => navigate("/vendor-dashboard")}
+                                onClick={() => handleVendorDashboard()}
                             >
                                 <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>
