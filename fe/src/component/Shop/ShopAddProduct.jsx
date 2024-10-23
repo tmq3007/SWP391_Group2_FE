@@ -61,7 +61,6 @@ export const ShopAddProduct = () => {
         }
 
         const productData = {
-
             productName,
             description,
             unitBuyPrice,

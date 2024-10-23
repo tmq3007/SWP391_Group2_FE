@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 
 export const CreateShop = () => {
@@ -13,58 +14,95 @@ export const CreateShop = () => {
     const [city, setCity] = React.useState("");
     const [state, setState] = React.useState("");
     const [address, setAddress] = React.useState("");
-    const [contactNumber, setContactNumber] = React.useState("");
+    const [phone, setPhone] = React.useState("");
     const [logo, setLogo] = React.useState(null);
     const [coverImage, setCoverImage] = React.useState(null);
     const [previewLogo, setPreviewLogo] = React.useState(null);
     const [previewCoverImage, setPreviewCoverImage] = React.useState(null);
 
-    const dispatch = useDispatch();
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('jwt');
 
-    {/* useEffect(() => {
-        dispatch(getAllCountriesAction());
-    }, [dispatch]);*/}
+    const dispatch = useDispatch();
 
 
     const handleCreateShop = () => {
-        const formData = new FormData();
-        formData.append("shopName", shopName);
-        formData.append("description", description);
-        formData.append("country", country);
-        formData.append("city", city);
-        formData.append("state", state);
-        formData.append("address", address);
-        formData.append("contactNumber", contactNumber);
+        // if (!shopName || !description || !country || !city || !state || !address || !phone ) {
+        //     alert("Please fill out all required fields.");
+        //     return;
+        // }
 
-        if (logo) {
-            formData.append("logo", logo);
-        }
-        if (coverImage) {
-            formData.append("coverImage", coverImage);
+        const shopData = {
+            shopName,
+            description,
+            country,
+            city,
+            state,
+            address,
+            phone,
+            logo,
+            coverImage,
+            user : userId
         }
 
-        {/* dispatch(createShopAction(formData));*/}
+
+        axios.post('http://localhost:8080/api/v1/request-shop-creation', shopData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Shop created successfully!", response);
+                alert("Shop created successfully!");
+            })
+            .catch(error => {
+                console.error("Error creating shop:", error);
+                alert("Error creating shop. Please try again.");
+            });
     };
 
     // Handle file uploads for the logo and cover image
     const fileInputLogoRef = useRef(null);
     const fileInputCoverRef = useRef(null);
 
-    const handleFileUploadLogo = (event) => {
+    const handleFileUpload = async (event, setPictureUrl, setPreviewPictureUrl) => {
         const file = event.target.files[0];
-        if (file) {
-            setLogo(file);
-            setPreviewLogo(URL.createObjectURL(file));
+
+        if (!file || file.size > 2 * 1024 * 1024) {
+            alert("Please select a file smaller than 2MB.");
+            return;
+        }
+
+        try {
+            const data = new FormData();
+            data.append("file", file);
+            data.append("upload_preset", "first_time");
+            data.append("cloud_name", "dkstc8tkg");
+
+            const res = await fetch("https://api.cloudinary.com/v1_1/dkstc8tkg/image/upload", {
+                method: "POST",
+                body: data,
+            });
+
+            // Parse the JSON response
+            const uploadedImage = await res.json();
+
+            if (uploadedImage.url) {
+                console.log("Image uploaded successfully:", uploadedImage.url);
+                setPictureUrl(uploadedImage.url);
+                setPreviewPictureUrl(URL.createObjectURL(file));
+            } else {
+                alert("Image upload failed.");
+            }
+        } catch (error) {
+            console.error("Error uploading the file:", error);
+            alert("There was an error uploading the file.");
         }
     };
 
-    const handleFileUploadCover = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setCoverImage(file);
-            setPreviewCoverImage(URL.createObjectURL(file));
-        }
-    };
+    const handleFileUploadLogo = (event) => handleFileUpload(event, setLogo, setPreviewLogo);
+    const handleFileUploadCover = (event) => handleFileUpload(event, setCoverImage, setPreviewCoverImage);
+
 
     const handleRemoveLogo = () => {
         setLogo(null);
@@ -199,8 +237,8 @@ export const CreateShop = () => {
                         <div className="mb-5">
                             <input type="text"
                                    className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
-                                   placeholder={"Contact Number"} value={contactNumber}
-                                   onChange={(e) => setContactNumber(e.target.value)}/>
+                                   placeholder={"Contact Number"} value={phone}
+                                   onChange={(e) => setPhone(e.target.value)}/>
                         </div>
                     </div>
                 </div>

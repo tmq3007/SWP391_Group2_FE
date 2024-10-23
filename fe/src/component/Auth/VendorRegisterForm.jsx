@@ -99,7 +99,7 @@ const VendorRegisterForm = () => {
             </Snackbar>
 
             <Typography variant='h4' className='text-center'>
-                Register
+                Register Vendor
             </Typography>
 
             <Formik
