@@ -1,73 +1,122 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import '../../../../style/AdminDashboard.css';
 import SearchIcon from "@mui/icons-material/Search";
-import {ChevronLeft, ChevronRight} from "@mui/icons-material";
-
-const ordersData = [
-    {
-        trackingNumber: '20240207303639',
-        customer: 'Customer',
-        email: 'customer@demo.com',
-        avatar: 'https://via.placeholder.com/40', // Placeholder avatar image
-        products: 6,
-        orderDate: '8 months ago',
-        total: '$64.79',
-        status: 'Processing',
-    },
-    {
-        trackingNumber: '20231105635099',
-        customer: 'Jhon Doe',
-        email: 'admin@demo.com',
-        avatar: 'https://via.placeholder.com/40',
-        products: 2,
-        orderDate: 'a year ago',
-        total: '$52.24',
-        status: 'Processing',
-    },
-    // ...more orders
-];
+import { ChevronLeft, ChevronRight, Check, Close, Visibility } from "@mui/icons-material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { getAllUnverifiedShop } from "../../../State/Admin/Action";
+import { verifyShop } from "../../../State/Admin/Action";  // Import the verifyShop API call
 
 const PER_PAGE = 4;
 
 function InactiveNewShopsPage() {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
+    const [shops, setShops] = useState([]);
 
-    const filteredOrders = ordersData.filter(
-        (order) =>
-            order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.email.toLowerCase().includes(searchTerm.toLowerCase())
+    // Modal states for verify and reject
+    const [openVerifyModal, setOpenVerifyModal] = useState(false);
+    const [openRejectModal, setOpenRejectModal] = useState(false);
+    const [selectedShop, setSelectedShop] = useState(null);
+
+    // Fetch shops from API
+    useEffect(() => {
+        async function fetchShops() {
+            try {
+                const response = await getAllUnverifiedShop();
+                const mappedShops = response.result.map((shop) => ({
+                    shopId: shop.shopId,
+                    shopName: shop.shopName,
+                    owner: `${shop.user.firstName} ${shop.user.lastName}`,
+                    email: shop.user.email,
+                    avatar: shop.logo || 'https://via.placeholder.com/40', // Placeholder if no logo is provided
+                }));
+                setShops(mappedShops);
+            } catch (error) {
+                console.error("Error fetching unverified shops", error);
+            }
+        }
+
+        fetchShops();
+    }, []);
+
+    // Filter shops based on search input
+    const filteredShops = shops.filter(
+        (shop) =>
+            shop.shopName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            shop.owner.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Handle pagination click
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
 
+    // Calculate pagination offset
     const offset = currentPage * PER_PAGE;
-    const pageCount = Math.ceil(filteredOrders.length / PER_PAGE);
-    const currentOrders = filteredOrders.slice(offset, offset + PER_PAGE);
+    const pageCount = Math.ceil(filteredShops.length / PER_PAGE);
+    const currentShops = filteredShops.slice(offset, offset + PER_PAGE);
+
+    // Open modal to confirm verification
+    const handleOpenVerifyModal = (shop) => {
+        setSelectedShop(shop);
+        setOpenVerifyModal(true);
+    };
+
+    // Open modal to confirm rejection
+    const handleOpenRejectModal = (shop) => {
+        setSelectedShop(shop);
+        setOpenRejectModal(true);
+    };
+
+    // Close the verify or reject modal
+    const handleClose = () => {
+        setOpenVerifyModal(false);
+        setOpenRejectModal(false);
+    };
+
+    // Confirm verification and call the API
+    const handleConfirmVerify = async () => {
+        if (selectedShop) {
+            try {
+                await verifyShop(selectedShop.shopId); // Call verify API
+                // Remove the shop from the list after successful verification
+                setShops((prevShops) => prevShops.filter((shop) => shop.shopId !== selectedShop.shopId));
+                handleClose();
+            } catch (error) {
+                console.error("Error verifying shop", error);
+            }
+        }
+    };
+
+    // Confirm rejection and remove the shop (no API call)
+    const handleConfirmReject = () => {
+        if (selectedShop) {
+            // Remove the shop from the list after rejection
+            setShops((prevShops) => prevShops.filter((shop) => shop.shopId !== selectedShop.shopId));
+            handleClose();
+        }
+    };
 
     return (
-        <div style={{flex: 1, padding: '20px', marginTop: '36px'}}>
+        <div style={{ flex: 1, padding: '20px', marginTop: '36px' }}>
             <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
-
                 <div className='flex justify-between mt-3'>
                     <div className='recent-orders-header relative top-3'>
-                        <h2 className='text-2xl font-semibold'>Inactive/New shops</h2>
+                        <h2 className='text-2xl font-semibold'>Inactive/New Shops</h2>
                     </div>
 
                     <div className="search-container top-2">
                         <input
                             type="text"
-                            placeholder="Search by Name"
+                            placeholder="Search by Shop Name or Owner"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="search-input"
                         />
                         <span className="search-icon">
-                        <SearchIcon/>
-                </span>
+                            <SearchIcon />
+                        </span>
                     </div>
                 </div>
             </div>
@@ -76,64 +125,113 @@ function InactiveNewShopsPage() {
                 <table>
                     <thead>
                     <tr>
-                        <th id='center'>Tracking Number</th>
-                        <th id='center'>Customer</th>
-                        <th id='center'>Products</th>
-                        <th id='center'>Order Date</th>
-                        <th id='center'>Total</th>
-                        <th id='center'>Status</th>
+                        <th id='center'>Shop Name</th>
+                        <th id='owner-un-shop'>Owner</th>
                         <th id='center'>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {currentOrders.map((order, index) => (
+                    {currentShops.map((shop, index) => (
                         <tr key={index}>
-                            <td>{order.trackingNumber}</td>
+                            <td>{shop.shopName}</td>
                             <td>
                                 <div className="customer-info">
-                                    <img src={order.avatar} alt="Avatar" className="avatar"/>
+                                    <img src={shop.avatar} alt="Avatar" className="avatar" />
                                     <div className="customer-details">
-                                        <span className="customer-name">{order.customer}</span>
-                                        <small className="customer-email">{order.email}</small>
+                                        <span className="customer-name">{shop.owner}</span>
+                                        <small className="customer-email">{shop.email}</small>
                                     </div>
                                 </div>
                             </td>
-                            <td>{order.products}</td>
-                            <td>{order.orderDate}</td>
-                            <td>{order.total}</td>
                             <td>
-                <span
-                    className={
-                        order.status === 'Completed'
-                            ? 'completed-status'
-                            : 'processing-status'
-                    }
-                >
-                    {order.status}
-                </span>
-                            </td>
-                            <td>
-                                <button className='eye'>
-                                    <img src="https://img.icons8.com/material-rounded/24/000000/visible.png"
-                                         alt="View"/>
+                                <button
+                                    className='action-button'
+                                    onClick={() => handleOpenVerifyModal(shop)}
+                                    title="Verify"
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <Check style={{ color: 'green' }} />
+                                </button>
+                                <button
+                                    className='action-button'
+                                    onClick={() => handleOpenRejectModal(shop)}
+                                    title="Reject"
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <Close style={{ color: 'red' }} />
+                                </button>
+                                <button
+                                    className='action-button'
+                                    title="View Details"
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <Visibility style={{ color: 'blue' }} />
                                 </button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
-
                 </table>
             </div>
 
             <ReactPaginate
-                previousLabel={<ChevronLeft/>}
-                nextLabel={<ChevronRight/>}
+                previousLabel={<ChevronLeft />}
+                nextLabel={<ChevronRight />}
                 pageCount={pageCount}
                 onPageChange={handlePageClick}
                 containerClassName={'pagination'}
                 activeClassName={'active'}
-
             />
+
+            {/* Verify Modal */}
+            <Dialog
+                open={openVerifyModal}
+                onClose={handleClose}
+                aria-labelledby="verify-action-dialog-title"
+                aria-describedby="verify-action-dialog-description"
+            >
+                <DialogTitle id="verify-action-dialog-title">
+                    Confirm Verification
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="verify-action-dialog-description">
+                        Are you sure you want to verify the shop "{selectedShop?.shopName}"?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} style={{ backgroundColor: '#dee2e6', color: '#000' }}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleConfirmVerify} style={{ backgroundColor: '#28a745', color: '#fff' }} autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Reject Modal */}
+            <Dialog
+                open={openRejectModal}
+                onClose={handleClose}
+                aria-labelledby="reject-action-dialog-title"
+                aria-describedby="reject-action-dialog-description"
+            >
+                <DialogTitle id="reject-action-dialog-title">
+                    Confirm Rejection
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="reject-action-dialog-description">
+                        Are you sure you want to reject the shop "{selectedShop?.shopName}"?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} style={{ backgroundColor: '#dee2e6', color: '#000' }}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleConfirmReject} style={{ backgroundColor: '#ff4d4f', color: '#fff' }} autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
