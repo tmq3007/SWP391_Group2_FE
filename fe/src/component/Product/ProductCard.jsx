@@ -17,8 +17,9 @@ const ProductCard = ({ cart, item, addToCart }) => {
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [open, setOpen] = useState(false);
-    const stock = item.stock - (cart.find(cartItem => cartItem.product.productId === item.productId)?.quantity || 0);
-
+    const stock = item && item.productId
+        ? item.stock - (cart.find(cartItem => cartItem.product.productId === item.productId)?.quantity || 0)
+        : 0;
     const handleFavoriteToggle = () => {
         setIsFavorite((prev) => !prev);
     };
@@ -32,6 +33,9 @@ const ProductCard = ({ cart, item, addToCart }) => {
             addToCart(item.measurementUnit, quantity, item);
             setIsAddingToCart(false);
             setQuantity(1); // Reset quantity after adding to cart
+
+            // Optionally, show a success message or toast notification
+            //alert(`${item.productName} has been added to your cart!`);
         } else {
             alert('Please enter a valid quantity.'); // Show alert for invalid quantity
         }
