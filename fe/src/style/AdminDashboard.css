@@ -172,6 +172,15 @@ table {
     background-color: #f8f9fa;
 }
 
+#owner-un-shop {
+    text-align: center;
+    padding: 15px 10px;
+    color: #999;
+    font-weight: 500;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
 #non-center {
     text-align: left;
     padding: 15px 10px;
@@ -471,6 +480,7 @@ small {
     align-items: center;
     position: relative;
     left: 30%;
+    width: 400px;
 }
 
 .avatar {
@@ -551,4 +561,12 @@ small {
 
 .add-user-button:hover {
     background-color: #008d74; /* Slightly darker green on hover */
+}
+
+.action-button {
+    z-index: 10;
+    pointer-events: auto; /* Ensure buttons are clickable */
+    background: transparent;
+    border: none;
+    cursor: pointer;
 }

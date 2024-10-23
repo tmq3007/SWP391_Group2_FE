@@ -103,7 +103,7 @@ export const getAllCategoriesAdmin = async () => {
 
 export const updateCategory = async (categoryId, updatedCategory) => {
     try {
-        const response = await axiosInstance.put(`/api/v1/categories/${categoryId}`, updatedCategory);
+        const response = await axiosInstance.patch(`/api/v1/categories/${categoryId}`, updatedCategory);
         return response.data;
     } catch (error) {
         console.error("Error updating category", error);
@@ -128,6 +128,26 @@ export const deleteCategory = async (categoryId) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting category", error);
+        throw error;
+    }
+}
+
+export const getAllUnverifiedShop = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/get-all-unverified-shops`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching unverified shop", error);
+        throw error;
+    }
+}
+
+export const verifyShop = async (shopId) => {
+    try {
+        const response = await axiosInstance.put(`/api/v1/verify-shop/${shopId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error verifying shop", error);
         throw error;
     }
 }

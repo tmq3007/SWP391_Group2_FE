@@ -138,6 +138,7 @@ export const UpdateCategoryForm = () => {
                     <div className="rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3">
                         <div className="mb-5">
                             <input
+                                readOnly
                                 id="name"
                                 name="name"
                                 type="text"
