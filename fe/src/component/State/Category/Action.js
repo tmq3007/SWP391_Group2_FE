@@ -18,7 +18,7 @@ export const getAllCategoriesAction = () => {
         try {
             const { data } = await axios.get("http://localhost:8080/api/v1/categories");
             dispatch({ type: GET_ALL_CATEGORIES_SUCCESS, payload: data });
-            console.log("all catefories", data);
+            console.log("all categories", data);
         } catch (error) {
             console.log("all err", error);
             dispatch({ type: GET_ALL_CATEGORIES_FAILURE, payload: error });

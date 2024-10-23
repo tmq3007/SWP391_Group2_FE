@@ -7,72 +7,95 @@ import axios from "axios";
 
 
 export const ShopAddProduct = () => {
-    const [productName, setProductName] = React.useState("");
-    const [description, setDescription] = React.useState("");
-    const [unitBuyPrice, setUnitBuyPrice] = React.useState("");
-    const [unitSellPrice, setUnitSellPrice] = React.useState("");
-    const [discount, setDiscount] = React.useState("");
-    const [stock, setStock] = React.useState("");
-    const [measurementUnit, setMesurementUnit] = React.useState("");
-    const [pictureUrl1, setPictureUrl1] = React.useState(null);
-    const [pictureUrl2, setPictureUrl2] = React.useState(null);
-    const [previewPictureUrl1, setPreviewPictureUrl1] = React.useState(null);
-    const [previewPictureUrl2, setPreviewPictureUrl2] = React.useState(null);
-    const [category, setCategory] = React.useState(null);
-    const [shopId, setShopId] = useState(null);
+    const [productName, setProductName] = useState("");
+    const [description, setDescription] = useState("");
+    const [unitBuyPrice, setUnitBuyPrice] = useState("");
+    const [unitSellPrice, setUnitSellPrice] = useState("");
+    const [discount, setDiscount] = useState("");
+    const [stock, setStock] = useState("");
+    const [measurementUnit, setMeasurementUnit] = useState("");
+    const [pictureUrl1, setPictureUrl1] = useState(null);
+    const [pictureUrl2, setPictureUrl2] = useState(null);
+    const [previewPictureUrl1, setPreviewPictureUrl1] = useState(null);
+    const [previewPictureUrl2, setPreviewPictureUrl2] = useState(null);
+    const [category, setCategory] = useState(null);
+    const [shopId, setShopId] = useState("");
+
+    const token = localStorage.getItem('jwt');
 
     const dispatch = useDispatch();
-    const { categories } = useSelector(store => store.categories);
+    const {categories} = useSelector((store) => store.categories || {});
 
 
+    // Fetch categories on component mount
     useEffect(() => {
         dispatch(getAllCategoriesAction());
     }, [dispatch]);
+
 
     //get shopId by userId
     useEffect(() => {
         const userId = localStorage.getItem("userId");
 
-        axios.get(`/api/v1/shops/shopId/${userId}`)
+        let isMounted = true; // to prevent memory leaks
+        axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
-                setShopId(response.data);
+                if (isMounted) setShopId(response.data.result);
             })
             .catch(error => {
                 console.error("Error fetching shopId:", error);
             });
-    }, []);
+
+        return () => { isMounted = false; };
+    }, [token]);
 
     // when click add product
     const handleAddProduct = () => {
-        const formData = new FormData();
-
-        formData.append("productName", productName);
-        formData.append("description", description);
-        formData.append("unitBuyPrice", unitBuyPrice);
-        formData.append("unitSellPrice", unitSellPrice);
-        formData.append("discount", discount);
-        formData.append("stock", stock);
-        formData.append("measurementUnit", measurementUnit);
-        formData.append("categoryId", category);
-
-        if (shopId) {
-            formData.append("shopId", shopId);
+        if (!productName || !unitBuyPrice || !unitSellPrice || !stock || !category || !shopId) {
+            alert("Please fill out all required fields.");
+            return;
         }
 
-        if (pictureUrl1) {
-            formData.append("pictureUrl1", pictureUrl1);
-        }
-        if (pictureUrl2) {
-            formData.append("pictureUrl2", pictureUrl2);
-        }
+        const productData = {
 
-        dispatch(createProductAction(formData));
+            productName,
+            description,
+            unitBuyPrice,
+            unitSellPrice,
+            discount,
+            stock,
+            measurementUnit,
+            category: category,
+            shop: shopId,
+            pictureUrl: pictureUrl1,
+            pictureUrl2
+        };
+
+
+        axios.post('http://localhost:8080/api/v1/products', productData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+            .then(response => {
+                console.log("Product created successfully!", response);
+                alert("Product created successfully!");
+            })
+            .catch(error => {
+                console.error("Error creating product:", error);
+                alert("Error creating product. Please try again.");
+            });
     };
+
 
     const handleCategoryChange = (event) => {
         const selectedCategoryId = event.target.value;
-        console.log("Selected Category ID:", selectedCategoryId);
         setCategory(selectedCategoryId);
+        console.log("Selected Category ID:", selectedCategoryId);
     };
 
 
@@ -80,21 +103,45 @@ export const ShopAddProduct = () => {
     const fileInputRef1 = useRef(null);
     const fileInputRef2 = useRef(null);
 
-    const handleFileUpload1 = (event) => {
+    const handleFileUpload = async (event, setPictureUrl, setPreviewPictureUrl) => {
         const file = event.target.files[0];
-        if (file) {
-            setPictureUrl1(file);
-            setPreviewPictureUrl1(URL.createObjectURL(file));
+
+        if (!file || file.size > 2 * 1024 * 1024) {
+            alert("Please select a file smaller than 2MB.");
+            return;
+        }
+
+        try {
+            const data = new FormData();
+            data.append("file", file);
+            data.append("upload_preset", "first_time");
+            data.append("cloud_name", "dkstc8tkg");
+
+            const res = await fetch("https://api.cloudinary.com/v1_1/dkstc8tkg/image/upload", {
+                method: "POST",
+                body: data,
+            });
+
+            // Parse the JSON response
+            const uploadedImage = await res.json();
+
+            // Check if the response contains the uploaded image URL
+            if (uploadedImage.url) {
+                console.log("Image uploaded successfully:", uploadedImage.url);
+                setPictureUrl(uploadedImage.url);
+                setPreviewPictureUrl(URL.createObjectURL(file));
+            } else {
+                alert("Image upload failed.");
+            }
+        } catch (error) {
+            console.error("Error uploading the file:", error);
+            alert("There was an error uploading the file.");
         }
     };
 
-    const handleFileUpload2 = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setPictureUrl2(file);
-            setPreviewPictureUrl2(URL.createObjectURL(file));
-        }
-    };
+    const handleFileUpload1 = (event) => handleFileUpload(event, setPictureUrl1, setPreviewPictureUrl1);
+    const handleFileUpload2 = (event) => handleFileUpload(event, setPictureUrl2, setPreviewPictureUrl2);
+
 
     const handleDivClick1 = () => {
         fileInputRef1.current.click();
@@ -209,9 +256,9 @@ export const ShopAddProduct = () => {
                     </div>
                     <div className={"rounded bg-white p-5 shadow md:p-8 w-full sm:w-8/12 md:w-2/3"}>
                         {/*Categories*/}
-                        <div className={"mb-5"}>
-                            <label htmlFor="" className={"flex text-body-dark " +
-                                "font-semibold text-sm leading-none mb-3"}>Category</label>
+                        <div className="mb-5">
+                            <label htmlFor=""
+                                   className="flex text-body-dark font-semibold text-sm leading-none mb-3">Category</label>
                             <div className="relative mt-2">
                                 <select
                                     id="shop-select"
@@ -220,17 +267,16 @@ export const ShopAddProduct = () => {
                                     className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left text-gray-900 text-lg shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     style={{height: '50px', fontSize: '18px'}}
                                 >
-                                    {categories && categories.length > 0 ? (
-                                        categories.map((categoryItem) => (
-                                            <option key={categoryItem.categoryId} value={categoryItem.categoryId}>
-                                                {categoryItem.categoryName}
+                                    {Array.isArray(categories.result) && categories.result.length > 0 ? (
+                                        categories.result.map((cat) => (
+                                            <option key={cat.categoryId} value={cat.categoryId}>
+                                                {cat.categoryName}
                                             </option>
                                         ))
                                     ) : (
                                         <option disabled>Loading categories...</option>
                                     )}
                                 </select>
-
                             </div>
                         </div>
                     </div>
@@ -266,7 +312,7 @@ export const ShopAddProduct = () => {
                                    className="input-field px-4 h-10 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent"
                                    placeholder={"Measurement Unit"}
                                    value={measurementUnit}
-                                   onChange={(e) => setMesurementUnit(e.target.value)}
+                                   onChange={(e) => setMeasurementUnit(e.target.value)}
                                    autoComplete="off" autoCorrect="off" autoCapitalize="off"/>
                         </div>
 
