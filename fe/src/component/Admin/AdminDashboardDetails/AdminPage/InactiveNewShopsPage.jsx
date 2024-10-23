@@ -3,7 +3,16 @@ import ReactPaginate from 'react-paginate';
 import '../../../../style/AdminDashboard.css';
 import SearchIcon from "@mui/icons-material/Search";
 import { ChevronLeft, ChevronRight, Check, Close, Visibility } from "@mui/icons-material";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Button,
+    Alert,
+    Snackbar
+} from '@mui/material';
 import { getAllUnverifiedShop } from "../../../State/Admin/Action";
 import { verifyShop } from "../../../State/Admin/Action";  // Import the verifyShop API call
 
@@ -18,6 +27,28 @@ function InactiveNewShopsPage() {
     const [openVerifyModal, setOpenVerifyModal] = useState(false);
     const [openRejectModal, setOpenRejectModal] = useState(false);
     const [selectedShop, setSelectedShop] = useState(null);
+
+    const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+    const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
+
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setSnackBarOpen(false);
+    };
+
+    const handleCloseSuccessSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setSuccessSnackBarOpen(false);
+    };
 
     // Fetch shops from API
     useEffect(() => {
@@ -79,12 +110,17 @@ function InactiveNewShopsPage() {
     const handleConfirmVerify = async () => {
         if (selectedShop) {
             try {
-                await verifyShop(selectedShop.shopId); // Call verify API
-                // Remove the shop from the list after successful verification
+                await verifyShop(selectedShop.shopId).then((response) => {
+
+                        setSuccessSnackBarMessage("Shop verified successfully");
+                        setSuccessSnackBarOpen(true);
+
+                })
                 setShops((prevShops) => prevShops.filter((shop) => shop.shopId !== selectedShop.shopId));
                 handleClose();
             } catch (error) {
-                console.error("Error verifying shop", error);
+                setSnackBarMessage("Error verifying shop");
+                setSnackBarOpen(true);
             }
         }
     };
@@ -99,6 +135,40 @@ function InactiveNewShopsPage() {
     };
 
     return (
+        <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={successSnackBarOpen}
+                onClose={handleCloseSuccessSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSuccessSnackBar}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {successSnackBarMessage}
+                </Alert>
+            </Snackbar>
+
         <div style={{ flex: 1, padding: '20px', marginTop: '36px' }}>
             <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
                 <div className='flex justify-between mt-3'>
@@ -233,6 +303,7 @@ function InactiveNewShopsPage() {
                 </DialogActions>
             </Dialog>
         </div>
+</div>
     );
 }
 
