@@ -28,8 +28,10 @@ const Home = () => {
     const [selectedPrice, setSelectedPrice] = useState('all');
     const [userId, setUserId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
-
-    const [localCart, setLocalCart] = useState(cart);
+    const updateCart = (updatedCart) => {
+        setCart(updatedCart); // Update the cart state in Home component
+    };
+    const [localCart, setLocalCart] = useState(cart || []);
     useEffect(() => {
         // Ensure that cart prop is updated properly in the local state
         if (cart) setLocalCart(cart);
@@ -69,18 +71,41 @@ const Home = () => {
 
     console.log("cart new:" ,cart);
     const addToCart = (buyUnit, quantity, item) => {
-        if (userId) {
-            const productDetails = {
-                buyUnit,
-                quantity,
-                productId: item.productId
-            };
-            dispatch(addItemToCart(userId, productDetails, jwt));
-
-           // window.location.reload();
-        } else {
-            console.error('User is not logged in');
+        if (!userId) {
+            console.error('User  is not logged in');
+            return;
         }
+
+        const productDetails = {
+            buyUnit,
+            quantity,
+            productId: item.productId
+        };
+
+        dispatch(addItemToCart(userId, productDetails, jwt))
+            .then(() => {
+                setCart(prevCart => {
+                    const existingItem = prevCart.result.cartItems.find(cartItem => cartItem.product.productId === item.productId);
+                    const updatedCartItems = existingItem
+                        ? prevCart.result.cartItems.map(cartItem =>
+                            cartItem.product.productId === item.productId
+                                ? { ...cartItem, quantity: Number(cartItem.quantity) + Number(quantity) }
+                                : cartItem
+                        )
+                        : [...prevCart.result.cartItems, { ...item, quantity }];
+
+                    return {
+                        ...prevCart,
+                        result: {
+                            ...prevCart.result,
+                            cartItems: updatedCartItems
+                        }
+                    };
+                });
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error);
+            });
     };
 
     const filteredProducts = products?.products?.filter((product) => {
@@ -108,7 +133,7 @@ const Home = () => {
     };
 
     //Ensure carts is an array or empty array if it's not available
-    const totalPrice = cart?.result?.totalPrice || 0;
+    const totalPrice = localCart?.result?.totalPrice || 0;
 
 
     return (
@@ -134,7 +159,7 @@ const Home = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
-                    {currentProducts.map((item) => (
+                    {currentProducts.map((item) => item && (
                         <ProductCard
                             key={item.id}
                             cart={localCart?.result?.cartItems || []}
@@ -164,7 +189,7 @@ const Home = () => {
             <CartModal
                 open={openCartModal}
                 onClose={handleCloseCart}
-                cart={cart?.result?.cartItems || []}  // Pass cart items or an empty array
+                cartItems={localCart?.result?.cartItems || []}  // Pass cart items or an empty array
                 addToCart={addToCart}
                 totalPrice={totalPrice}  // Pass total price
             />

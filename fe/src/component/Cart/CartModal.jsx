@@ -19,11 +19,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateCartItem, removeCartItem, getAllCartItems } from '../State/Cart/Action';
 import { getUser } from "../State/Authentication/Action";
 
-const CartModal = ({ open, onClose, cart }) => {
+const CartModal = ({ open, onClose, cartItems }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const [userId, setUserId] = useState(null);
-    const [localCart, setLocalCart] = useState(cart || []);  // Initialize localCart to avoid undefined error
+    const [localCart, setLocalCart] = useState(cartItems || []);  // Initialize localCart to avoid undefined error
 
     useEffect(() => {
         if (userId) {
@@ -42,35 +42,37 @@ const CartModal = ({ open, onClose, cart }) => {
 
     useEffect(() => {
         // Ensure that cart prop is updated properly in the local state
-        if (cart) setLocalCart(cart);
-    }, [cart]);
+        if (cartItems) setLocalCart(cartItems);
+    }, [cartItems]);
 
     const handleQuantityChange = (item, change) => {
-        if (change < 0 && item.quantity === 1) {
-            handleRemoveItem(item);
+        const newQuantity = item.quantity + change;
+
+        if (newQuantity <= 0) {
+            handleRemoveItem(item); // Remove item if quantity is zero or less
         } else {
-            dispatch(updateCartItem(item.measurementUnit, change, item, jwt))
+            // Dispatch updateCartItem with the new quantity
+            dispatch(updateCartItem(userId, item.id, { quantity: newQuantity }, jwt))
                 .then(() => {
                     // Reflect the updated quantity in localCart
                     setLocalCart(prevCart =>
                         prevCart.map(cartItem =>
                             cartItem.id === item.id
-                                ? { ...cartItem, quantity: cartItem.quantity + change }
+                                ? { ...cartItem, quantity: newQuantity }
                                 : cartItem
                         )
                     );
                 });
         }
     };
-
     const handleRemoveItem = (item) => {
-        // Update the local cart to hide the item instead of removing it
-        setLocalCart(prevCart =>
-            prevCart.map(cartItem =>
-                cartItem.id === item.id ? { ...cartItem, deleted: true } : cartItem
-            )
-        );
+        // Dispatch the action to remove item from the cart
         dispatch(removeCartItem(userId, item.id, jwt))
+            .then(() => {
+                // If the item is successfully removed, update the local cart state
+                const updatedCart = localCart.filter(cartItem => cartItem.id !== item.id);
+                setLocalCart(updatedCart); // Update local cart state
+            })
             .catch((error) => console.error('Error removing item:', error));
     };
 
@@ -87,6 +89,7 @@ const CartModal = ({ open, onClose, cart }) => {
             .map(item => item.id) // Extract product IDs
     ).size; // Get the size of the Set, which gives the count of unique products
 
+    console.log("cart modal",localCart)
     return (
         <Dialog
             open={open}
@@ -104,7 +107,7 @@ const CartModal = ({ open, onClose, cart }) => {
                 <List>
                     {localCart.map((item) => (
                         !item.deleted && ( // Only render if not deleted
-                            <div key={item.cartItemId}>
+                            <div key={item.cartItemId || item.id}> {/* Use item.id as a fallback if cartItemId is not unique */}
                                 <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 0', justifyContent: 'space-between' }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
                                         <IconButton

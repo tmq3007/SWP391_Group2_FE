@@ -58,18 +58,21 @@ export const addItemToCart = (userId,item, jwt) => async (dispatch) => {
     }
 };
 
-//Thêm hàm để cập nhật sản phẩm trong giỏ hàng
-export const updateCartItem = (userId, cartItemId, item,jwt) => async (dispatch) => {
+// Update the updateCartItem action
+export const updateCartItem = (userId, cartItemId, item, jwt) => async (dispatch) => {
     dispatch({ type: UPDATE_CARTITEM_REQUEST });
     try {
-        const response = await axios.put(`${API_URL_CART}/delete/user/${userId}/cartItem/${cartItemId}`, item,{
-            headers:{
+        // Send the item with the updated quantity
+        const {response} = await axios.put(`${API_URL_CART}/delete/user/${userId}/cartItem/${cartItemId}`, {
+            quantity: item.quantity // Assuming you only need to send the updated quantity
+        }, {
+            headers: {
                 Authorization: `Bearer ${jwt}`
             }
         });
         dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: response.data });
     } catch (error) {
-        dispatch({ type: UPDATE_CARTITEM_FAILURE, payload: error.response.data.message });
+        dispatch({ type: UPDATE_CARTITEM_FAILURE, payload: error.response?.data?.message || 'Error removing item' });
     }
 };
 
