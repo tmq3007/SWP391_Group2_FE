@@ -30,7 +30,6 @@ export const createProductAction = (reqData) => async (dispatch) => {
         const { data } = await axios.post("http://localhost:8080/api/v1/products", reqData, {
             headers: {
                 Authorization: `Bearer ${jwt}`,
-                'Content-Type': 'multipart/form-data'
             }
         });
         dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
