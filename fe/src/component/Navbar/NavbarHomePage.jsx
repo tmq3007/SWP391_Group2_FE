@@ -19,8 +19,8 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     const [userId, setUserId] = useState(null);
     const [shopId, setShopId] = useState(null);
     const [unverifiedShopId, setUnverifiedShopId] = useState(null);
-    const [shopError, setShopError] = useState(null);
-    const [unverifiedShopError, setUnverifiedShopError] = useState(null);
+    const [shopError, setShopError] = useState(false);
+    const [unverifiedShopError, setUnverifiedShopError] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
@@ -103,11 +103,11 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             console.log('Both ShopID and UnverifiedShopID are null or have errors');
             navigate("/create-shop");
         }
-        else if (shopError && !unverifiedShopError) {
+        else if (shopError && unverifiedShopId) {
             console.log("ShopID Error but Unverified ShopID is valid");
             navigate("/processing");
         }
-        else if (!shopError && unverifiedShopError) {
+        else if (shopId && unverifiedShopError) {
             console.log("Unverified ShopID Error but ShopID is valid");
             navigate("/vendor-dashboard");
         }

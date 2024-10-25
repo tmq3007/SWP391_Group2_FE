@@ -9,7 +9,9 @@ import {
     DELETE_ALL_PRODUCTS_REQUEST, DELETE_ALL_PRODUCTS_SUCCESS,
     DELETE_ALL_PRODUCTS_FAILURE, DELETE_PRODUCT_BY_ID_SUCCESS,
     DELETE_PRODUCT_BY_ID_FAILURE, CREATE_PRODUCT_REQUEST,
-    CREATE_PRODUCT_SUCCESS, CREATE_PRODUCT_FAILURE
+    CREATE_PRODUCT_SUCCESS, CREATE_PRODUCT_FAILURE,
+    GET_ALL_PRODUCT_BY_SHOP_ID_SUCCESS, GET_ALL_PRODUCT_BY_SHOP_ID_FAILURE,
+    GET_ALL_PRODUCT_BY_SHOP_ID_REQUEST
 
 } from "./ActionType";
 import {api} from "../../config/api";
@@ -50,6 +52,20 @@ export const getAllProductsAction = () => {
         } catch (error) {
             console.log("all err", error);
             dispatch({ type: GET_ALL_PRODUCTS_FAILURE, payload: error });
+        }
+    };
+};
+
+export const getAllProductsByShopIdAction = () => {
+    return async (dispatch) => {
+        dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_REQUEST });
+        try {
+            const { data } = await axios.get("http://localhost:8080/api/v1/products");
+            dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_SUCCESS, payload: data });
+            console.log("all products", data);
+        } catch (error) {
+            console.log("all err", error);
+            dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_FAILURE, payload: error });
         }
     };
 };

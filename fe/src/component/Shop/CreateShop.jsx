@@ -40,8 +40,8 @@ export const CreateShop = () => {
             state,
             address,
             phone,
-            logo,
-            coverImage,
+            logo: logo,
+            cover: coverImage,
             user : userId
         }
 

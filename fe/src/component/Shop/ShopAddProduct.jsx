@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useDispatch, useSelector} from "react-redux";
-import {createProductAction} from "../State/Product/Action";
 import {getAllCategoriesAction} from "../State/Category/Action";
+import {createProductAction} from "../State/Product/Action";
 import axios from "axios";
 
 
@@ -74,17 +74,12 @@ export const ShopAddProduct = () => {
             pictureUrl2
         };
 
-
-        axios.post('http://localhost:8080/api/v1/products', productData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        })
-            .then(response => {
-                console.log("Product created successfully!", response);
+        dispatch(createProductAction(productData))
+            .then(() => {
+                console.log("Product created successfully!");
                 alert("Product created successfully!");
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error creating product:", error);
                 alert("Error creating product. Please try again.");
             });
