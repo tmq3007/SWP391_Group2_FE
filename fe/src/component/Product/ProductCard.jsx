@@ -21,6 +21,7 @@ const ProductCard = ({ cart, item, addToCart }) => {
 
     const handleFavoriteToggle = () => {
         setIsFavorite((prev) => !prev);
+
     };
 
     const handleAddToCartClick = () => {
@@ -205,7 +206,7 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                     backgroundColor: 'rgba(1, 147, 118, 0.2)',
                                 }
                             }}>
-                                {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }} /> : <FavoriteBorderIcon />}
+                                {isFavorite ? <FavoriteIcon sx={{ color: '#F95454' }} /> : <FavoriteBorderIcon />}
                             </IconButton>
                         </Box>
                     )}

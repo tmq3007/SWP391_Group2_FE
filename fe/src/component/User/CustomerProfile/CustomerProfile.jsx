@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import ProfileNav from './ProfileNav'
 import ProfileInfo from './ProfileInfo'
 import {AddressProfile} from "./AddressProfile";
@@ -7,8 +7,26 @@ import ChangePassword from "./ChangePassword";
 import {MyOrder} from "./MyOrder";
 import {Wishlist} from "./Wishlist";
 import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
+import {getUser} from "../../State/Authentication/Action";
+import {useDispatch} from "react-redux";
 
 export const CustomerProfile = () => {
+    const dispatch = useDispatch();
+    const [user, setUser] = useState(null);
+    const [userId, setUserId] = useState(null);
+
+    const jwt = localStorage.getItem("jwt");
+    useEffect(() => {
+        if (jwt) {
+            dispatch(getUser(jwt)).then((data) => {
+                setUserId(data.result.id);
+            }).catch((error) => {
+                console.error('Error getting user:', error);
+            });
+        }
+    }, [dispatch, jwt]);
+
+    console.log("user id:", userId);
   return (
       <div>
         <NavbarHomePage/>
