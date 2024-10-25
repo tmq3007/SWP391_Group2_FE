@@ -6,38 +6,67 @@ import { ShopFilter } from "./ShopFilter";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useDispatch, useSelector } from "react-redux";
-import { getAllProductsAction } from "../State/Product/Action";
+import {getAllProductsAction, getAllProductsByShopIdAction} from "../State/Product/Action";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useNavigate} from "react-router-dom";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import axios from "axios";
 
 
 
 export const ShopProduct = () => {
     //move to another page
     const navigate = useNavigate();
+    const token = localStorage.getItem('jwt');
 
     //call api
     const dispatch = useDispatch();
-    const { products } = useSelector(store => store);
-
+    const [shopId, setShopId] = useState("");
+    const { products, isLoading, error } = useSelector(store => store.products);
     //pagination
     const productsPerPage = 5;
     const [page, setPage] = useState(1);
 
-    // Lấy dữ liệu tất cả sản phẩm khi component được mount
+    //call api user id then use shop id to get product
     useEffect(() => {
-        dispatch(getAllProductsAction());
-    }, [dispatch]);
+        const userId = localStorage.getItem("userId");
+        let isMounted = true;
+
+        const fetchShopId = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (isMounted) {
+                    const shopId = response.data.result;
+                    setShopId(shopId);
+
+                    if (shopId) {
+                        dispatch(getAllProductsByShopIdAction(shopId));
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching shopId:", error);
+            }
+        };
+        fetchShopId();
+        return () => {
+            isMounted = false;
+        };
+    }, [dispatch, token]);
+
+
 
     // Pagination logic
     const totalPages = Math.ceil(products.length / productsPerPage);
     const indexOfLastProduct = page * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products && products.products ? products.products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
-    {/*const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);*/}
+    const currentProducts = products?.slice(indexOfFirstProduct, indexOfLastProduct) || [];
+
 
     const handlePageChange = (event, value) => {
         setPage(value);
