@@ -47,8 +47,10 @@ const ProductDetail = ({ cart, item, addToCart }) => {
     };
 
     const handleCloseDialog = () => {
+        //window.location.href = "http://localhost:3000/";
         setOpenDialog(false);
         setDialogMessage(""); // Clear the message when closing
+
     };
 
     return (

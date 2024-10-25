@@ -17,9 +17,13 @@ const ProductCard = ({ cart, item, addToCart }) => {
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [open, setOpen] = useState(false);
-    const stock = item && item.productId
-        ? item.stock - (cart.find(cartItem => cartItem.product.productId === item.productId)?.quantity || 0)
-        : 0;
+
+    const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
+    const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
+
+    // Calculate available stock
+    const availableStock = item.stock - currentQuantityInCart;
+    // Bỏ giới hạn kho hàng
     const handleFavoriteToggle = () => {
         setIsFavorite((prev) => !prev);
 
@@ -30,13 +34,12 @@ const ProductCard = ({ cart, item, addToCart }) => {
     };
 
     const handleConfirmAddToCart = () => {
-        if (quantity > 0 && quantity <= stock) {
+        if (quantity > 0 && quantity <= availableStock) { // Chỉ cần kiểm tra quantity > 0
             addToCart(item.measurementUnit, quantity, item);
             setIsAddingToCart(false);
             setQuantity(1); // Reset quantity after adding to cart
-
-            // Optionally, show a success message or toast notification
-            //alert(`${item.productName} has been added to your cart!`);
+        } else if (quantity > availableStock) {
+            alert(`You can only add up to ${availableStock} of this item.`);
         } else {
             alert('Please enter a valid quantity.'); // Show alert for invalid quantity
         }
@@ -56,17 +59,8 @@ const ProductCard = ({ cart, item, addToCart }) => {
     };
 
     const handleQuantityChange = (e) => {
-        const newQuantity = e.target.value; // Lấy giá trị nhập vào từ input
+        const newQuantity = e.target.value;
         setQuantity(newQuantity); // Cập nhật state quantity với giá trị mới
-
-        // Kiểm tra và hiển thị thông báo lỗi nếu cần
-        if (newQuantity === '' || isNaN(newQuantity) || Number(newQuantity) < 1) {
-            // Nếu không nhập gì, hoặc không phải là số, hoặc nhỏ hơn 1
-            // Không cần phải làm gì, quantity sẽ vẫn là giá trị nhập vào
-        } else if (Number(newQuantity) > stock) {
-            // Nếu số lượng nhập vào lớn hơn số lượng trong kho
-            //setQuantity(stock); // Cập nhật về giới hạn stock
-        }
     };
 
     return (
@@ -134,13 +128,10 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                 onChange={handleQuantityChange}
                                 fullWidth
                                 margin="normal"
-                                inputProps={{ min: 1, max: stock }} // Prevent negative input and limit to stock
+                                inputProps={{ min: 1 }} // Chỉ cần giới hạn là 1
                             />
                             {quantity < 1 && (
                                 <Typography color="error" variant="body2">Quantity must be at least 1.</Typography>
-                            )}
-                            {quantity > stock && (
-                                <Typography color="error" variant="body2">Quantity cannot exceed {stock}.</Typography>
                             )}
                             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                                 <Button
@@ -148,12 +139,12 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                     onClick={handleConfirmAddToCart}
                                     fullWidth
                                     sx={{
-                                        backgroundColor: '#019376', // Màu nền
+                                        backgroundColor: '#019376',
                                         '&:hover': {
-                                            backgroundColor: '#01755b', // Màu khi hover
+                                            backgroundColor: '#01755b',
                                         },
-                                        borderRadius: 2, // Bo tròn
-                                        fontWeight: 'bold', // Đậm chữ
+                                        borderRadius: 2,
+                                        fontWeight: 'bold',
                                         transition: 'background-color 0.3s ease',
                                     }}
                                 >
@@ -164,14 +155,14 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                     onClick={handleCancelAddToCart}
                                     fullWidth
                                     sx={{
-                                        borderColor: '#019376', // Màu viền
-                                        color: '#019376', // Màu chữ
+                                        borderColor: '#019376',
+                                        color: '#019376',
                                         '&:hover': {
-                                            borderColor: '#01755b', // Màu viền khi hover
-                                            color: '#01755b', // Màu chữ khi hover
+                                            borderColor: '#01755b',
+                                            color: '#01755b',
                                         },
-                                        borderRadius: 2, // Bo tròn
-                                        fontWeight: 'bold', // Đậm chữ
+                                        borderRadius: 2,
+                                        fontWeight: 'bold',
                                         transition: 'all 0.3s ease',
                                     }}
                                 >
@@ -188,13 +179,13 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                 sx={{
                                     flexGrow: 1,
                                     mr: 1,
-                                    backgroundColor: '#019376', // Customize background color
-                                    color: 'white', // Customize text color
-                                    padding: '10px 15px', // Add padding
-                                    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)', // Add shadow
+                                    backgroundColor: '#019376',
+                                    color: 'white',
+                                    padding: '10px 15px',
+                                    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
                                     '&:hover': {
-                                        backgroundColor: '#01755b', // Customize hover background color
-                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', // Adjust shadow on hover
+                                        backgroundColor: '#01755b',
+                                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                     },
                                     transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
                                     borderRadius: 2,

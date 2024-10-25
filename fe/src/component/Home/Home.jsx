@@ -13,13 +13,14 @@ import { NavbarHomePage } from "../Navbar/NavbarHomePage";
 import { findCart, addItemToCart } from '../State/Cart/Action';
 import {getUser} from "../State/Authentication/Action";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import {useNavigate} from "react-router-dom";
 
 const Home = () => {
     const dispatch = useDispatch();
     const { products } = useSelector(store => store);
     const jwt = localStorage.getItem("jwt");
     const {carts} = useSelector(store => store);
-
+const navigate = useNavigate();
     const [cart, setCart] = useState(null);
     const [openCartModal, setOpenCartModal] = useState(false);
     const itemsPerPage = 8;
@@ -125,7 +126,7 @@ const Home = () => {
     };
 
     const handleOpenCart = () => {
-        setOpenCartModal(true);
+        navigate("/cart")
     };
 
     const handleCloseCart = () => {
@@ -162,7 +163,7 @@ const Home = () => {
                     {currentProducts.map((item) => item && (
                         <ProductCard
                             key={item.id}
-                            cart={localCart?.result?.cartItems || []}
+                            cart={cart?.result?.cartItems || []}
                             item={item}
                             addToCart={(buyUnit, quantity) => addToCart(buyUnit, quantity, item)}
                         />
@@ -182,17 +183,17 @@ const Home = () => {
 
             <div className="fixed bottom-10 right-10 cart-modal">
                 <button className="text-white p-3 rounded-lg shadow-lg" onClick={handleOpenCart}>
-                    <AddShoppingCartIcon /> View Cart
+                    <AddShoppingCartIcon /> View Cart ({cart?.result?.cartItems?.length > 0 ? cart.result.cartItems.length : 0})
                 </button>
             </div>
 
-            <CartModal
-                open={openCartModal}
-                onClose={handleCloseCart}
-                cartItems={localCart?.result?.cartItems || []}  // Pass cart items or an empty array
-                addToCart={addToCart}
-                totalPrice={totalPrice}  // Pass total price
-            />
+            {/*<CartModal*/}
+            {/*    open={openCartModal}*/}
+            {/*    onClose={handleCloseCart}*/}
+            {/*    cartItems={localCart?.result?.cartItems || []}  // Pass cart items or an empty array*/}
+            {/*    addToCart={addToCart}*/}
+            {/*    totalPrice={totalPrice}  // Pass total price*/}
+            {/*/>*/}
         </div>
     );
 };

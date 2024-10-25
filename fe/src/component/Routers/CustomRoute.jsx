@@ -14,6 +14,7 @@ import {CustomerProfile} from "../User/CustomerProfile/CustomerProfile";
 import {ShopDashboard} from "../Shop/ShopDashboard";
 import {CreateShop} from "../Shop/CreateShop";
 import Processing from "../Shop/Processing";
+import Cart from "../Cart/Cart";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -49,6 +50,14 @@ const CustomRoute = () => {
                                <VendorDashboard/>
                            </ProtectedRoute>
                        }/>
+
+                <Route path="/cart"
+                    element={
+                    <ProtectedRoute role="ROLE_CUSTOMER">
+                        <Cart></Cart>
+                    </ProtectedRoute>
+                    }
+                />
 
                 <Route path={"/create-shop"}
                        element={
