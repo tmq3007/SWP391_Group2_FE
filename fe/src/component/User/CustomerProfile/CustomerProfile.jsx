@@ -9,6 +9,7 @@ import {Wishlist} from "./Wishlist";
 import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
 import {getUser} from "../../State/Authentication/Action";
 import {useDispatch} from "react-redux";
+import CustomerPayment from "./CustomerPayment";
 
 export const CustomerProfile = () => {
     const dispatch = useDispatch();
@@ -48,7 +49,7 @@ export const CustomerProfile = () => {
               <Route path="/orders" element={<MyOrder/>}/>
 
               <Route path="/wishlist" element={<Wishlist/>}/>
-
+                <Route path="/my-payment" element={<CustomerPayment/>}/>
             </Routes>
           </div>
 

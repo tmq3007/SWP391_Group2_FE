@@ -3,13 +3,39 @@ import { Box, Typography } from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
 const CustomerPaymentList = ({ items }/*an array of order item pass from customer payment - from cart*/) => {
-
     // Calculate total amount
-    const totalAmount = items.reduce((total, item) => total + item.amount * item.price, 0);
+    const a = [
+        {
+            amount:10,
+            name:"h1lo",
+            price:20
+        },
+        {
+            amount:10,
+            name:"h1lo",
+            price:20
+        },
+        {
+            amount:10,
+            name:"h1lo",
+            price:20
+        },
+        {
+            amount:10,
+            name:"h1lo",
+            price:20
+        },
+        {
+            amount:10,
+            name:"h1lo",
+            price:20
+        },
+    ];
+    items = a;
+    const totalAmount = (items.length > 0) ? items.reduce((total, item) => total + item.amount * item.price, 0) : 0;
     const navigate = useNavigate();
     const handleCancelPayment = () => {
         navigate('/');
-        return null;
     };
 
     return (
