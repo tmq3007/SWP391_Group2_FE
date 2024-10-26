@@ -163,7 +163,7 @@ const navigate = useNavigate();
                     {currentProducts.map((item) => item && (
                         <ProductCard
                             key={item.id}
-                            cart={cart?.result?.cartItems || []}
+                            cart={localCart?.result?.cartItems || []}
                             item={item}
                             addToCart={(buyUnit, quantity) => addToCart(buyUnit, quantity, item)}
                         />

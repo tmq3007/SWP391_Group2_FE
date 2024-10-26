@@ -18,7 +18,7 @@ const ProductCard = ({ cart, item, addToCart }) => {
     const [quantity, setQuantity] = useState(1);
     const [open, setOpen] = useState(false);
 
-    const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
+    const currentCartItem = cart.find(cartItem => cartItem.productId === item.productId);
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
 
     // Calculate available stock
