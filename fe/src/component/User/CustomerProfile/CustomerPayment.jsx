@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { NavbarShop } from "../../Navbar/NavbarShop";
 import {Container, Input} from "@mui/joy";
 import Box from "@mui/material/Box";
 import { IconButton, TextField, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
@@ -15,6 +14,7 @@ import {useTabsList} from "@mui/base";
 import {Label} from "@mui/icons-material";
 import {padding} from "@mui/system";
 import {REMOVE_CARTITEM_FAILURE, REMOVE_CARTITEM_REQUEST, REMOVE_CARTITEM_SUCCESS} from "../../State/Cart/ActionType";
+import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
 
 const getUserData = async (userId, jwt) => {
     try {
@@ -115,7 +115,6 @@ const CustomerPayment = () => {
             try {
                 const userData = await getUserData(id, token);
                 setUser(userData.result);
-                setPhone(user.phone);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -299,7 +298,6 @@ const CustomerPayment = () => {
                 ...user,
                 phone: newPhone
             }));
-            setPhone(newPhone);
             console.log(user);
         }else{
             setOpenUpdatePhoneError(true);
@@ -308,10 +306,10 @@ const CustomerPayment = () => {
     return (
 
         <div className='w-full h-full'>
-            <NavbarShop/>
+            <NavbarHomePage/>
 
             <Container sx={{ marginTop: 8, display: "flex", justifyContent: "space-between", gap: 5 }}>
-                <Box sx={{ width: "70%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
+                <Box sx={{ width: "60%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
                     <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: '#f5f5f5' } }}>
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center'>
@@ -329,7 +327,7 @@ const CustomerPayment = () => {
                             </Button>
 
                         </div>
-                        <TextField disabled value={(phone !== "") ? phone : ""}/>
+                        <TextField disabled value={(user !== null) ? user.phone : ""}/>
                     </Box>
 
                     <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: '#f5f5f5' } }}>
@@ -400,8 +398,8 @@ const CustomerPayment = () => {
                         <TextField placeholder='Note for your package...' sx={{ width: "100%", outlineStyle: 'transparent' }} />
                     </Box>
                 </Box>
-                    <Box sx={{ width: "30%", height: "50%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
-                        <CustomerPaymentList /> {/* Render the ItemsList component here */}
+                    <Box sx={{ width: "40%", height: "50%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
+                        <CustomerPaymentList/> {/* Render the ItemsList component here */}
                     </Box>
             </Container>
 
@@ -465,7 +463,7 @@ const CustomerPayment = () => {
                         <TextField
                             label="Your old phone number is"
                             name="phone"
-                            value={(phone !== "") ? phone : ""}
+                            value={(user !== null) ? user.phone : ""}
                             fullWidth
                             margin="dense"
                             InputProps={{

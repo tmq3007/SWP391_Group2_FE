@@ -15,6 +15,8 @@ import {ShopDashboard} from "../Shop/ShopDashboard";
 import {CreateShop} from "../Shop/CreateShop";
 import Processing from "../Shop/Processing";
 import Cart from "../Cart/Cart";
+import CustomerPayment from "../User/CustomerProfile/CustomerPayment";
+import SuccessOrderShow from "../User/CustomerProfile/SuccessOrderShow";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -37,6 +39,8 @@ const CustomRoute = () => {
                 <Route path='/auth/:register' element={<Home/>}/>
                 <Route path="/product-detail" element={<ProductDetail/>}/>
                 <Route path="/my-profile/*" element={<CustomerProfile/>}/>
+                <Route path={"/my-payment"} element={<CustomerPayment/>}/>
+                <Route path={"/success-place-order"} element={<SuccessOrderShow/>}/>
                 <Route path="/shop-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
