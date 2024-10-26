@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateCartItem, removeCartItem, getAllCartItems, findCart } from '../State/Cart/Action';
 import { getUser } from "../State/Authentication/Action";
 import { NavbarHomePage } from "../Navbar/NavbarHomePage";
+import {useNavigate} from "react-router-dom";
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,11 @@ const Cart = () => {
     const [cart, setCart] = useState(null);
     const [userId, setUserId] = useState(null);
     const [localCart, setLocalCart] = useState([]);
+    const navigate = useNavigate();
+
+    const moveToPayment = () => {
+        navigate("/my-payment");
+    }
 
     useEffect(() => {
         if (cart && cart.result) {
@@ -91,7 +97,7 @@ const Cart = () => {
 
     return (
         <div>
-            <NavbarHomePage />
+            <NavbarHomePage/>
             <Typography variant="h4" sx={{ textAlign: 'center', margin: '20px 0', color: '#333',marginTop:"100px" }}>
                 Your Shopping Cart
             </Typography>
@@ -131,7 +137,7 @@ const Cart = () => {
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ padding: '16px 20px' }}>
-                    <Button variant="contained" fullWidth sx={{ backgroundColor: '#019376', borderRadius: '24px', padding: '12px 0', fontWeight: 'bold', fontSize: '16px' }}>
+                    <Button onClick={moveToPayment} variant="contained" fullWidth sx={{ backgroundColor: '#019376', borderRadius: '24px', padding: '12px 0', fontWeight: 'bold', fontSize: '16px' }}>
                         Checkout
                         <Typography variant="body1" sx={{ color: '#fff', fontWeight: 'bold', marginLeft: '100px' }}>${newTotalPrice.toFixed(2)}</Typography>
                     </Button>
