@@ -15,6 +15,7 @@ import {Label} from "@mui/icons-material";
 import {padding} from "@mui/system";
 import {REMOVE_CARTITEM_FAILURE, REMOVE_CARTITEM_REQUEST, REMOVE_CARTITEM_SUCCESS} from "../../State/Cart/ActionType";
 import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
+import {useLocation} from "react-router-dom";
 
 const getUserData = async (userId, jwt) => {
     try {
@@ -101,7 +102,9 @@ const deleteAddress = async (id,jwt) => {
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const CustomerPayment = () => {
-
+    const location = useLocation();
+    const selectedItems = location.state?.selectedItems || [];
+    console.log("Yup",selectedItems);
     const token = localStorage.getItem("jwt");
     const id = jwtDecode(token).userId;
     const [user, setUser] = useState(null);
@@ -146,6 +149,7 @@ const CustomerPayment = () => {
     const districtRef = useRef();
     const subDistrictRef = useRef();
     const streetRef = useRef();
+    const noteRef = useRef("");
     ///////////////////////////////////////////////////////////////////////
     const addCityRef = useRef();
     const addDistrictRef = useRef();
@@ -395,11 +399,11 @@ const CustomerPayment = () => {
                                 <Typography>Note</Typography>
                             </div>
                         </div>
-                        <TextField placeholder='Note for your package...' sx={{ width: "100%", outlineStyle: 'transparent' }} />
+                        <TextField placeholder='Note for your package...' sx={{ width: "100%", outlineStyle: 'transparent' }} inputRef={noteRef} />
                     </Box>
                 </Box>
                     <Box sx={{ width: "40%", height: "50%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
-                        <CustomerPaymentList/> {/* Render the ItemsList component here */}
+                        <CustomerPaymentList chosenAddress={(array.length > 0 && selectedIndex !== -1) ? array[selectedIndex] : null} chosenPhone={(user !== null) ? user.phone : null} item={selectedItems} note={noteRef.current.value}/> {/* Render the ItemsList component here */}
                     </Box>
             </Container>
 
