@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { NavbarShop } from "../../Navbar/NavbarShop";
-import { Container } from "@mui/joy";
+import React, {useEffect, useRef, useState} from 'react';
+import {Container, Input} from "@mui/joy";
 import Box from "@mui/material/Box";
 import { IconButton, TextField, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import LooksOneIcon from '@mui/icons-material/LooksOne';
@@ -9,109 +8,308 @@ import Looks3Icon from '@mui/icons-material/Looks3';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomerPaymentList from "./CustomerPaymentList";
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
+import {useTabsList} from "@mui/base";
+import {Label} from "@mui/icons-material";
+import {padding} from "@mui/system";
+import {REMOVE_CARTITEM_FAILURE, REMOVE_CARTITEM_REQUEST, REMOVE_CARTITEM_SUCCESS} from "../../State/Cart/ActionType";
+import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
 
+const getUserData = async (userId, jwt) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
+
+const updatePhoneNumber = async (phone,id,jwt) => {
+    try {
+        const response = await axios.put(`http://localhost:8080/api/v1/users/updatePhone/${id}/${phone}`, {},{
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
+
+const getAddressData = async (jwt) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/v1/addresses`, {
+            headers: {
+                Authorization:`Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
+
+const updateAddress = async (object,jwt) => {
+    try {
+        const response = await axios.patch(`http://localhost:8080/api/v1/addresses`,object, {
+            headers: {
+                Authorization:`Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
+
+const addAddress = async (object,jwt) => {
+    try {
+        const response = await axios.post(`http://localhost:8080/api/v1/addresses`,object, {
+            headers: {
+                Authorization:`Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
+
+const deleteAddress = async (id,jwt) => {
+    try {
+        const response = await axios.delete(`http://localhost:8080/api/v1/addresses/${id}`, {
+            headers: {
+                Authorization:`Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const CustomerPayment = () => {
-    const [getPhoneNumber, setPhoneNumber] = useState("098098098");
-    const [openPhoneModal, setOpenPhoneModal] = useState(false);
-    const [newPhoneNumber, setNewPhoneNumber] = useState("");
 
-    const [openAddressModal, setOpenAddressModal] = useState(false);
-    const [address, setAddress] = useState({
-        country: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        streetAddress: ""
+    const token = localStorage.getItem("jwt");
+    const id = jwtDecode(token).userId;
+    const [user, setUser] = useState(null);
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState([]);
+    const [selectedIndex, setSelectedIndex] = useState();
+    /////////////////////////////////////////////////////////////////
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userData = await getUserData(id, token);
+                setUser(userData.result);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        fetchData();
+    }, [id, token]);
+    console.log("1",user);
+
+    ///////////////////////////////////////////////////////////////
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const addressData = await getAddressData(token);
+                setAddress(addressData);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        fetchData();
+    }, [token]);
+    console.log("2",address);
+
+    ///////////////////////////////////////////////////////////////////////
+    var array = address.filter((item) => item.user.id === user.id);
+    console.log(array);
+
+    ///////////////////////////////////////////////////////////////////////
+    const cityRef = useRef();
+    const districtRef = useRef();
+    const subDistrictRef = useRef();
+    const streetRef = useRef();
+    ///////////////////////////////////////////////////////////////////////
+    const addCityRef = useRef();
+    const addDistrictRef = useRef();
+    const addStreetRef = useRef();
+    const addSubDistrictRef = useRef();
+    ////////////////////////////////////////////////////////////////////////
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openAdd, setOpenAdd] = useState(false);
+    const [openUpdatePhone, setOpenUpdatePhone] = useState(false);
+    const [openUpdateError, setOpenUpdateError] = useState(false);
+    const [openAddError, setOpenAddError] = useState(false);
+    const [openUpdatePhoneError, setOpenUpdatePhoneError] = useState(false);
+    const [openWarning, setOpenWarning] = useState(false);
+    const regex = /^[a-zA-Z0-9]+$/;
+    ////////////////////////////////////////////////////////////////////////
+    const handleCloseUpdate = () => {
+        setOpenUpdate(false);
+    }
+    const handleCloseAdd = () => {
+        setOpenAdd(false);
+    }
+    const handleCloseUpdatePhone = () => {
+        setOpenUpdatePhone(false);
+    }
+    const handleCloseUpdateError = () => {
+        setOpenUpdateError(false);
+    }
+    const handleCloseAddError  = () => {
+        setOpenAddError(false);
+    }
+    const handleCloseUpdatePhoneError = () => {
+        setOpenUpdatePhoneError(false);
+    }
+    const handleCloseWarning = () => {
+        setOpenWarning(false);
+    }
+    ///////////////////////////////////////////////////////////
+    const [chosenAddress, setChosenAddress] = useState({});
+    const [update, setUpdate] = useState({
+        addressID:-1,
+        city:"",
+        district:"",
+        subDistrict:"",
+        street:"",
+        id: -1
     });
-
-    //test for item list display
-    const [items] = useState([
-        { name: "Soda can", amount: 1, price: 10 },
-        { name: "Cookies block", amount: 2, price: 20 },
-        { name: "Bread", amount: 1, price: 15 },
-    ]);
-
-    const [originalAddress, setOriginalAddress] = useState({});
-    const [submittedAddresses, setSubmittedAddresses] = useState([]);
-    const [selectedIndex, setSelectedIndex] = useState(-1);
-
-    const changePhoneNumber = (a) => {
-        return setPhoneNumber(a);
+    //////////////////////////////////////////////////////////
+    const RegexCheck = (object) => {
+        return regex.test(object.city)
+        && regex.test(object.district)
+        && regex.test(object.street)
+        && regex.test(object.subDistrict);
     };
+    const updateThis = (index) => {
+        setChosenAddress(array[index]);
+        setOpenUpdate(true);
+    }
+    const submitUpdateThis = async () => {
+        const cityValue = cityRef.current.value;
+        const districtValue = districtRef.current.value;
+        const subDistrictValue = subDistrictRef.current.value;
+        const streetValue = streetRef.current.value;
 
-    const handleClickOpenPhone = () => {
-        setNewPhoneNumber("");
-        setOpenPhoneModal(true);
-    };
+        console.log("1 ", cityValue);
+        console.log("2 ", districtValue);
+        console.log("3 ", streetValue);
+        console.log("4 ", subDistrictValue);
 
-    const handleClosePhone = () => {
-        setOpenPhoneModal(false);
-    };
+        // Set the update state
+        const newUpdate = {
+            addressID: chosenAddress.addressID,
+            city: cityValue,
+            district: districtValue,
+            subDistrict: subDistrictValue,
+            street: streetValue
+        };
 
-    const handleUpdate = () => {
-        setPhoneNumber(newPhoneNumber);
-        handleClosePhone();
-    };
+        console.log(newUpdate);
+        if (RegexCheck(newUpdate)) {
+            await updateAddress(newUpdate,token);
+            const updatedAddresses = await getAddressData(token);
+            setAddress(updatedAddresses);
+            handleCloseUpdate();
+        }else{
+            setOpenUpdateError(true);
+        }
+    }
 
-    const handleClickOpenAddress = () => {
-        setOpenAddressModal(true);
-    };
+    const addThis = () => {
+        setOpenAdd(true);
+    }
+    const submitAddThis = async () => {
+        const cityValue = addCityRef.current.value;
+        const districtValue = addDistrictRef.current.value;
+        const subDistrictValue = addSubDistrictRef.current.value;
+        const streetValue = addStreetRef.current.value;
 
-    const handleCloseAddress = () => {
-        setOpenAddressModal(false);
-    };
+        console.log("1 ", cityValue);
+        console.log("2 ", districtValue);
+        console.log("3 ", streetValue);
+        console.log("4 ", subDistrictValue);
 
-    const handleAddressConfirm = () => {
-        setSubmittedAddresses([...submittedAddresses, address]);
-        setAddress({
-            country: "",
-            city: "",
-            state: "",
-            zipCode: "",
-            streetAddress: ""
-        });
-        handleCloseAddress();
-    };
+        // Set the update state
+        const newAdd = {
+            city: cityValue,
+            district: districtValue,
+            subDistrict: subDistrictValue,
+            street: streetValue,
+            user: id
+        };
+        console.log(newAdd);
+        if (RegexCheck(newAdd)) {
+            await addAddress(newAdd,token);
+            const updatedAddresses = await getAddressData(token);
+            setAddress(updatedAddresses);
+            handleCloseAdd();
+        }else{
+            setOpenAddError(true);
+        }
+    }
 
-    const handleDeleteAddress = (index) => {
-        setSubmittedAddresses(submittedAddresses.filter((_, i) => i !== index));
-        setSelectedIndex(-1); // Reset selected index after deletion
-    };
-
-    const handleUpdateAddress = (index) => {
-        const addr = submittedAddresses[index];
-        setOriginalAddress(addr);
-        setAddress(addr);
-        setOpenAddressModal(true);
-        setSelectedIndex(index); // Set the index for the address to update
-    };
-
-    const handleCancelUpdate = () => {
-        setAddress(originalAddress);
-        handleCloseAddress();
-    };
-
-    const handleConfirmUpdate = () => {
-        const updatedAddresses = submittedAddresses.map((addr, index) =>
-            index === selectedIndex ? address : addr
-        );
-        setSubmittedAddresses(updatedAddresses);
-        setAddress({
-            country: "",
-            city: "",
-            state: "",
-            zipCode: "",
-            streetAddress: ""
-        });
-        handleCloseAddress();
-        setSelectedIndex(-1); // Reset selected index
-    };
-
+    const deleteThis = (index) => {
+        setChosenAddress(array[index]);
+        setOpenWarning(true);
+    }
+    const trigger = async () => {
+        console.log(chosenAddress.addressID);
+        const deleteId = chosenAddress.addressID;
+        if(deleteId >= 1){
+            await deleteAddress(deleteId,token);
+            const updatedAddresses = await getAddressData(token);
+            setAddress(updatedAddresses);
+            handleCloseWarning();}
+        else{
+            console.log("Error");
+            }
+        }
+    const phoneRegex = /^\d{10,11}$/;
+    const phoneRef = useRef();
+    const updateThisPhone = () => {
+        setOpenUpdatePhone(true);
+    }
+    const submitUpdateThisPhone = async () => {
+        const newPhone = phoneRef.current.value;
+        console.log(newPhone);
+        if(phoneRegex.test(newPhone)){
+            await updatePhoneNumber(newPhone,id,token);
+            const newUser = await getUserData(id,token);
+            setUser(() => ({
+                ...user,
+                phone: newPhone
+            }));
+            console.log(user);
+        }else{
+            setOpenUpdatePhoneError(true);
+        }
+    }
     return (
+
         <div className='w-full h-full'>
-            <NavbarShop/>
+            <NavbarHomePage/>
+
             <Container sx={{ marginTop: 8, display: "flex", justifyContent: "space-between", gap: 5 }}>
-                <Box sx={{ width: "70%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
+                <Box sx={{ width: "60%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
                     <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: '#f5f5f5' } }}>
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center'>
@@ -122,16 +320,14 @@ const CustomerPayment = () => {
                             </div>
                             <Button
                                 variant="outlined"
-                                onClick={handleClickOpenPhone}
-                                sx={{
-                                    borderColor: "#019376", color: "#019376",
-                                    '&:hover': { backgroundColor: '#019376', color: 'white' }
-                                }}
-                            >
+                                onClick={updateThisPhone}
+                                sx={{borderColor: "#019376", color: "#019376",
+                                    '&:hover': { backgroundColor: '#019376', color: 'white' }}}>
                                 + Update
                             </Button>
+
                         </div>
-                        <TextField disabled value={getPhoneNumber} />
+                        <TextField disabled value={(user !== null) ? user.phone : ""}/>
                     </Box>
 
                     <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: '#f5f5f5' } }}>
@@ -144,74 +340,50 @@ const CustomerPayment = () => {
                             </div>
                             <Button
                                 variant="outlined"
-                                onClick={handleClickOpenAddress}
+                                onClick={addThis}
                                 sx={{
                                     borderColor: "#019376", color: "#019376",
                                     '&:hover': { backgroundColor: '#019376', color: 'white' }
                                 }}
+
                             >
                                 + Add
                             </Button>
                         </div>
 
                         <Box sx={{ marginTop: 2, padding: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
-                            {submittedAddresses.map((addr, index) => (
+                            {array.length > 0 && array.map((addr, index) => (
                                 <Box
                                     key={index}
                                     sx={{
+                                        display: 'flex',  // Align content horizontally
+                                        justifyContent: 'space-between',  // Push buttons to the right
+                                        alignItems: 'center',
                                         margin: 1,
                                         padding: 1,
                                         border: '1px solid #019376',
                                         borderRadius: 1,
                                         bgcolor: selectedIndex === index ? '#e0f7fa' : '#f9f9f9', // Highlight selected address
-                                        cursor: "pointer",
-                                        position: "relative",
+                                        cursor: 'pointer',
                                     }}
-                                    onClick={() => setSelectedIndex(index)} // Set selected index on click
+                                    onClick={() => {setSelectedIndex(index); console.log(index);}} // Set selected index on click
                                 >
-                                    {/*<Typography sx={{*/}
-                                    {/*    width: "15rem",*/}
-                                    {/*    height: "3rem",*/}
-                                    {/*    overflowX: "auto",*/}
-                                    {/*    overflowY: "hidden",*/}
-                                    {/*    whiteSpace: "nowrap",*/}
-                                    {/*    display: "block",*/}
-                                    {/*}}>{`${addr.streetAddress}, ${addr.city}, ${addr.state}, ${addr.zipCode}, ${addr.country}`}</Typography>*/}
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                                            <Typography sx={{ fontWeight: 'bold', marginRight: '0.5rem' }}>Street:</Typography>
-                                            <Typography>{addr.streetAddress}</Typography>
-                                        </Box> hello there
-                                        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                                            <Typography sx={{ fontWeight: 'bold', marginRight: '0.5rem' }}>City:</Typography>
-                                            <Typography>{addr.city}</Typography>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                                            <Typography sx={{ fontWeight: 'bold', marginRight: '0.5rem' }}>State:</Typography>
-                                            <Typography>{addr.state}</Typography>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                                            <Typography sx={{ fontWeight: 'bold', marginRight: '0.5rem' }}>Zip Code:</Typography>
-                                            <Typography>{addr.zipCode}</Typography>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                                            <Typography sx={{ fontWeight: 'bold', marginRight: '0.5rem' }}>Country:</Typography>
-                                            <Typography>{addr.country}</Typography>
-                                        </Box>
-                                    </Box>
+                                    <Typography>
+                                        {`${addr.city}, ${addr.street}, ${addr.district}, ${addr.subDistrict}`}
+                                    </Typography>
 
-
-                                    <Box sx={{ position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                        <IconButton onClick={() => handleDeleteAddress(index)} size="small">
-                                            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
+                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                        <IconButton onClick={(e) => { e.stopPropagation(); updateThis(index); }}>
+                                            <EditIcon fontSize="small" sx={{ color: 'blue' }} />
                                         </IconButton>
-                                        <IconButton onClick={() => handleUpdateAddress(index)} size="small">
-                                            <EditIcon fontSize="small" sx={{ color: "blue" }} />
+                                        <IconButton onClick={(e) => { e.stopPropagation(); deleteThis(index); }}>
+                                            <DeleteIcon fontSize="small" sx={{ color: 'red' }} />
                                         </IconButton>
                                     </Box>
                                 </Box>
                             ))}
                         </Box>
+
                     </Box>
 
                     <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: '#f5f5f5' } }}>
@@ -226,95 +398,185 @@ const CustomerPayment = () => {
                         <TextField placeholder='Note for your package...' sx={{ width: "100%", outlineStyle: 'transparent' }} />
                     </Box>
                 </Box>
-
-                    <Box sx={{ width: "30%", height: "50%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
-                        <CustomerPaymentList items={items} /> {/* Render the ItemsList component here */}
+                    <Box sx={{ width: "40%", height: "50%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
+                        <CustomerPaymentList/> {/* Render the ItemsList component here */}
                     </Box>
-
             </Container>
 
+            {/* add new address */}
+            <Dialog open={openAdd} onClose={handleCloseAdd}>
+                <DialogContent sx={{marginTop: "20px"}}>
+                    <Typography variant="h6" sx={{color: "#019376"}}>Add new address for your payment</Typography>
 
-            {/* Modal for updating phone number */}
-            <Dialog open={openPhoneModal} onClose={handleClosePhone}>
-                <DialogTitle>Update Phone Number</DialogTitle>
-                <DialogContent>
                     <TextField
-                        autoFocus
-                        margin="dense"
-                        label="New Phone Number"
-                        type="text"
+                        label="City"
+                        name="city"
+                        inputRef={addCityRef}
                         fullWidth
-                        variant="standard"
-                        value={newPhoneNumber}
-                        onChange={(e) => setNewPhoneNumber(e.target.value)}
+                        margin="dense"
+                        sx={{marginTop: "20px"}}
                     />
+
+                    <TextField
+                        label="District"
+                        name="district"
+                        inputRef={addDistrictRef}
+                        fullWidth
+                        margin="dense"
+                    />
+
+                    <TextField
+                        label="Street"
+                        name="street"
+                        inputRef={addStreetRef}
+                        fullWidth
+                        margin="dense"
+                    />
+
+                    <TextField
+                        label="subdistrict"
+                        name="subdistrict"
+                        inputRef={addSubDistrictRef}
+                        fullWidth
+                        margin="dense"
+                    />
+
+
                 </DialogContent>
+
                 <DialogActions>
-                    <Button onClick={handleClosePhone} sx={{ color: "#019376" }}>Cancel</Button>
-                    <Button onClick={handleUpdate} sx={{ color: "#019376" }}>Update</Button>
+                    <Button variant="contained" color="primary" sx={{marginRight: "30px"}} onClick={submitAddThis}>
+                        Submit
+                    </Button>
                 </DialogActions>
+                <DialogContent>
+                    <Typography variant="caption" display="block" fontSize="15px" gutterBottom>
+                        (Click outside the form to close.)
+                    </Typography>
+                </DialogContent>
+            </Dialog>
+            {/* update phone number */}
+            <Dialog open={openUpdatePhone} onClose={handleCloseUpdatePhone}>
+                <DialogContent >
+                    <Typography>Update your phone number</Typography>
+                    <Box sx={{marginTop: "20px"}}>
+                        <TextField
+                            label="Your old phone number is"
+                            name="phone"
+                            value={(user !== null) ? user.phone : ""}
+                            fullWidth
+                            margin="dense"
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Box>
+                    <Box>
+                        <TextField
+                            label="New phone number"
+                            name="phone1"
+                            inputRef={phoneRef}
+                            /*value={formData.country}*/
+                            /*onChange={handleChange}*/
+                            fullWidth
+                            margin="dense"
+                        />
+                        <Button variant={"contained"} color={"primary"} onClick={submitUpdateThisPhone}> Update </Button>
+                    </Box>
+
+                </DialogContent>
+                <Typography>( Click out from the message to close.)</Typography>
             </Dialog>
 
-            {/* Modal for adding or updating address */}
-            <Dialog open={openAddressModal} onClose={handleCloseAddress}>
-                <DialogTitle>{originalAddress.country ? "Update Address" : "Add Address"}</DialogTitle>
-            <DialogContent>
-                <TextField
-                    margin="dense"
-                    label="Country"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={address.country}
-                    onChange={(e) => setAddress({ ...address, country: e.target.value })}
-                />
-                <TextField
-                    margin="dense"
-                    label="City"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={address.city}
-                    onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                />
-                <TextField
-                    margin="dense"
-                    label="State"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={address.state}
-                    onChange={(e) => setAddress({ ...address, state: e.target.value })}
-                />
-                <TextField
-                    margin="dense"
-                    label="Zip Code"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={address.zipCode}
-                    onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
-                />
-                <TextField
-                    margin="dense"
-                    label="Street Address"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={address.streetAddress}
-                    onChange={(e) => setAddress({ ...address, streetAddress: e.target.value })}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleCloseAddress} sx={{ color: "#019376" }}>Cancel</Button>
-                <Button onClick={originalAddress.country ? handleConfirmUpdate : handleAddressConfirm} sx={{ color: "#019376" }}>
-                    {originalAddress.country ? "Update" : "Add"}
-                </Button>
-            </DialogActions>
-        </Dialog>
+            {/* update old address */}
+            <Dialog open={openUpdate} onClose={handleCloseUpdate}>
+                <DialogContent>
+                    <Typography fontSize="30px" color={"#019376"} sx={{marginBottom:"20px"}}>Update address</Typography>
+                    <Typography fontSize="20px">Your old address is </Typography>
+                    <Typography>{chosenAddress.city+", "+chosenAddress.district+", "+chosenAddress.street+", "+chosenAddress.subDistrict}</Typography>
+                    <Box>
+                        <TextField
+                            label="City"
+                            name="city1"
+                            inputRef={cityRef}
+                            fullWidth
+                            margin="dense"
+                            sx={{marginTop: "20px"}}
+                        />
+
+                        <TextField
+                            label="District"
+                            name="district1"
+                            inputRef={districtRef}
+                            fullWidth
+                            margin="dense"
+                        />
+
+                        <TextField
+                            label="Street"
+                            name="street1"
+                            inputRef={streetRef}
+                            fullWidth
+                            margin="dense"
+                        />
+
+                        <TextField
+                            label="subdistrict"
+                            name="subdistrict1"
+                            inputRef={subDistrictRef}
+                            fullWidth
+                            margin="dense"
+                        />
+                        <Button variant={"contained"} color={"primary"} sx={{marginTop:"20px"}} onClick={submitUpdateThis}>
+                            Update address
+                        </Button>
+                    </Box>
+                </DialogContent>
+                <Typography margin={"10px"}>
+                    ( Click out from the message to close.)
+                </Typography>
+            </Dialog>
+
+            <Dialog open={openWarning} onClose={handleCloseWarning}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"}>Warning</Typography>
+                    <Typography fontSize={"20px"} >Do you really want to delete this address</Typography>
+                    <Typography fontSize={"20px"} sx={{color:"red"}} >{chosenAddress.city +", "+chosenAddress.district+", "+chosenAddress.street+", "+chosenAddress.subDistrict}</Typography>
+                    <Button variant={"contained"} color={"primary"} sx={{marginTop:"20px",marginBottom:"20px"}} onClick={trigger}>Delete</Button>
+                    <Typography marginTop={"20px"}>( Click out from the message to close.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openUpdateError} onClose={handleCloseUpdateError}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"}>Error</Typography>
+                    <Typography fontSize={"20px"} >Cannot update current address </Typography>
+                    <Typography fontSize={"20px"} sx={{color:"red"}} >Check back input information, ensure it not empty or contain any special character!</Typography>
+                    <Typography marginTop={"20px"}>( Click out from the message to close.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openAddError} onClose={handleCloseAddError}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"}>Add Error</Typography>
+                    <Typography fontSize={"20px"} >Cannot add new address </Typography>
+                    <Typography fontSize={"20px"} sx={{color:"red"}} >Check back input information, ensure it not empty or contain any special character!</Typography>
+                    <Typography marginTop={"20px"}>( Click out from the message to close.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openUpdatePhoneError} onClose={handleCloseUpdatePhoneError}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>UPDATE FAILED</Typography>
+                    <Typography fontSize={"20px"} margin={"15px"}>Update current phone failed.</Typography>
+                    <Typography fontSize={"20px"}  margin={"15px"}>Phone number must be 10 to 11 number</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to close.)</Typography>
+                </DialogContent>
+            </Dialog>
 </div>
-);
-};
+    )
+}
+
 
 export default CustomerPayment;
 

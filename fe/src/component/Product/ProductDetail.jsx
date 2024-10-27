@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Typography, Button, Box, Chip, Divider, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import StarIcon from '@mui/icons-material/Star';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProductsAction } from '../State/Product/Action';
 import ProductCardInDetail from "./ProductCardInDetail";
+import ProductCard from "./ProductCard";
+import {getUser} from "../State/Authentication/Action";
+import {findCart} from "../State/Cart/Action";
 
 const ProductDetail = ({ cart, item, addToCart }) => {
     const dispatch = useDispatch();
@@ -14,7 +17,7 @@ const ProductDetail = ({ cart, item, addToCart }) => {
     const discount = item?.discount || 0;
     const discountPrice = originalPrice * (1 - discount);
     const productDescription = item?.description || "No description available.";
-    const stock = item.stock - (cart.find(cartItem => cartItem.product.productId === item.productId)?.quantity || 0);
+    const stock = item.stock - (cart.find(cartItem => cartItem.productId === item.productId)?.quantity || 0);
 
     const relatedProducts = Array.isArray(products)
         ? products.filter((product) =>
@@ -34,11 +37,16 @@ const ProductDetail = ({ cart, item, addToCart }) => {
 
     const [openDialog, setOpenDialog] = React.useState(false); // State for dialog
     const [dialogMessage, setDialogMessage] = React.useState(""); // State for dialog message
-
+    const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
+    const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
+    const availableStock = item.stock - currentQuantityInCart;
+    console.log("availableStock",availableStock)
+    console.log("currentCartItem",currentCartItem)
+    console.log("currentQuantityInCart",currentQuantityInCart)
     const handleAddToCart = () => {
-        if (stock <= 0) {
+        if (availableStock <= 0) {
             // If stock is 0 or less, show error message
-            setDialogMessage("Cannot add to cart because it is all in cart.");
+            setDialogMessage("Cannot add to cart no product available.");
             setOpenDialog(true);
         } else {
             // Add product to cart
@@ -47,9 +55,39 @@ const ProductDetail = ({ cart, item, addToCart }) => {
     };
 
     const handleCloseDialog = () => {
+        //window.location.href = "http://localhost:3000/";
         setOpenDialog(false);
         setDialogMessage(""); // Clear the message when closing
+
     };
+    const [userId, setUserId] = useState(null);
+    const jwt = localStorage.getItem("jwt");
+    const [cart0, setCart] = useState(null);
+    useEffect(() => {
+        if (jwt) {
+            dispatch(getUser(jwt)).then((data) => {
+                setUserId(data.result.id);
+            }).catch((error) => {
+                console.error('Error getting user:', error);
+            });
+        }
+    }, [dispatch, jwt]);
+
+    console.log("user id:", userId);
+    console.log("product",products);
+    // Fetch cart after userId is set
+    useEffect(() => {
+        if (userId && jwt) {
+            dispatch(findCart(userId, jwt))
+                .then((data) => {
+                    setCart(data);  // Properly set the cart data after fetching
+                    console.log("Cart data:", data);  // Debugging the cart data
+                })
+                .catch((error) => {
+                    console.error('Error fetching cart:', error);
+                });
+        }
+    }, [dispatch, userId, jwt]);
 
     return (
         <div>
@@ -131,7 +169,7 @@ const ProductDetail = ({ cart, item, addToCart }) => {
                         </Button>
 
                         <Typography variant="body2" sx={{ color: '#888' }}>
-                            {item?.stock || 0} pieces available
+                            {availableStock || 0}  available
                         </Typography>
                     </Box>
                 </div>
@@ -139,23 +177,23 @@ const ProductDetail = ({ cart, item, addToCart }) => {
             <Divider />
 
             {/* Related products section */}
-            <section className="p-8">
-                <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-                    Related Products
-                </Typography>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {relatedProducts.map((relatedItem) => (
-                        <ProductCardInDetail
-                            key={relatedItem.productId}
-                            item={relatedItem}
-                            cart={cart}
-                            addToCart={addToCart}  // Pass addToCart function for related products
-                            selectedProductId={null}  // No selected product id for related products
-                            setSelectedProductId={() => {}}  // No operation for related products
-                        />
-                    ))}
-                </div>
-            </section>
+            {/*<section className="p-8">*/}
+            {/*    <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>*/}
+            {/*        Related Products*/}
+            {/*    </Typography>*/}
+            {/*    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">*/}
+            {/*        {relatedProducts.map((relatedItem) => (*/}
+            {/*            <ProductCardInDetail*/}
+            {/*                key={relatedItem.productId}*/}
+            {/*                item={relatedItem}*/}
+            {/*                cart={cart0?.result?.cartItems || []}*/}
+            {/*                addToCart={() => addToCart(item.measurementUnit, 1, relatedItem)}  // Pass addToCart function for related products*/}
+            {/*                selectedProductId={null}  // No selected product id for related products*/}
+            {/*                setSelectedProductId={() => {}}  // No operation for related products*/}
+            {/*            />*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*</section>*/}
 
             {/* Popup for error message */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>

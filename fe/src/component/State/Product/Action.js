@@ -30,7 +30,6 @@ export const createProductAction = (reqData) => async (dispatch) => {
         const { data } = await axios.post("http://localhost:8080/api/v1/products", reqData, {
             headers: {
                 Authorization: `Bearer ${jwt}`,
-                'Content-Type': 'multipart/form-data'
             }
         });
         dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
@@ -56,19 +55,29 @@ export const getAllProductsAction = () => {
     };
 };
 
-export const getAllProductsByShopIdAction = () => {
-    return async (dispatch) => {
-        dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_REQUEST });
-        try {
-            const { data } = await axios.get("http://localhost:8080/api/v1/products");
-            dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_SUCCESS, payload: data });
-            console.log("all products", data);
-        } catch (error) {
-            console.log("all err", error);
-            dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_FAILURE, payload: error });
-        }
-    };
+export const getAllProductsByShopIdAction = (shopId) => async (dispatch) => {
+    const jwt = localStorage.getItem('jwt');
+
+    if (!jwt) {
+        console.error("No JWT found. Please log in.");
+        return;
+    }
+
+    dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_REQUEST });
+    try {
+        const { data } = await axios.get(`http://localhost:8080/api/v1/products/get-all-product-by-shopId/${shopId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            }
+        });
+        dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_SUCCESS, payload: data });
+        console.log("All products fetched successfully", data);
+    } catch (error) {
+        console.error("Error fetching products by shop ID:", error.response ? error.response.data : error.message);
+        dispatch({ type: GET_ALL_PRODUCT_BY_SHOP_ID_FAILURE, payload: error });
+    }
 };
+
 
 // Action to get product by ID
 export const getProductById = (productId) => {
