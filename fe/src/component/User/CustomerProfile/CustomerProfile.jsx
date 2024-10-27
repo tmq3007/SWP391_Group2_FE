@@ -42,7 +42,7 @@ export const CustomerProfile = () => {
               <Route path="/profileinfo" element={<ProfileInfo/>}/>
 
               {/* Route for Change Password */}
-              <Route path="/change-pass" element={<ChangePassword/>}/>
+              <Route path="/change-pass" element={<ChangePassword userId={userId} jwt={jwt} />}/>
 
               {/* Route for My Orders */}
               <Route path="/orders" element={<MyOrder/>}/>

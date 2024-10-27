@@ -1,80 +1,60 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import {getUser, updateUserById} from '../../State/Authentication/Action'; // Adjust this path to your action file
+import {getUser, changePassword, updateUserById} from '../../State/Authentication/Action';
 
-const ChangePassword = ({ userId, jwt }) => { // Receive userId and jwt as props
+const ChangePassword = ({ userId, jwt }) => {
+    const j = localStorage.getItem("jwt");
+
+
     const dispatch = useDispatch();
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
         confirmPassword: '',
     });
-    const [user, setUser] = useState(null);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [message, setMessage] = useState({ type: '', text: '' });
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setPasswordData({
-            ...passwordData,
-            [name]: value,
-        });
-        setError('');
+        setPasswordData((prevData) => ({ ...prevData, [name]: value }));
+        setMessage({ type: '', text: '' });
     };
-    useEffect(() => {
-        dispatch(getUser(jwt))
-            .then((data) => {
-                setUser(data.result);
-
-            })
-            .catch((error) => {
-                console.error('Error getting user:', error);
-            });
-    }, [dispatch, jwt]);
 
 
     const handleSubmit = async () => {
         const { currentPassword, newPassword, confirmPassword } = passwordData;
 
-        // Validation checks
         if (!currentPassword || !newPassword || !confirmPassword) {
-            setError('Please fill in all fields');
+            setMessage({ type: 'error', text: 'Please fill in all fields' });
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setError('New password and confirmation do not match');
+            setMessage({ type: 'error', text: 'New password and confirmation do not match' });
             return;
         }
-        
-
-        // Create a user object to update
-        const userUpdateData = {
-            // Current password for validation
-            // Include other user properties if necessary, e.g., email, phone
-        };
-
-        try {
-            await dispatch(updateUserById(userId, userUpdateData, jwt)); // Dispatch action to update user
-            setSuccess('Password updated successfully');
-            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' }); // Clear the form
-        } catch (error) {
-            setError('Error updating password'); // Handle errors
-            console.error('Error updating password:', error);
+        const req = {
+            oldPassword: currentPassword,
+            newPassword: newPassword
         }
+
+        dispatch(changePassword(userId,req,jwt))
+            .then(() => {
+                alert('Password is changed!');
+            })
+            .catch((error) => {
+                setMessage({ type: 'error', text: error.message || 'Failed to change password' });
+            });
+
     };
 
     return (
         <div className="flex flex-col items-center justify-center w-full">
-            <Box
-                className="bg-white rounded-lg p-8 w-[70%] space-y-6"
-                component="form"
-            >
+            <Box className="bg-white rounded-lg p-8 w-[70%] space-y-6" component="form">
                 <Typography variant="h5" className="text-center font-semibold">
                     Change Password
                 </Typography>
-
                 <TextField
                     label="Current Password"
                     name="currentPassword"
@@ -105,15 +85,9 @@ const ChangePassword = ({ userId, jwt }) => { // Receive userId and jwt as props
                     onChange={handleChange}
                 />
 
-                {error && (
-                    <Typography variant="body2" className="text-red-500">
-                        {error}
-                    </Typography>
-                )}
-
-                {success && (
-                    <Typography variant="body2" className="text-green-500">
-                        {success}
+                {message.text && (
+                    <Typography variant="body2" className={`text-${message.type === 'error' ? 'red' : 'green'}-500`}>
+                        {message.text}
                     </Typography>
                 )}
 
@@ -125,6 +99,7 @@ const ChangePassword = ({ userId, jwt }) => { // Receive userId and jwt as props
                 >
                     Update Password
                 </Button>
+                {/* Input fields and Submit button */}
             </Box>
         </div>
     );
