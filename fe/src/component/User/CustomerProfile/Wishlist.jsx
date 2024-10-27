@@ -47,23 +47,12 @@ export const Wishlist = () => {
             });
         }
     }, [dispatch, jwt]);
-    // useEffect(() => {
-    //     if (userId && jwt) {
-    //         dispatch(getAllWishlist(userId,jwt))
-    //             .then((data) => {
-    //                 setWishlist(data);
-    //                 console.log("Wishlist data:", data);  // Debugging the cart data
-    //             })
-    //             .catch((error) => {
-    //                 console.error('Error fetching wishlist:', error);
-    //             });
-    //     }
-    // }, [dispatch, userId, jwt]);
+
     useEffect(() => {
         if (userId && jwt) {
             dispatch(getAllWishlist(userId, jwt))
                 .then((data) => {
-                    const products = data.result[0].products || [];  // Safely access products array
+                    const products = data.result.products || [];  // Safely access products array
                     const formattedWishlist = products.map(product => ({
                         name: product.productName || 'Unnamed Product',  // Fallback for missing product name
                         price: product.unitSellPrice || 0,  // Fallback for missing price

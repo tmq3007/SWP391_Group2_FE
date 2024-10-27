@@ -58,7 +58,11 @@ const cartReducer = (state = initialState, action) => {
             };
 
         case GET_ALL_CART_ITEMS_SUCCESS:
-            return { ...state, isLoading: false, cart: action.payload, error: null, success: true };
+            return { ...state,
+                isLoading: false,
+                cart: action.payload,
+                error: null,
+                success: true };
 
         // Handle successful clearing of the cart
         case CLEAR_CART_SUCCESS:
