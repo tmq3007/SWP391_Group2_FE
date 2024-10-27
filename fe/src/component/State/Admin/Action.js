@@ -151,3 +151,31 @@ export const verifyShop = async (shopId) => {
         throw error;
     }
 }
+
+export const rejectShop = async (shopId) => {
+    try {
+        const response = await axiosInstance.put(`/api/v1/reject-shop/${shopId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error rejecting shop", error);
+        throw error;
+    }
+}
+
+export const announceVerifyShop = async (email) => {
+    try {
+        const response = await axiosInstance.post(`/api/v1/announce-verify-shop`, email);
+        return response.data;
+    } catch (error) {
+        console.error("Error announcing shop verification", error);
+    }
+}
+
+export const announceRejectShop = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/api/v1/announce-reject-shop`, data);
+        return response.data;
+    } catch (error) {
+        console.error("Error announcing shop rejection", error);
+    }
+}
