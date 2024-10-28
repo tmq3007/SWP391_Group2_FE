@@ -8,6 +8,7 @@ import {ShopAddProduct} from "./ShopAddProduct";
 import {ShopEditProduct} from "./ShopEditProduct";
 import {ShopTransaction} from "./ShopTransaction";
 import Processing from "./Processing";
+import RejectedShopCreation from "./RejectedShopCreation";
 
 export const ShopDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -37,7 +38,9 @@ export const ShopDashboard = () => {
 
                     <Route path="/shop-add-product" element={<ShopAddProduct/>}/>
 
-                    <Route path="/shop-edit-product" element={<ShopEditProduct/>}/>
+                    <Route path="/shop-edit-product/:productId" element={<ShopEditProduct/>}/>
+
+                    <Route path="/rejected-shop-creation" element={<RejectedShopCreation/>}/>
 
                     {/* Add more routes here */}
 

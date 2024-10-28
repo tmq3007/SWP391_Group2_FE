@@ -20,6 +20,7 @@ export const ShopAddProduct = () => {
     const [previewPictureUrl2, setPreviewPictureUrl2] = useState(null);
     const [category, setCategory] = useState(null);
     const [shopId, setShopId] = useState("");
+    const [isActive, setIsActive] = useState(true);
 
     const token = localStorage.getItem('jwt');
 
@@ -71,7 +72,8 @@ export const ShopAddProduct = () => {
             category: category,
             shop: shopId,
             pictureUrl: pictureUrl1,
-            pictureUrl2
+            pictureUrl2,
+            isActive
         };
 
         dispatch(createProductAction(productData))

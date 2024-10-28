@@ -148,7 +148,7 @@ const VendorRightBar = ({ selectedPage }) => {
                   " font-semibold rounded outline-none transition duration-300 ease-in-out" +
                   " focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 bg-accent" +
                   " border border-transparent hover:bg-accent-hover px-5 py-0 h-12 text-sm md:text-base"}
-              onClick={() => navigate("/create-shop")}>
+              onClick={() => navigate("/rejected-shop-creation")}>
                 <AddIcon/>Add Shop
               </button>
             </div>

@@ -80,33 +80,54 @@ export const getAllProductsByShopIdAction = (shopId) => async (dispatch) => {
 
 
 // Action to get product by ID
-export const getProductById = (productId) => {
-    return async (dispatch) => {
-        dispatch({ type: GET_PRODUCT_BY_ID_REQUEST });
-        try {
-            const response = await
-                axios.get(`http://localhost:8080/api/v1/products/${productId}`);
-            dispatch({ type: GET_PRODUCT_BY_ID_SUCCESS, payload: response.data });
-        } catch (error) {
-            console.log("all err", error);
-            dispatch({ type: GET_PRODUCT_BY_ID_FAILURE, payload: error });
-        }
-    };
+export const getProductById = (productId) => async (dispatch) => {
+    const jwt = localStorage.getItem('jwt');
+
+    if (!jwt) {
+        console.error("No JWT found. Please log in.");
+        return;
+    }
+
+    dispatch({ type: GET_PRODUCT_BY_ID_REQUEST });
+    try {
+        const { data } = await axios.get(`http://localhost:8080/api/v1/products/${productId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+        dispatch({ type: GET_PRODUCT_BY_ID_SUCCESS, payload: data });
+        console.log("Product fetched successfully", data);
+    } catch (error) {
+        console.error("Error fetching product:", error.response ? error.response.data : error.message);
+        dispatch({ type: GET_PRODUCT_BY_ID_FAILURE, payload: error });
+    }
 };
 
-// Action to update product by ID
-export const updateProductById = (productId) => {
-    return async (dispatch) => {
-        dispatch({ type: UPDATE_PRODUCT_BY_ID_REQUEST});
-        try {
-            const response = await axios.patch(`http://localhost:8080/api/v1/products/${productId}`);
-            dispatch({ type: UPDATE_PRODUCT_BY_ID_SUCCESS, payload: response.data });
-        } catch (error) {
-            console.log("all err", error);
-            dispatch({ type: UPDATE_PRODUCT_BY_ID_FAILURE, payload: error });
-        }
-    };
+
+// Update product by ID action
+export const updateProductById = (productId, updatedProductData) => async (dispatch) => {
+    const jwt = localStorage.getItem('jwt');
+
+    if (!jwt) {
+        console.error("No JWT found. Please log in.");
+        return;
+    }
+
+    dispatch({ type: UPDATE_PRODUCT_BY_ID_REQUEST });
+    try {
+        const { data } = await axios.patch(`http://localhost:8080/api/v1/products/${productId}`, updatedProductData, {
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+        dispatch({ type: UPDATE_PRODUCT_BY_ID_SUCCESS, payload: data });
+        console.log("Product updated successfully", data);
+    } catch (error) {
+        console.error("Error updating product:", error.response ? error.response.data : error.message);
+        dispatch({ type: UPDATE_PRODUCT_BY_ID_FAILURE, payload: error });
+    }
 };
+
 
 // Action to delete product by ID
 export const deleteProductById = (productId) => {
