@@ -13,6 +13,8 @@ import Cart from "../Cart/Cart";
 import CustomerPayment from "../User/CustomerProfile/CustomerPayment";
 import SuccessOrderShow from "../User/CustomerProfile/SuccessOrderShow";
 import {HelpingCenter} from "../HelpingCenter/HelpingCenter";
+import PaymentTimeOut from "../Payment/PaymentTimeOut";
+import Payment from "../Payment/Payment";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -80,6 +82,8 @@ const CustomRoute = () => {
                                <AdminDashboard/>
                            </ProtectedRoute>
                        }/>
+                <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
+                <Route path="/payment" element={<Payment/>}/>
 
             </Routes>
             <Auth/>

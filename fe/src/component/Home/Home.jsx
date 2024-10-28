@@ -102,7 +102,7 @@ const navigate = useNavigate();
 
     const filteredProducts = products?.products?.filter((product) => {
         const matchesCategory = selectedCategory === 'all' || product.category.categoryName === selectedCategory;
-        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice <= 50) || (selectedPrice === 'high' && product.unitSellPrice > 50) || selectedPrice === 'all';
+        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice <= 50000) || (selectedPrice === 'high' && product.unitSellPrice > 50000) || selectedPrice === 'all';
         const matchesSearch = product.productName.toLowerCase().includes(searchQuery);
 
         return matchesCategory && matchesPrice && matchesSearch;

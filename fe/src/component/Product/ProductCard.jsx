@@ -111,12 +111,12 @@ const ProductCard = ({ cart, item, addToCart }) => {
                     </Typography>
                     {discount > 0 && (
                         <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                           Original Price: ${originalPrice.toFixed(2)}
+                           Original Price: {originalPrice.toFixed(2)}VND
                         </Typography>
                     )}
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
                         <Typography variant="h5" component="div" sx={{ color: "#019376", fontWeight: 'bold', mb: 1 }}>
-                             ${discountPrice.toFixed(2)}
+                             {discountPrice.toFixed(2)}VND
                         </Typography>
                         <Typography variant="body2" sx={{ color: '#888', mb: 1 }}>
                             {availableStock || 0}  available

@@ -142,12 +142,12 @@ const ProductDetail = ({ cart, item, addToCart }) => {
                             color="text.secondary"
                             sx={{ textDecoration: 'line-through', fontSize: '1rem' }}
                         >
-                            Original Price: ${originalPrice.toFixed(2)}
+                            Original Price: {originalPrice.toFixed(2)}VND
                         </Typography>
                     )}
 
                     <Typography variant="h4" sx={{ color: "#019376", fontWeight: 'bold' }}>
-                        ${discountPrice.toFixed(2)}
+                        {discountPrice.toFixed(2)}VND
                     </Typography>
 
                     <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>

@@ -221,18 +221,24 @@ const SuccessOrderShow = () => {
             order.paymentId = 2;
             const response = await addOrder(order, token);
             const orderId = response.orderId;
-            console.log(response);
-            console.log(orderId);
+            const total = response.finalTotal;
+
+            console.log("total", total);
+
             await processOrderItems(items, orderId, token);
 
-            //
-            // NAVIGATE HERE AFTER SUCCESSFUL CREATE ORDER
-            //
+            // Pass total, orderId, and account info to Payment
+            navigate('/payment', {
+                state: { amount: total, accountInfo: "SPOD", orderId: orderId }
+            });
+
             setOpenSuccess(true);
         } catch (error) {
             console.error("Error adding order:", error);
         }
-    }
+    };
+
+
     console.log(order, items);
 
     return (
@@ -265,7 +271,7 @@ const SuccessOrderShow = () => {
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <Discount className={"text-green-500 text-xs"} style={{ fontSize: '15px' }}/>
                                             <Typography
-                                                className={"font-semibold text-xs"}>Dsicount: {item.product.discount}%</Typography>
+                                                className={"font-semibold text-xs"}>Discount: {item.product.discount}%</Typography>
                                         </div>
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <AttachMoneyIcon className={"text-green-500"} style={{ fontSize: '15px' }}/>
