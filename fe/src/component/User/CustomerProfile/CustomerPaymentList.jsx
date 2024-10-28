@@ -5,103 +5,6 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import moment from "moment";
 
-const addOrder = async (order, jwt) => {
-    try {
-        const response = await axios.post(`http://localhost:8080/api/v1/orders`,order, {
-            headers: {
-                Authorization: `Bearer ${jwt}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.log("Error fetching user data:", error);
-        throw error;
-    }
-};
-
-const deleteCartItem = async (uid,oid, jwt) => {
-    try {
-        const response = await axios.delete(`http://localhost:8080/api/v1/cart/delete/user/${uid}/cartItem/${oid}`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.log("Error fetching user data:", error);
-        throw error;
-    }
-};
-const addOrderItems = async (id,orderItems, jwt) => {
-    try {
-        const response = await axios.post(`http://localhost:8080/api/v1/orderItems/${id}`,orderItems, {
-            headers: {
-                Authorization: `Bearer ${jwt}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.log("Error fetching user data:", error);
-        throw error;
-    }
-};
-
-async function deleteCartItems(items, userId, token) {
-    const deletePromises = items.map((item) => deleteCartItem(userId, item.id, token)); // No need for async/await here
-
-    try {
-        await Promise.all(deletePromises);
-        console.log('All items deleted successfully');
-    } catch (error) {
-        console.error('Error deleting items:', error);
-    }
-}
-
-async function processOrderItems(items, orderId, token) {
-    const orderItemPromises = items.map(async (item) => {
-        const orderItems = {
-            productName: item.product.productName,
-            productImage: item.product.pictureUrl,
-            productSellPrice: item.product.productSellPrice,
-            discount: item.product.discount,
-            productQuantity: item.quantity,
-            itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
-            finalPrice: (
-                (item.product.unitSellPrice * item.quantity) -
-                ((item.product.unitSellPrice * item.quantity) * (item.product.discount / 100))
-            ).toFixed(2),
-            orders: {
-                orderId: orderId,
-            },
-            shop: {
-                shopId: item.product.shop.shopId,
-            }
-        };
-
-        console.log("Order Item:", orderItems);
-
-        // Call addOrderItems and wait for the result
-        await addOrderItems(orderId, orderItems, token);
-    });
-
-    try {
-        // Wait for all order item promises to complete
-        await Promise.all(orderItemPromises);
-        console.log("All order items processed successfully.");
-
-        // Delete cart items after processing all order items
-        await deleteCartItems(items, items[0].userId, token); // Ensure items[0].userId exists
-        console.log("Cart items deleted after processing orders.");
-
-    } catch (error) {
-        console.error("Error processing order items:", error);
-    }
-}
-
-
-// Giả sử bạn gọi hàm này ở đâu đó trong mã của bạn
-// processOrderItems(items, orderId, token);
-
 const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
     const address = chosenAddress;
     const phone = chosenPhone;
@@ -155,18 +58,20 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
                     }
                 };
                 console.log(order);
-                try {
-                    const response = await addOrder(order, token);
-                    orderId = response.orderId;
-                    console.log(response);
-                    console.log(orderId);
-                    await processOrderItems(items, orderId, token);
-
-                } catch (error) {
-                    console.error("Error adding order:", error);
+                if(items && order){
+                    console.log(items,order);
+                navigate("/success-place-order",{
+                        state: {
+                            items: items, // Ensure correct key
+                            order: order
+                        }
+                    });
+                }
+                else{
+                    console.log("Nope -----------------");
                 }
             }
-            navigate("/success-place-order");
+
         }
     };
 
@@ -213,15 +118,15 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
         <Box sx={{padding: 2}}>
             <Typography variant="h6" marginBottom={"10px"} color={"#019376"}>Items List</Typography>
             {(items.length > 0) && items.map((item, index) => (
-                <Box key={index} sx={{display: 'flex'}}>
-                <Box width={"80%"} sx={{display: 'row', justifyContent: 'space-between', padding: 1, marginBottom: 1.5,
-                    borderRadius: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
-                    <Typography>{`${item.product.productName}`}</Typography>
-                    <Typography><span className={"text-green-500"}>{`${item.quantity} `}</span> <span> x </span> <span>{`${item.totalPrice}`}</span></Typography>
-                </Box>
-                    <Box width={"20%"} sx={{display: 'row', justifyContent: 'center', alignContent: "center", padding: 1, marginBottom: 1.5, marginLeft: 1,
-                        borderRadius: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
-                        <Typography><span className={"text-green-500"}>{`${item.product.discount}%`}</span></Typography>
+                <Box key={index} sx={{display: 'row'}}>
+                    <Box width={"100%"} sx={{
+                        display: 'flex', justifyContent: 'space-between', padding: 1, marginBottom: 1.5,
+                        borderRadius: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white'
+                    }}>
+                        <div><Typography className="font-semibold" >{`${item.product.productName}`}</Typography>
+                            <Typography><span className={"text-green-500"}>{`${item.quantity} `}</span> <span> x </span>
+                                <span>{`${item.product.unitSellPrice}`}</span></Typography></div>
+                        <div><Typography><span className={"text-green-500 font-semibold"}>{`Sale ${item.product.discount}%`}</span></Typography></div>
                     </Box>
                 </Box>
             ))}
@@ -232,7 +137,7 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',widthpadding: 1,marginBottom:"10px"}}>
                     <Typography>Total: </Typography>
-                    <Typography sx={{ marginRight:"10px"}}>{ (items.length > 0) ? (items.reduce((total,item) =>
+                    <Typography sx={{ marginRight:"10px"}} className={"line-through"}>{ (items.length > 0) ? (items.reduce((total,item) =>
                     { return total + (item.quantity * item.product.unitSellPrice)},0)).toFixed(2) : 0}$</Typography>
                 </Box>
 

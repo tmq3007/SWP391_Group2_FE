@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateCartItem, removeCartItem, getAllCartItems, findCart } from '../State/Cart/Action';
 import { getUser } from "../State/Authentication/Action";
 import { NavbarHomePage } from "../Navbar/NavbarHomePage";
+import {useNavigate} from "react-router-dom";
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -28,7 +29,11 @@ const Cart = () => {
     const [userId, setUserId] = useState(null);
     const [localCart, setLocalCart] = useState([]);
     const [selectedItems, setSelectedItems] = useState({}); // To track selected items
-
+    const [openWarning, setOpenWarning] = useState(false);
+    const navigate = useNavigate();
+    const handleCloseWarning = () => {
+        setOpenWarning(false);
+    }
     useEffect(() => {
         if (cart && cart.result) {
             setLocalCart(cart.result.cartItems || []);
@@ -89,10 +94,27 @@ const Cart = () => {
     };
 
     const handleToggleSelect = (itemId) => {
-        setSelectedItems(prev => ({
-            ...prev,
-            [itemId]: !prev[itemId] // Toggle selection state
-        }));
+        setSelectedItems(prev => {
+            const newState = {
+                ...prev,
+                [itemId]: !prev[itemId]
+            };
+            console.log("Updated selected items:", newState);
+            return newState;
+        });
+    };
+
+    const getSelectedItems = () => {
+        return localCart.filter(item => selectedItems[item.id]);
+    };
+
+    const handleCheckout = () => {
+        const selectedItemsList = getSelectedItems();
+        if(selectedItemsList.length === 0){
+            setOpenWarning(true);
+        }else {
+            navigate('/my-payment', {state: {selectedItems: selectedItemsList}});
+        }
     };
 
     const newTotalPrice = localCart.reduce((total, item) => {
@@ -161,12 +183,19 @@ const Cart = () => {
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ padding: '16px 20px' }}>
-                    <Button variant="contained" fullWidth sx={{ backgroundColor: '#019376', borderRadius: '24px', padding: '12px 0', fontWeight: 'bold', fontSize: '16px' }}>
+                    <Button onClick={handleCheckout} variant="contained" fullWidth sx={{ backgroundColor: '#019376', borderRadius: '24px', padding: '12px 0', fontWeight: 'bold', fontSize: '16px' }}>
                         Checkout
                         <Typography variant="body1" sx={{ color: '#fff', fontWeight: 'bold', marginLeft: '100px' }}>${selectedTotalPrice.toFixed(2)}</Typography>
                     </Button>
                 </ListItem>
             </List>
+            <Dialog open={openWarning} onClose={handleCloseWarning}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>No products</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>You need to chose some products to check out.</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to close.)</Typography>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
