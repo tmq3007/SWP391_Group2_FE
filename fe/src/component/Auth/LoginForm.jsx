@@ -18,7 +18,7 @@ const initialValues = {
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-    username: Yup.string().required('Username or Email is required'),
+    username: Yup.string().required('Username is required'),
     password: Yup.string().required('Password is required'),
 });
 
@@ -39,13 +39,19 @@ const LoginForm = () => {
 
     // Handle form submission
     const handleSubmit = (values) => {
-
-        dispatch(loginUser({userData: values, navigate}))
+        dispatch(loginUser({ userData: values, navigate }))
             .catch((error) => {
-                setSnackBarMessage(error.response.data.message);
-                setSnackBarOpen(true);
+                if (error.response && error.response.data?.message) {
+                    setSnackBarMessage(error.response.data.message);
+                    setSnackBarOpen(true);
+                } else if (!error.response) {
+                    setSnackBarMessage("Unable to connect to the server. Please check your network connection.");
+                    setSnackBarOpen(true);
+                } else {
+                    setSnackBarMessage("An error occurred. Please try again later.");
+                    setSnackBarOpen(true);
+                }
             });
-
     };
 
     return (
@@ -86,7 +92,7 @@ const LoginForm = () => {
                         <Field
                             as={InputField}
                             name='username'
-                            label='Username or Email'
+                            label='Username'
                             fullWidth
                             margin='normal'
                             error={touched.username && Boolean(errors.username)} // Show error

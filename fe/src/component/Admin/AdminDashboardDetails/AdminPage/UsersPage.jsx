@@ -78,7 +78,7 @@ function UsersPage() {
                 handleCloseModal(); // Close the modal after confirming
 
             } catch (error) {
-                console.error(`Error ${selectedUser.status === 'Active' ? 'banning' : 'unbanning'} user:`, error);
+                console.error('Error blocking/unblocking user:');
             }
         }
     };
