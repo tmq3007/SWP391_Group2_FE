@@ -56,7 +56,7 @@ export const AdminDashboardSidebar = () => {
     }
 
     return (
-        <div className="w-1/5 bg-gray p-6 h-full overflow-y-auto">
+        <div className="w-1/5 bg-gray p-6 h-full overflow-y-auto mt-5">
             {/* MAIN section */}
             <List
                 subheader={

@@ -33,7 +33,7 @@ function VendorsPage() {
                 }));
                 setUsersData(transformedData); // Update state with transformed data
             } catch (e) {
-                console.log('Error fetching summary data', e);
+                console.log('Error fetching summary data');
             }
         };
 
