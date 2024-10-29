@@ -40,7 +40,6 @@ export const ShopDashboard = () => {
 
                     <Route path="/shop-edit-product/:productId" element={<ShopEditProduct/>}/>
 
-                    <Route path="/rejected-shop-creation" element={<RejectedShopCreation/>}/>
 
                     {/* Add more routes here */}
 

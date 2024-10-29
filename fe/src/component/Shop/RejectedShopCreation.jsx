@@ -4,12 +4,11 @@ import {useNavigate} from "react-router-dom";
 
 const RejectedShopCreation = () => {
     const navigate = useNavigate();
+
     return (
-        <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-            <p className="mt-5 text-lg font-semibold text-gray-700">
-                Your request is on processing...
-            </p>
+        <Container>
+            <Title>Oops! Your Store Creation was Rejected</Title>
+            <Message>Please double-check your information and try again.</Message>
             <StyledWrapper className={"mt-3"} onClick={() => navigate("/auth/login")}>
                 <button className="button">
                     <svg className="svgIcon" viewBox="0 0 448 512">
@@ -18,9 +17,33 @@ const RejectedShopCreation = () => {
                     </svg>
                 </button>
             </StyledWrapper>
-        </div>
+        </Container>
     );
 };
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f3f4f6; /* Light gray background */
+    text-align: center;
+    padding: 20px;
+`;
+
+const Title = styled.h1`
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1f2937; /* Dark gray */
+    margin-bottom: 10px;
+`;
+
+const Message = styled.p`
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #4b5563; /* Medium gray */
+    margin: 0 0 20px;
+`;
 
 const StyledWrapper = styled.div`
     .button {
