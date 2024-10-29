@@ -27,8 +27,8 @@ function UsersPage() {
                     name: `${user.firstName} ${user.lastName}`, // Combine first and last names
                     email: user.email,
                     avatar: 'https://via.placeholder.com/40', // Placeholder image for now
+                    phone: user.phone,
                     permissions: user.roles.map((role) => role.name), // Extract roles
-                    walletPoints: '', // No wallet points in the original data
                     status: user.isActive ? 'Active' : 'Inactive' // Determine status from `isActive`
                 }));
                 setUsersData(transformedData); // Update state with transformed data
@@ -126,8 +126,8 @@ function UsersPage() {
                     <tr>
                         <th id='center'>ID</th>
                         <th id='center'>Name</th>
-                        <th id='center'>Permissions</th>
-                        <th id='center'>Available wallet points</th>
+                        <th id='center'>Phone</th>
+                        <th id='center'>Roles</th>
                         <th id='center'>Status</th>
                         <th id='center'>Actions</th>
                     </tr>
@@ -138,13 +138,16 @@ function UsersPage() {
                             <td>#ID: {user.id}</td>
                             <td>
                                 <div className="customer-info">
-                                    <img src={user.avatar} alt="Avatar" className="avatar" />
+                                    <img src={user.avatar} alt="Avatar" className="avatar"/>
                                     <div className="customer-details">
                                         <span className="customer-name">{user.name}</span>
                                         <small className="customer-email">{user.email}</small>
                                     </div>
                                 </div>
                             </td>
+
+                            <td>{user.phone || 'N/A'}</td>
+
                             <td>
                                 {user.permissions.map((perm, i) => (
                                     <span key={i} className="permission-badge">
@@ -152,7 +155,7 @@ function UsersPage() {
                                     </span>
                                 ))}
                             </td>
-                            <td>{user.walletPoints || 'N/A'}</td>
+
                             <td>
                                 <span className={user.status === 'Active' ? 'active-status' : 'inactive-status'}>
                                     {user.status}
@@ -162,9 +165,9 @@ function UsersPage() {
                                 {!user.permissions.includes("ADMIN") && (
                                     <button className='eye' onClick={() => handleOpenModal(user)}>
                                         {user.status === 'Active' ? (
-                                            <PersonOffIcon style={{ color: 'red' }} />
+                                            <PersonOffIcon style={{color: 'red'}}/>
                                         ) : (
-                                            <PersonIcon style={{ color: 'green' }} />
+                                            <PersonIcon style={{color: 'green'}}/>
                                         )}
                                     </button>
                                 )}

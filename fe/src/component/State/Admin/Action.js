@@ -179,3 +179,13 @@ export const announceRejectShop = async (data) => {
         console.error("Error announcing shop rejection", error);
     }
 }
+
+export const getAllStatisticsShop = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/shops/get-all-statistics-shops`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching shop statistics", error);
+        throw error;
+    }
+}
