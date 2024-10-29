@@ -15,6 +15,7 @@ import SuccessOrderShow from "../User/CustomerProfile/SuccessOrderShow";
 import {HelpingCenter} from "../HelpingCenter/HelpingCenter";
 import PaymentTimeOut from "../Payment/PaymentTimeOut";
 import Payment from "../Payment/Payment";
+import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -75,7 +76,7 @@ const CustomRoute = () => {
                     </ProtectedRoute>
                 }/>
 
-                <Route path="/auth/unauthorized" element={<h1>Unauthorized Access</h1>} />
+                <Route path="/auth/unauthorized" element={<UnAuthorizedPage/>} />
                 <Route path="/admin-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_ADMIN">
@@ -84,6 +85,8 @@ const CustomRoute = () => {
                        }/>
                 <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
                 <Route path="/payment" element={<Payment/>}/>
+
+
 
             </Routes>
             <Auth/>
