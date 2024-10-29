@@ -172,7 +172,7 @@ async function processOrderItems(items, orderId, token) {
         await Promise.all(orderItemPromises);
         console.log("All order items processed successfully.");
 
-        // Delete amount of product in each items, which have been order
+        // Delete amount of product in each item, which have been order
         await deleteAmountProducts(items, token);
         // Delete cart items after processing all order items
         await deleteCartItems(items, items[0].userId, token); // Ensure items[0].userId exists
