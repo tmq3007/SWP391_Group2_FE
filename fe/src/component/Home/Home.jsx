@@ -14,6 +14,7 @@ import { findCart, addItemToCart } from '../State/Cart/Action';
 import {getUser} from "../State/Authentication/Action";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import {useNavigate} from "react-router-dom";
+import {addItemToWishlist, getAllWishlist} from "../State/Wishlist/Action";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const Home = () => {
     const {carts} = useSelector(store => store);
 const navigate = useNavigate();
     const [cart, setCart] = useState(null);
+    const [wishlist, setWishlist] = useState(null);
     const [openCartModal, setOpenCartModal] = useState(false);
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
@@ -55,7 +57,23 @@ const navigate = useNavigate();
 
     console.log("user id:", userId);
     console.log("product",products);
-    // Fetch cart after userId is set
+
+    //get all wishlist
+    useEffect(() => {
+        if (userId && jwt) {
+            dispatch(getAllWishlist(userId, jwt))
+                .then((data) => {
+                    setWishlist(data);  // Properly set the cart data after fetching
+                    console.log("Wishlist data:", data);  // Debugging the cart data
+                })
+                .catch((error) => {
+                    console.error('Error fetching wishlist:', error);
+                });
+        }
+    }, [dispatch, userId, jwt]);  // Include jwt and userId as dependencies
+    console.log("wishlist",wishlist)
+
+    //get all cart
     useEffect(() => {
         if (userId && jwt) {
             dispatch(findCart(userId, jwt))
@@ -71,6 +89,30 @@ const navigate = useNavigate();
 
 
     console.log("cart new:" ,cart);
+    //add to wishlist
+
+    const addToWishlist = (productID) => {
+        if (!userId) {
+            console.error('User is not logged in');
+            return;
+        }
+        const request = {userId: userId,productId : productID}
+        if (!jwt) {
+            console.error('jwt not have');
+            return;
+        }
+        dispatch(addItemToWishlist(request,jwt))
+            .then(()=>{
+                dispatch(findCart(userId, jwt))
+                    .then((data) => {
+                        setCart(data);  // Properly set the cart data after fetching
+                        console.log("Cart data:", data);  // Debugging the cart data
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching cart:', error);
+                    });
+            })
+    }
     const addToCart = (buyUnit, quantity, item) => {
         if (!userId) {
             console.error('User is not logged in');
@@ -83,6 +125,9 @@ const navigate = useNavigate();
             productId: item.productId,
         };
 
+
+
+        //add to cart
         dispatch(addItemToCart(userId, productDetails, jwt))
             .then(() => {
                 // Refetch the cart to get the latest data from the server
@@ -153,10 +198,13 @@ const navigate = useNavigate();
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
                     {currentProducts.map((item) => item && (
                         <ProductCard
+
                             key={item.id}
                             cart={cart?.result?.cartItems || []}
                             item={item}
+                            wishlist={wishlist?.result?.products || []}
                             addToCart={(buyUnit, quantity) => addToCart(buyUnit, quantity, item)}
+                            addToWishlist={() => addToWishlist(item.productId)}
                         />
                     ))}
                 </div>

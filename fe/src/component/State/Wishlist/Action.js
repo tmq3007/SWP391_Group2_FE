@@ -36,15 +36,16 @@ export const getAllWishlist = (userId,jwt) => async (dispatch) => {
 };
 
 
-export const addItemToWishlist = (userId,item, jwt) => async (dispatch) => {
+export const addItemToWishlist = (request,jwt) => async (dispatch) => {
     dispatch({ type: ADD_ITEM_TO_WISHLIST_REQUEST });
     try {
-        const {response} = await axios.post('${API_URL}/api/v1/wishlist', item,{
+        const {response} = await axios.post('http://localhost:8080/api/v1/wishlist',request,{
             headers:{
                 Authorization: `Bearer ${jwt}`
             }
         });
         dispatch({ type: ADD_ITEM_TO_WISHLIST_SUCCESS, payload: response.data });
+        console.log("w",response)
         return response;
     } catch (error) {
         dispatch({ type: ADD_ITEM_TO_WISHLIST_FAILURE, payload: error.message  });
