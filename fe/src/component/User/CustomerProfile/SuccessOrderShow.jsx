@@ -33,6 +33,39 @@ const getUserName = async (id, jwt) => {
     }
 };
 
+/////////////////////////////////////////////////////////////////////////
+//    FOR SET IS PAID   FOR SET IS PAID  FOR SET IS PAID  FOR SET IS PAID
+//  FOR SET IS PAID   FOR SET IS PAID  FOR SET IS PAID  FOR SET IS PAID
+/////////////////////////////////////////////////////////////////////////
+const setIsPaid = async (id, jwt, choice) => {
+    let url = "";
+    switch (i){
+        case 1:{ // set ISPAID to true
+            url = `http://localhost:8080/api/v1/orders/isPaidToTrue/${id}`
+            break;
+        }
+        case 2:{ // set ISPAID to false
+            url = `http://localhost:8080/api/v1/orders/isPaidToFalse/${id}`
+            break;
+        }
+    }
+    if(url !== ""){
+    try {
+        const response = await axios.patch(url, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+    }else{
+        console.log("Payment failed!");
+    }
+};
+
 const addOrder = async (order, jwt) => {
     try {
         const response = await axios.post(`http://localhost:8080/api/v1/orders`,order, {
@@ -221,24 +254,17 @@ const SuccessOrderShow = () => {
             order.paymentId = 2;
             const response = await addOrder(order, token);
             const orderId = response.orderId;
-            const total = response.finalTotal;
-
-            console.log("total", total);
-
+            console.log(response);
+            console.log(orderId);
             await processOrderItems(items, orderId, token);
-
-            // Pass total, orderId, and account info to Payment
-            navigate('/payment', {
-                state: { amount: total, accountInfo: "SPOD", orderId: orderId }
-            });
-
+            //
+            // NAVIGATE HERE AFTER SUCCESSFUL CREATE ORDER
+            //
             setOpenSuccess(true);
         } catch (error) {
             console.error("Error adding order:", error);
         }
-    };
-
-
+    }
     console.log(order, items);
 
     return (
