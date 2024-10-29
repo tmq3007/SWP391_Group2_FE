@@ -11,7 +11,7 @@ const PaymentTimeOut = () => {
             <p className="mt-5 text-lg font-semibold text-gray-700">
                 Time Out
             </p>
-            <StyledWrapper className={"mt-3"} onClick={() => navigate("/payment")}>
+            <StyledWrapper className={"mt-3"} onClick={() => navigate("/")}>
                 <button className="button">
                     <svg className="svgIcon" viewBox="0 0 448 512">
                         <path

@@ -1,16 +1,59 @@
-export const OrderPaymentPage = () => {
-    return (
-        <div style={{display: 'flex', padding: '20px', marginLeft: '20px'}}>
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import * as React from "react";
 
-            <div style={{width: '75%'}}>
-                <h2>Order Payment</h2>
-                <ul>
-                    <li>Tôi Có Thể Xem Lại Các Shop Đã Bấm "Theo Dõi" Ở Đâu?</li>
-                    <li>Shopee có cung cấp bảo hiểm hàng hóa cho đơn hàng của tôi không?</li>
-                    <li>Tại Sao Không Bình Luận Được Trên Shopee Livestream?</li>
-                    {/* Add more help articles here */}
-                </ul>
-            </div>
+export const OrderPaymentPage = () => {
+    const accordionStyle = {
+        backgroundColor: '#F5F5F5',
+        color: '#333', // Darker color for contrast with light background
+    };
+    return (
+        <div >
+            <Accordion style={accordionStyle}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                >
+                    <h2 style={{fontWeight:"bold"}}> How to delete/remove products from the Shopping Cart?</h2>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <p>In your Shopping Cart > select Delete Icon for the products you want to delete from the Shopping Cart.</p>
+                 </AccordionDetails>
+
+            </Accordion>
+            <Accordion style={accordionStyle}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon/>}
+                    aria-controls="panel2-content"
+                    id="panel2-header"
+                >
+                    <h2 style={{fontWeight: "bold"}}> Reduce the number of products to 0</h2>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <p>You can use this method when you want to manually remove each product from the Shopping Cart
+                        In your Shopping Cart, adjust the product quantity to 0</p>
+                </AccordionDetails>
+            </Accordion>
+            {/*<Accordion style={accordionStyle}>*/}
+            {/*    <AccordionSummary*/}
+            {/*        expandIcon={<ExpandMoreIcon />}*/}
+            {/*        aria-controls="panel3-content"*/}
+            {/*        id="panel3-header"*/}
+            {/*    >*/}
+            {/*        Accordion Actions*/}
+            {/*    </AccordionSummary>*/}
+            {/*    <AccordionDetails>*/}
+            {/*        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse*/}
+            {/*        malesuada lacus ex, sit amet blandit leo lobortis eget.*/}
+            {/*    </AccordionDetails>*/}
+            {/*    <AccordionActions>*/}
+            {/*        <Button>Cancel</Button>*/}
+            {/*        <Button>Agree</Button>*/}
+            {/*    </AccordionActions>*/}
+            {/*</Accordion>*/}
         </div>
     );
 }

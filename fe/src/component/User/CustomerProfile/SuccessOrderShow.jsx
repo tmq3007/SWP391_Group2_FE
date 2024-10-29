@@ -33,6 +33,39 @@ const getUserName = async (id, jwt) => {
     }
 };
 
+/////////////////////////////////////////////////////////////////////////
+//    FOR SET IS PAID   FOR SET IS PAID  FOR SET IS PAID  FOR SET IS PAID
+//  FOR SET IS PAID   FOR SET IS PAID  FOR SET IS PAID  FOR SET IS PAID
+/////////////////////////////////////////////////////////////////////////
+const setIsPaid = async (id, jwt, choice) => {
+    let url = "";
+    switch (choice){
+        case 1:{ // set ISPAID to true
+            url = `http://localhost:8080/api/v1/orders/isPaidToTrue/${id}`
+            break;
+        }
+        case 2:{ // set ISPAID to false
+            url = `http://localhost:8080/api/v1/orders/isPaidToFalse/${id}`
+            break;
+        }
+    }
+    if(url !== ""){
+    try {
+        const response = await axios.patch(url, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+    }else{
+        console.log("Payment failed!");
+    }
+};
+
 const addOrder = async (order, jwt) => {
     try {
         const response = await axios.post(`http://localhost:8080/api/v1/orders`,order, {
@@ -139,7 +172,7 @@ async function processOrderItems(items, orderId, token) {
         await Promise.all(orderItemPromises);
         console.log("All order items processed successfully.");
 
-        // Delete amount of product in each items, which have been order
+        // Delete amount of product in each item, which have been order
         await deleteAmountProducts(items, token);
         // Delete cart items after processing all order items
         await deleteCartItems(items, items[0].userId, token); // Ensure items[0].userId exists
@@ -158,6 +191,20 @@ const SuccessOrderShow = () => {
     const [name, setName] = useState('');
     const [openWarning, setOpenWarning] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
+    const [openConfirmPayWhenRecieve, setOpenConfirmPayWhenRecieve] = useState(false);
+    const [openConfirmPayViaQr, setOpenConfirmPayViaQr] = useState(false);
+    const handleOpenConfirmPayWhenRecieve = () => {
+        setOpenConfirmPayWhenRecieve(false);
+    }
+    const handleOpenConfirmPayViaQr = () => {
+        setOpenConfirmPayViaQr(false);
+    }
+    const a = () => {
+        setOpenConfirmPayWhenRecieve(true);
+    }
+    const b = () => {
+        setOpenConfirmPayViaQr(true);
+    }
     const handleOpenSuccess = () => {
         navigate('/');
     }
@@ -221,24 +268,17 @@ const SuccessOrderShow = () => {
             order.paymentId = 2;
             const response = await addOrder(order, token);
             const orderId = response.orderId;
-            const total = response.finalTotal;
-
-            console.log("total", total);
-
+            console.log(response);
+            console.log(orderId);
             await processOrderItems(items, orderId, token);
-
-            // Pass total, orderId, and account info to Payment
-            navigate('/payment', {
-                state: { amount: total, accountInfo: "SPOD", orderId: orderId }
-            });
-
+            //
+            // NAVIGATE HERE AFTER SUCCESSFUL CREATE ORDER
+            //
             setOpenSuccess(true);
         } catch (error) {
             console.error("Error adding order:", error);
         }
-    };
-
-
+    }
     console.log(order, items);
 
     return (
@@ -409,7 +449,7 @@ const SuccessOrderShow = () => {
                     </div>
                     <Divider/>
                     <div className={"flex justify-between w-[100%] mt-3 cursor-pointer"} style={{gridTemplateColumns: "50% 50%"}}>
-                        <div onClick={payWhenRecieve}
+                        <div onClick={a}
                             className="w-[50%] flex justify-center items-center group hover:bg-white p-2 rounded transition bg-green-500 border-2 hover:border-green-500">
 
                             <PaidIcon className="text-white mr-2 group-hover:text-green-500 transition"/>
@@ -417,7 +457,7 @@ const SuccessOrderShow = () => {
                                 Pay when receive
                             </Typography>
                         </div>
-                        <div onClick={payByQr}
+                        <div onClick={b}
                             className="w-[50%] flex justify-center items-center group hover:bg-white p-2 rounded transition bg-green-500 border-2 hover:border-green-500">
                             <QrCodeIcon className="text-white mr-2 group-hover:text-green-500 transition"/>
                             <Typography className="font-semibold text-white group-hover:text-green-500 transition">
@@ -444,6 +484,24 @@ const SuccessOrderShow = () => {
                     <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>Create order success!</Typography>
                     <Typography marginTop={"20px"} margin={"15px"}>Back to homepage and see more item.</Typography>
                     <Button onClick={handleOpenSuccess} variant={"contained"} color={"primary"} className={"ml-[20px]"}>To home page</Button>
+                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to back to homepage.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openConfirmPayWhenRecieve} onClose={handleOpenConfirmPayWhenRecieve}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>Confirm pay when receive!</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>Pay when receive</Typography>
+                    <Button onClick={payWhenRecieve} variant={"contained"} color={"primary"} className={"ml-[20px]"}>Confirm</Button>
+                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to back to homepage.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openConfirmPayViaQr} onClose={handleOpenConfirmPayViaQr}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>Confirm payment via QR!</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>Pay via QR</Typography>
+                    <Button onClick={payByQr} variant={"contained"} color={"primary"} className={"ml-[20px]"}>Confirm</Button>
                     <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to back to homepage.)</Typography>
                 </DialogContent>
             </Dialog>
