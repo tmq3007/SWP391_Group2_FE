@@ -9,25 +9,23 @@ const Popup = ({ message }) => (
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        padding: "40px",              // Increased padding
+        padding: "20px",
         backgroundColor: "#ffffff",
-        borderRadius: "15px",          // Slightly larger border radius
-        boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.3)",  // Deeper shadow for emphasis
+        borderRadius: "10px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
         zIndex: 1000,
         textAlign: "center",
-        width: "300px",                // Width adjustment for larger popup
     }}>
-        <p style={{ fontSize: "22px", color: "#00796b", fontWeight: "bold" }}>{message}</p>  {/* Larger font size */}
+        <p style={{ fontSize: "18px", color: "#00796b" }}>{message}</p>
     </div>
 );
-
 
 const Payment = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
     // Access `amount`, `accountInfo`, and `orderId` from location.state
-    const { amount = 5000, accountInfo = "okok", orderId } = location.state || {};
+    const { amount , accountInfo , orderId } = location.state || {};
 
     const MY_BANK = {
         BANK_ID: "MBBank",
@@ -36,13 +34,13 @@ const Payment = () => {
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [showPopup, setShowPopup] = useState(false);  // State to show popup
-    const description = accountInfo;
+    const description = accountInfo + orderId;
     const vietQrContent = `https://img.vietqr.io/image/${MY_BANK.BANK_ID}-${MY_BANK.ACCOUNT_ID}-qr_only.png?amount=${amount}&addInfo=${description}&accountName=${accountInfo}`;
 
     useEffect(() => {
         const timer = setTimeout(() => {
             navigate('/payment-time-out');
-        }, 120000);
+        }, 30000);
 
         return () => clearTimeout(timer);
     }, [navigate]);
@@ -71,8 +69,6 @@ const Payment = () => {
             if (price >= lastPrice && lastContent.includes(content)) {
                 setPaymentSuccess(true); // Update the payment success state
                 setShowPopup(true);      // Show the popup
-
-                //set True o day
             } else {
                 console.log("Không thành công");
             }
@@ -87,7 +83,7 @@ const Payment = () => {
             const timer = setTimeout(() => {
                 setShowPopup(false);  // Hide popup after 1 second
                 navigate('/');
-            }, 2000);
+            }, 1000);
 
             return () => clearTimeout(timer);
         }
@@ -101,12 +97,11 @@ const Payment = () => {
                 <div style={{ flex: "1", textAlign: "left", padding: "20px" }}>
                     <h2 style={{ color: "#00796b", fontWeight: "bold", fontSize: "26px", marginBottom: "20px" }}>Thông tin thanh toán</h2>
 
-                    <p style={{fontSize: "18px", margin: "15px 0", color: "#004d40"}}>
-                        Số tiền: <strong style={{color: "#d32f2f"}}>{amount.toLocaleString('vi-VN')} VND</strong>
+                    <p style={{ fontSize: "18px", margin: "15px 0", color: "#004d40" }}>
+                        Số tiền: <strong style={{ color: "#d32f2f" }}>{amount.toLocaleString()} VND</strong>
                     </p>
 
-
-                    <p style={{fontSize: "18px", margin: "15px 0", color: "#004d40"}}>
+                    <p style={{ fontSize: "18px", margin: "15px 0", color: "#004d40" }}>
                         Tài khoản: <strong>{MY_BANK.ACCOUNT_ID}</strong>
                     </p>
 

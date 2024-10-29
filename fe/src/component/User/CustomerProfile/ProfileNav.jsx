@@ -9,6 +9,8 @@ import HelpIcon from '@mui/icons-material/Help';
 import { useNavigate, useLocation } from "react-router-dom";
 import {logout} from "../../State/Authentication/Action";
 import {useDispatch} from "react-redux";
+import SettingsIcon from '@mui/icons-material/Settings';
+import {Settings} from "@mui/icons-material";
 
 const menu = [
   {
@@ -34,13 +36,14 @@ const menu = [
   {
     title: 'Need Help',
     icon: <HelpIcon />,
-    herf: 'help'
+    herf: 'help-center'
   },
   {
-    title: 'Log Out',
-    icon: <LogoutIcon />,
-    herf: 'logout'
+    title: 'Setting',
+    icon: <Settings />,
+    herf: 'setting'
   },
+
 ];
 
 export default function ProfileNav({ open, handleClose }) {
@@ -49,8 +52,11 @@ export default function ProfileNav({ open, handleClose }) {
   const dispatch = useDispatch ();
   const handleNavigate = (item) => {
 
-
+    if (item.title === 'Need Help') {
+      navigate('/help-center');
+    }  else {
       navigate(`${item.herf}`);
+    }
     // Navigate to the selected menu item
   };
 
