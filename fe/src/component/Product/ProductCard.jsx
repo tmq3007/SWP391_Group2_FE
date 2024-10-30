@@ -7,7 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ProductDetail from "./ProductDetail";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist }) => {
+const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromWishlist }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0;
     const discountPrice = originalPrice * (1 - discount / 100);
@@ -35,8 +35,13 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist }) => {
         setIsFavorite(inWishlist);
     }, [wishlist, item.productId]);
     const handleFavoriteToggle = () => {
+        if (isFavorite) {
+            removeFromWishlist(item.productId);
+        } else {
+            addToWishlist(item);
+        }
         setIsFavorite((prev) => !prev);
-        addToWishlist();
+
     };
 
     const handleAddToCartClick = () => {

@@ -14,7 +14,7 @@ import { findCart, addItemToCart } from '../State/Cart/Action';
 import {getUser} from "../State/Authentication/Action";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import {useNavigate} from "react-router-dom";
-import {addItemToWishlist, getAllWishlist} from "../State/Wishlist/Action";
+import {addItemToWishlist, getAllWishlist,removeItemFromWishlist} from "../State/Wishlist/Action";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -89,8 +89,9 @@ const navigate = useNavigate();
 
 
     console.log("cart new:" ,cart);
-    //add to wishlist
 
+
+    //add to wishlist
     const addToWishlist = (productID) => {
         if (!userId) {
             console.error('User is not logged in');
@@ -103,16 +104,46 @@ const navigate = useNavigate();
         }
         dispatch(addItemToWishlist(request,jwt))
             .then(()=>{
-                dispatch(findCart(userId, jwt))
+                dispatch(getAllWishlist(userId, jwt))
                     .then((data) => {
-                        setCart(data);  // Properly set the cart data after fetching
-                        console.log("Cart data:", data);  // Debugging the cart data
+                        setWishlist(data);  // Properly set the cart data after fetching
+                        console.log("Wishlist data:", data);  // Debugging the cart data
                     })
                     .catch((error) => {
-                        console.error('Error fetching cart:', error);
+                        console.error('Error fetching wishlist:', error);
                     });
             })
     }
+    //remove from wishlist
+    const removeFromWishlist = (productId) => {
+        if (!userId) {
+            console.error('User is not logged in');
+            return;
+        }
+
+        if (!jwt) {
+            console.error('JWT token is missing');
+            return;
+        }
+
+        dispatch(removeItemFromWishlist(userId, productId, jwt))
+            .then(()=>{
+                dispatch(getAllWishlist(userId, jwt))
+                    .then((data) => {
+                        setWishlist(data);  // Properly set the cart data after fetching
+                        console.log("Wishlist data:", data);  // Debugging the cart data
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching wishlist:', error);
+                    });
+            })
+            .catch((error) => {
+                console.error('Error removing item from wishlist:', error);
+            });
+    };
+
+
+
     const addToCart = (buyUnit, quantity, item) => {
         if (!userId) {
             console.error('User is not logged in');
@@ -205,6 +236,7 @@ const navigate = useNavigate();
                             wishlist={wishlist?.result?.products || []}
                             addToCart={(buyUnit, quantity) => addToCart(buyUnit, quantity, item)}
                             addToWishlist={() => addToWishlist(item.productId)}
+                            removeFromWishlist={() => removeFromWishlist(item.productId)}
                         />
                     ))}
                 </div>
