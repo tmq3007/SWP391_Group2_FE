@@ -308,12 +308,12 @@ function UsersPage() {
                     <DialogTitle>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <img src="https://img.icons8.com/material-outlined/24/ff0000/trash--v1.png" alt="Trash Icon" />
-                            <span>{selectedUser?.status === 'Active' ? 'Block Customer' : 'Unblock Customer'}</span>
+                            <span>{selectedUser?.status === 'Active' ? 'Ban User' : 'Unban User'}</span>
                         </div>
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            {`Are you sure you want to ${selectedUser?.status === 'Active' ? 'ban' : 'unban'} this customer?`}
+                            {`Are you sure you want to ${selectedUser?.status === 'Active' ? 'ban' : 'unban'} this user?`}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

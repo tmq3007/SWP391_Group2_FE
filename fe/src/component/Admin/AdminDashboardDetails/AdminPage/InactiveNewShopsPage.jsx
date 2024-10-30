@@ -60,7 +60,8 @@ function InactiveNewShopsPage() {
                 }));
                 setShops(mappedShops);
             } catch (error) {
-                console.error("Error fetching unverified shops", error);
+                setSnackBarMessage("Cannot connect to the server. Please check your internet connection.");
+                setSnackBarOpen(true);
             }
         }
         fetchShops();

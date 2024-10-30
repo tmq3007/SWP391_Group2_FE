@@ -1,6 +1,5 @@
 import React from 'react';
 import Summary from "../Summary";
-import OrderStatus from "../OrderStatus";
 import RecentOrders from "../RecentOrder";
 import SaleHistory from "../SaleHistory";
 import PopularProducts from "../PopularProducts";

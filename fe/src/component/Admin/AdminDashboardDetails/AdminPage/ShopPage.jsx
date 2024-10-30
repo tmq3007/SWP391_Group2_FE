@@ -5,7 +5,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';   // For active status
 import ToggleOffIcon from '@mui/icons-material/ToggleOff'; // For inactive status
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Snackbar
+} from '@mui/material';
 import {getAllStatisticsShop} from "../../../State/Admin/Action";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
@@ -16,6 +25,16 @@ function ShopsPage() {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [shops, setShops] = useState([]);
+
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSnackBarOpen(false);
+    };
 
     useEffect(() => {
         // Fetch shop statistics data on component mount
@@ -38,7 +57,8 @@ function ShopsPage() {
                 }));
                 setShops(formattedData);
             } catch (error) {
-                console.error("Error fetching shop statistics", error);
+                setSnackBarMessage("Cannot connect to the server. Please check your internet connection.");
+                setSnackBarOpen(true);
             }
         };
 
@@ -60,6 +80,24 @@ function ShopsPage() {
     const currentShops = filteredShops.slice(offset, offset + PER_PAGE);
 
     return (
+        <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
         <div style={{ flex: 1, padding: '20px', marginTop: '36px' }}>
             <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
                 <div className='flex justify-between mt-3'>
@@ -137,6 +175,7 @@ function ShopsPage() {
             />
 
 
+        </div>
         </div>
     );
 }
