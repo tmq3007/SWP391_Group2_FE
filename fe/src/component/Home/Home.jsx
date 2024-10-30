@@ -73,45 +73,36 @@ const navigate = useNavigate();
     console.log("cart new:" ,cart);
     const addToCart = (buyUnit, quantity, item) => {
         if (!userId) {
-            console.error('User  is not logged in');
+            console.error('User is not logged in');
             return;
         }
 
         const productDetails = {
             buyUnit,
             quantity,
-            productId: item.productId
+            productId: item.productId,
         };
 
         dispatch(addItemToCart(userId, productDetails, jwt))
             .then(() => {
-                setCart(prevCart => {
-                    const existingItem = prevCart.result.cartItems.find(cartItem => cartItem.product.productId === item.productId);
-                    const updatedCartItems = existingItem
-                        ? prevCart.result.cartItems.map(cartItem =>
-                            cartItem.product.productId === item.productId
-                                ? { ...cartItem, quantity: Number(cartItem.quantity) + Number(quantity) }
-                                : cartItem
-                        )
-                        : [...prevCart.result.cartItems, { ...item, quantity }];
-
-                    return {
-                        ...prevCart,
-                        result: {
-                            ...prevCart.result,
-                            cartItems: updatedCartItems
-                        }
-                    };
-                });
+                // Refetch the cart to get the latest data from the server
+                dispatch(findCart(userId, jwt))
+                    .then((data) => {
+                        setCart(data);  // Set cart with latest data from server
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching updated cart:', error);
+                    });
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error adding item to cart:', error);
             });
     };
 
+
     const filteredProducts = products?.products?.filter((product) => {
         const matchesCategory = selectedCategory === 'all' || product.category.categoryName === selectedCategory;
-        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice <= 50) || (selectedPrice === 'high' && product.unitSellPrice > 50) || selectedPrice === 'all';
+        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice <= 50000) || (selectedPrice === 'high' && product.unitSellPrice > 50000) || selectedPrice === 'all';
         const matchesSearch = product.productName.toLowerCase().includes(searchQuery);
 
         return matchesCategory && matchesPrice && matchesSearch;

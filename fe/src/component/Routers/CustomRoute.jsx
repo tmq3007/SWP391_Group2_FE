@@ -15,7 +15,6 @@ import {ShopDashboard} from "../Shop/ShopDashboard";
 import {CreateShop} from "../Shop/CreateShop";
 import Processing from "../Shop/Processing";
 import Cart from "../Cart/Cart";
-import RejectedShopCreation from "../Shop/RejectedShopCreation";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -70,12 +69,6 @@ const CustomRoute = () => {
                 <Route path="/processing" element={
                     <ProtectedRoute role={"ROLE_VENDOR"}>
                         <Processing/>
-                    </ProtectedRoute>
-                }/>
-
-                <Route path="/rejected-shop-creation" element={
-                    <ProtectedRoute role={"ROLE_VENDOR"}>
-                        <RejectedShopCreation/>
                     </ProtectedRoute>
                 }/>
 

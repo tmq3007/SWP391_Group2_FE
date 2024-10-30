@@ -68,25 +68,30 @@ export const NavbarAdmin = () => {
             {/* Logo and Menu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
-                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
+                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{color: '#019376'}}>
                         Shopii
                     </li>
+                    <div style={{
+                        width: '1.5px',
+                        height: '20px',
+                        backgroundColor: '#019376',
+                        margin: '0 10px'
+                    }}></div>
+                    <li className="text-gray-500 text-sm" style={{color: '#019376'}}>Admin Dashboard</li>
                 </div>
-                <IconButton className="block lg:hidden">
-                    <MenuIcon sx={{ fontSize: '1.5rem' }} />
-                </IconButton>
+
 
             </div>
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center top-3">
-                <SearchIcon className="absolute left-4 text-gray-400 top-2" />
+                <SearchIcon className="absolute left-4 text-gray-400 top-2"/>
                 <input
                     type="text"
                     className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"
                     placeholder="Search your route..."
                 />
             </div>
-            <Divider orientation="vertical" variant="middle" flexItem />
+
 
             {isLoggedIn ? (
                 <>

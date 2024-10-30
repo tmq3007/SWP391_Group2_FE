@@ -99,7 +99,8 @@ const ProductCardInDetail = ({ cart, item, addToCart, addToWishlist }) => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <ProductDetail cart={cart} item={item} addToCart={addToCart} onClose={handleClose} />
+                    <ProductDetail cart={cart} item={item} addToCart={() => addToCart(item.measurementUnit, 1, item)} onClose={handleClose} />
+
                 </DialogContent>
             </Dialog>
         </>

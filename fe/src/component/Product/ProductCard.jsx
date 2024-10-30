@@ -20,6 +20,7 @@ const ProductCard = ({ cart, item, addToCart }) => {
 
     const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
+    console.log("currentQuantityInCart",currentQuantityInCart);
 
     // Calculate available stock
     const availableStock = item.stock - currentQuantityInCart;
@@ -105,17 +106,20 @@ const ProductCard = ({ cart, item, addToCart }) => {
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 2 }}>
                         {item.productName}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {item.measurementUnit} kg
+                    <Typography variant="body2" color="text.primary">
+                        Buy Unit: {item.measurementUnit} kg
                     </Typography>
                     {discount > 0 && (
                         <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                            ${originalPrice.toFixed(2)}
+                           Original Price: {originalPrice.toFixed(2)}VND
                         </Typography>
                     )}
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
-                        <Typography variant="h6" component="div" sx={{ color: "#019376", fontWeight: 'bold', mb: 2 }}>
-                            ${discountPrice.toFixed(2)}
+                        <Typography variant="h5" component="div" sx={{ color: "#019376", fontWeight: 'bold', mb: 1 }}>
+                             {discountPrice.toFixed(2)}VND
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#888', mb: 1 }}>
+                            {availableStock || 0}  available
                         </Typography>
                     </Box>
 
@@ -201,7 +205,7 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                     backgroundColor: 'rgba(1, 147, 118, 0.2)',
                                 }
                             }}>
-                                {isFavorite ? <FavoriteIcon sx={{ color: '#F95454' }} /> : <FavoriteBorderIcon />}
+                                {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }} /> : <FavoriteBorderIcon />}
                             </IconButton>
                         </Box>
                     )}

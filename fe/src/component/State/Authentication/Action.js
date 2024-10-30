@@ -7,8 +7,8 @@ import {
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
     UPDATE_PROFILE_SUCCESS,
-        UPDATE_PROFILE_FAILURE,
-        UPDATE_PROFILE_REQUEST
+    UPDATE_PROFILE_FAILURE,
+    UPDATE_PROFILE_REQUEST, CHANGE_PASSWORD_REQUEST, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE
 } from "./ActionType";
 import axios from "axios";
 import {API_URL} from "../../config/api";
@@ -82,12 +82,38 @@ export const loginUser = (reqData) => async (dispatch) => {
             });
 
             dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: data });
-            return data; // Return the data if further handling is needed
+            return data; // Return the data if further  handling is needed
         } catch (error) {
             dispatch({ type: UPDATE_PROFILE_FAILURE, payload: error.message });
             console.error('Error updating user:', error);
         }
     };
+
+
+export const changePassword = (userId, request, jwt) => async (dispatch) => {
+    dispatch({ type: CHANGE_PASSWORD_REQUEST });
+    try {
+        const { data } = await axios.put(`http://localhost:8080/api/v1/users/change-password/${userId}`, request, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+
+        dispatch({ type: CHANGE_PASSWORD_SUCCESS, payload: data });
+        console.log("change",request)
+        return data;
+
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || error.message;
+        dispatch({
+            type: CHANGE_PASSWORD_FAILURE,
+            payload: errorMessage,
+        });
+        console.error('Error changin3g password:', error,errorMessage);
+        throw new Error(errorMessage); // Propagate error to be handled in the component
+    }
+};
+
 
 export const getUser = (jwt) => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST});

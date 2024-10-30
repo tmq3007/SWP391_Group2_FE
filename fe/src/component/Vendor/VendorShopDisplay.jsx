@@ -3,7 +3,7 @@ import { Avatar, Box, Typography, Grid, Divider } from '@mui/material';
 import { LocationOn, Phone } from '@mui/icons-material';
 
 const ShopDisplay = ({ shop }) => {
-  const { name, address, phone, avatar, commission, sale, balance, withdraw } = shop;
+  const user = shop;
 
   return (
     <Box
@@ -28,17 +28,17 @@ const ShopDisplay = ({ shop }) => {
             marginRight: 2,
             backgroundColor: '#d2691e',
           }}
-          src={avatar} // Shop's avatar
+          src={user.logo} // Shop's avatar
         />
         <Box>
-          <Typography variant="h6">{name}</Typography>
+          <Typography variant="h6">{user.shopName}</Typography>
           <Typography variant="body2" color="text.secondary">
             <LocationOn fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {address}
+            {user.country+", "+user.city+", "+user.address}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             <Phone fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {phone}
+              {user.phone}
           </Typography>
         </Box>
       </Box>
@@ -49,7 +49,7 @@ const ShopDisplay = ({ shop }) => {
       <Grid container spacing={2} justifyContent="space-between">
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {commission}
+            {0}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
             Commission
@@ -57,7 +57,7 @@ const ShopDisplay = ({ shop }) => {
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {sale}
+            {0}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
             Sale
@@ -65,7 +65,7 @@ const ShopDisplay = ({ shop }) => {
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {balance}
+            {0}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
             Balance
@@ -73,7 +73,7 @@ const ShopDisplay = ({ shop }) => {
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {withdraw}
+            {0}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
             Withdraw

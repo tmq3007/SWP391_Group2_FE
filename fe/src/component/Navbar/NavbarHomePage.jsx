@@ -11,6 +11,7 @@ import {logout} from "../State/Authentication/Action";
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import config from "tailwindcss/defaultConfig";
+import {HelpOutline} from "@mui/icons-material";
 
 export const NavbarHomePage = ({ setSearchQuery }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -129,7 +130,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             {/* Logo and ShopMenu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
-                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
+                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{color: '#019376'}}>
                         Shopii
                     </li>
                 </div>
@@ -150,6 +151,17 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 />
             </div>
 
+            <div className="flex items-center">
+                <Button
+                    sx={{color: '#039375'}}
+                    size='small'
+                    onClick={() => navigate("/help-center")}
+                >
+                    <HelpOutline className="mr-2" />
+                    Help Center
+                </Button>
+            </div>
+
             {/* User Info and Actions */}
             <div className="flex items-center space-x-3">
                 {/*<IconButton>*/}
@@ -164,28 +176,28 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{ backgroundColor: '#019376' }}
+                                sx={{backgroundColor: '#019376'}}
                                 onClick={() => handleVendorDashboard()}
                             >
-                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
+                                <span style={{color: "#FFFFFF"}}>Dash Board</span>
                             </Button>
                         ) || userRole === "ROLE_ADMIN" && (
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{ backgroundColor: '#019376' }}
+                                sx={{backgroundColor: '#019376'}}
                                 onClick={() => navigate("/admin-dashboard")}
                             >
-                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
+                                <span style={{color: "#FFFFFF"}}>Dash Board</span>
                             </Button>
-                        )|| userRole === "ROLE_CUSTOMER" && (
+                        ) || userRole === "ROLE_CUSTOMER" && (
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{ backgroundColor: '#019376' }}
+                                sx={{backgroundColor: '#019376'}}
                                 onClick={() => handleVendorRegister()}
                             >
-                                <span style={{ color: "#FFFFFF" }}>Become a seller</span>
+                                <span style={{color: "#FFFFFF"}}>Become a seller</span>
                             </Button>
                         )}
                     </>
@@ -194,12 +206,13 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                         variant="contained"
                         color="primary"
                         onClick={handleJoin}
-                        sx={{ backgroundColor: '#019376' }}
+                        sx={{backgroundColor: '#019376'}}
                     >
-                        <span style={{ color: "#FFFFFF" }}>Join</span>
+                        <span style={{color: "#FFFFFF"}}>Join</span>
                     </Button>
                 )}
             </div>
+
         </div>
     );
 };
