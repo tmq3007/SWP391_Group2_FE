@@ -229,7 +229,6 @@ const navigate = useNavigate();
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
                     {currentProducts.map((item) => item && (
                         <ProductCard
-
                             key={item.id}
                             cart={cart?.result?.cartItems || []}
                             item={item}

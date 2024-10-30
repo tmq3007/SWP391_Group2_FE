@@ -31,10 +31,10 @@ const ProductDetail = ({ cart, item, addToCart }) => {
         dispatch(getAllProductsAction());
     }, [dispatch]);
 
-    const reviews = item?.reviews || [];
-    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(2) : 'No reviews';
-
+    // const reviews = item?.reviews || [];
+    // const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    // const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(2) : 'No reviews';
+    const averageRating = item?.averageRating >0? item?.averageRating :'No reviews';
     const [openDialog, setOpenDialog] = React.useState(false); // State for dialog
     const [dialogMessage, setDialogMessage] = React.useState(""); // State for dialog message
     const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
