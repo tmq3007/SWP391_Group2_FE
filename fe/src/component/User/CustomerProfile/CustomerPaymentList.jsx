@@ -40,7 +40,7 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
             const time = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
             const orderAddress = `${address.city} / ${address.district} / ${address.street} / ${address.subDistrict}`;
             const a = items.reduce((acc, cur) => acc + cur.product.unitSellPrice * cur.quantity, 0);
-            const b = items.reduce((acc, cur) => acc + ((cur.product.unitSellPrice * cur.quantity) - ((cur.product.unitSellPrice * cur.quantity) * (cur.product.discount / 100))), 0);
+            const b = items.reduce((acc, cur) => acc + ((cur.product.unitSellPrice * cur.quantity) - ((cur.product.unitSellPrice * cur.quantity) * (cur.product.discount ))), 0);
             console.log(id);
             if (id !== null && id !== undefined) {
                 const order = {
@@ -84,9 +84,9 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
             productImage: item.product.pictureUrl,
             productSellPrice: item.product.productSellPrice,
             discount: item.product.discount,
-            productQuantity: item.quantity,
+            productQuantity: item.quantity,/ 100
             itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
-            finalPrice: ((item.product.unitSellPrice * item.quantity) - ((item.product.unitSellPrice * item.quantity) * (item.product.discount / 100))).toFixed(2),
+            finalPrice: ((item.product.unitSellPrice * item.quantity) - ((item.product.unitSellPrice * item.quantity) * (item.product.discount ))).toFixed(2),
             orders: {
                 orderId: orderId,
             },
@@ -144,13 +144,13 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',marginBottom:"10px"}}>
                     <Typography>Saved: </Typography>
                     <Typography sx={{ marginRight:"10px"}}>{ (items.length > 0) ? (items.reduce((total,item) =>
-                    { return total + (item.quantity * item.product.unitSellPrice * (item.product.discount / 100))},0)).toFixed(2) : 0}$</Typography>
+                    { return total + (item.quantity * item.product.unitSellPrice * (item.product.discount ))},0)).toFixed(2) : 0}$</Typography>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',fontWeight: 'bold',marginBottom:"10px"}}>
                     <Typography>Final Total: </Typography>
                     <Typography sx={{ marginRight:"10px"}}>
                         { (items.length > 0) ? (items.reduce((total,item) =>
-                        { return total + ((item.quantity * item.product.unitSellPrice) - (item.quantity * item.product.unitSellPrice * (item.product.discount / 100)))},0)).toFixed(2) : 0}$
+                        { return total + ((item.quantity * item.product.unitSellPrice) - (item.quantity * item.product.unitSellPrice * (item.product.discount)))},0)).toFixed(2) : 0}$
                     </Typography>
                 </Box>
             </Box>

@@ -151,7 +151,7 @@ async function processOrderItems(items, orderId, token) {
             itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
             finalPrice: (
                 (item.product.unitSellPrice * item.quantity) -
-                ((item.product.unitSellPrice * item.quantity) * (item.product.discount / 100))
+                ((item.product.unitSellPrice * item.quantity) * (item.product.discount  ))
             ).toFixed(2),
             orders: {
                 orderId: orderId,
@@ -266,15 +266,20 @@ const SuccessOrderShow = () => {
     const payByQr = async () => {
         try {
             order.paymentId = 2;
-            const response = await addOrder(order, token);
-            const orderId = response.orderId;
-            console.log(response);
-            console.log(orderId);
-            await processOrderItems(items, orderId, token);
+           // order.isPaid=true;
+            //const response = await addOrder(order, token);
+            //const orderId = response.orderId;
+            //const total = order.totalPrice;
+            //console.log("total final", order.totalPrice );
+            //console.log("orderId",orderId);
+            //await processOrderItems(items, orderId, token);
             //
             // NAVIGATE HERE AFTER SUCCESSFUL CREATE ORDER
             //
-            setOpenSuccess(true);
+            console.log("order succ", order)
+
+            navigate("/payment", { state: { order: order ,items:items, token: token} });
+            //setOpenSuccess(true);
         } catch (error) {
             console.error("Error adding order:", error);
         }
@@ -321,7 +326,7 @@ const SuccessOrderShow = () => {
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <PointOfSaleIcon className={"text-green-500"} style={{ fontSize: '15px' }}/>
                                             <Typography
-                                                className={"font-semibold text-1xl text-green-500"}>{`${item.product.unitSellPrice - (item.product.unitSellPrice * (item.product.discount / 100))}$`} / {item.product.measurementUnit}</Typography>
+                                                className={"font-semibold text-1xl text-green-500"}>{`${item.product.unitSellPrice - (item.product.unitSellPrice * (item.product.discount  ))}$`} / {item.product.measurementUnit}</Typography>
                                         </div>
                                     </div>
                                 </Box>
@@ -352,7 +357,7 @@ const SuccessOrderShow = () => {
                                                 className={"line-through"}>{item.product.unitSellPrice * item.quantity}$</Typography>
                                         </div>
                                         <Typography
-                                            className={"font-semibold text-green-500 "}>{item.product.unitSellPrice * item.quantity - (item.product.unitSellPrice * item.quantity * (item.product.discount / 100))}$</Typography>
+                                            className={"font-semibold text-green-500 "}>{item.product.unitSellPrice * item.quantity - (item.product.unitSellPrice * item.quantity * (item.product.discount ))}$</Typography>
                                     </div>
                                 </Box>
                             </Box>
@@ -423,11 +428,11 @@ const SuccessOrderShow = () => {
                                 </td>
                                 <td>
                                     <Typography className={"line-through"}>{item.quantity} x {item.product.unitSellPrice}$</Typography>
-                                    <Typography className={"text-green-500"}>{item.quantity} x {item.product.unitSellPrice - item.product.unitSellPrice * (item.product.discount / 100)}$</Typography>
+                                    <Typography className={"text-green-500"}>{item.quantity} x {item.product.unitSellPrice - item.product.unitSellPrice * (item.product.discount)}$</Typography>
                                 </td>
                                 <td>
                                     <Typography className={"line-through"}>{item.quantity * item.product.unitSellPrice}$</Typography>
-                                    <Typography className={"text-green-500"}>{(item.quantity * item.product.unitSellPrice - (item.quantity * item.product.unitSellPrice * (item.product.discount / 100))).toFixed(2)}$</Typography>
+                                    <Typography className={"text-green-500"}>{(item.quantity * item.product.unitSellPrice - (item.quantity * item.product.unitSellPrice * (item.product.discount ))).toFixed(2)}$</Typography>
                                 </td>
                             </tr>
                         ))}

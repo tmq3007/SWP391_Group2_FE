@@ -5,7 +5,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {
+    Alert,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Snackbar
+} from "@mui/material";
 import { banUser, unbanUser, getAllVendors} from "../../../State/Admin/Action";
 
 const PER_PAGE = 5;
@@ -16,6 +25,26 @@ function VendorsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [usersData, setUsersData] = useState([]);
+
+    const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+    const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
+
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSnackBarOpen(false);
+    };
+
+    const handleCloseSuccessSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSuccessSnackBarOpen(false);
+    };
 
     useEffect(() => {
         const fetchSummaryData = async () => {
@@ -49,7 +78,8 @@ function VendorsPage() {
                 });
                 setUsersData(transformedData);
             } catch (e) {
-                console.log('Error fetching summary data');
+                setSnackBarMessage("Cannot connect to the server. Please check your internet connection.");
+                setSnackBarOpen(true);
             }
         };
 
@@ -75,9 +105,15 @@ function VendorsPage() {
         if (selectedUser) {
             try {
                 if (selectedUser.status === 'Active') {
-                    await banUser(selectedUser.id);
+                    await banUser(selectedUser.id).then((response) => {
+                        setSuccessSnackBarMessage("User has been banned successfully.");
+                        setSuccessSnackBarOpen(true);
+                    });
                 } else {
-                    await unbanUser(selectedUser.id);
+                    await unbanUser(selectedUser.id).then((response) => {
+                        setSuccessSnackBarMessage("User has been unbanned successfully.");
+                        setSuccessSnackBarOpen(true);
+                    });
                 }
 
                 const updatedUsers = usersData.map((user) =>
@@ -89,7 +125,8 @@ function VendorsPage() {
                 handleCloseModal();
 
             } catch (error) {
-                console.error(`Error ${selectedUser.status === 'Active' ? 'banning' : 'unbanning'} user:`, error);
+                setSnackBarMessage("An error occurred. Please try again later.");
+                setSnackBarOpen(true);
             }
         }
     };
@@ -103,6 +140,40 @@ function VendorsPage() {
     const currentUsers = filteredUsers.slice(offset, offset + PER_PAGE);
 
     return (
+        <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={successSnackBarOpen}
+                onClose={handleCloseSuccessSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSuccessSnackBar}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {successSnackBarMessage}
+                </Alert>
+            </Snackbar>
+
         <div style={{ flex: 1, padding: '20px', marginTop: '36px' }}>
             <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
                 <div className='flex justify-between mt-3'>
@@ -232,6 +303,7 @@ function VendorsPage() {
                 </DialogActions>
             </Dialog>
         </div>
+    </div>
     );
 }
 
