@@ -34,7 +34,7 @@ const Payment = () => {
     console.log("order",order)
     const MY_BANK = {
         BANK_ID: "MBBank",
-        ACCOUNT_ID: "99999300799999"
+        ACCOUNT_ID: "0867726950"
     };
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -219,7 +219,7 @@ const Payment = () => {
         }else{
             try {
                 const response = await fetch(
-                    "https://script.google.com/macros/s/AKfycbxpG2eiN-BiWieYCoGF5IIp_2FbwYA4vrBqzLQtv43oI53zH5n8AqyzL8DcG6s_Hw4g/exec"
+                    "https://script.google.com/macros/s/AKfycbytMZ-GQ3Qk8eIGQsbPDcE1TZNkuraFYGqfMEytatbGJ9kAFXoUI7zoDoo6bdPtFeHh/exec"
                 );
                 const data = await response.json();
                 const lastPaid = data.data[data.data.length - 1];
