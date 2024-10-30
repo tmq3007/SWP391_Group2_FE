@@ -22,7 +22,6 @@ export const CreateShop = () => {
     const [previewCoverImage, setPreviewCoverImage] = React.useState(null);
     const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
 
-
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('jwt');
 
@@ -45,7 +44,7 @@ export const CreateShop = () => {
             phone,
             logo: logo,
             cover: coverImage,
-            user : userId
+            user : userId,
         }
 
 
