@@ -2,32 +2,36 @@ import React, { useState, useEffect } from 'react';
 import "../../style/ShopProduct.css";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { ShopFilter } from "./ShopFilter";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import { useDispatch, useSelector } from "react-redux";
-import { getAllProductsByShopIdAction } from "../State/Product/Action";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import { ShopFilter } from "./ShopFilter";
+import { useDispatch, useSelector } from "react-redux";
+import {getAllProductsByShopIdAction, updateProductById} from "../State/Product/Action";
 import { useNavigate } from "react-router-dom";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import axios from "axios";
 
 export const ShopProduct = () => {
     const navigate = useNavigate();
-    const token = localStorage.getItem('jwt');
-
     const dispatch = useDispatch();
-    const [shopId, setShopId] = useState("");
-    const { products } = useSelector(store => store.products);
+    const token = localStorage.getItem('jwt');
+    const userId = localStorage.getItem("userId");
 
-    // Pagination
-    const productsPerPage = 5;
+    const { products } = useSelector(store => store.products);
+    const [shopId, setShopId] = useState("");
     const [page, setPage] = useState(1);
+    const [isFilterVisible, setFilterVisible] = useState(false);
+
+    const productsPerPage = 5;
+    const totalPages = Math.ceil(products.length / productsPerPage);
+    const indexOfLastProduct = page * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
 
     useEffect(() => {
-        const userId = localStorage.getItem("userId");
         let isMounted = true;
 
         const fetchShopId = async () => {
@@ -38,32 +42,56 @@ export const ShopProduct = () => {
                 if (isMounted) {
                     const shopId = response.data.result;
                     setShopId(shopId);
-                    if (shopId) {
-                        dispatch(getAllProductsByShopIdAction(shopId));
-                    }
+                    if (shopId) dispatch(getAllProductsByShopIdAction(shopId));
                 }
             } catch (error) {
                 console.error("Error fetching shopId:", error);
             }
         };
+
         fetchShopId();
         return () => { isMounted = false };
-    }, [dispatch, token]);
+    }, [dispatch, token, userId]);
 
-    const totalPages = Math.ceil(products.length / productsPerPage);
-    const indexOfLastProduct = page * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products?.slice(indexOfFirstProduct, indexOfLastProduct) || [];
+    const fetchAverageRating = async (productId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/reviews/get-all-review-by-product-id/${productId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const reviews = response.data;
+            console.log("review data: " , reviews);
+            const averageRating = reviews.reduce((total, review) => total + review.rating, 0) / reviews.length || 0;
+            console.log("averageRating:",averageRating);
+            return averageRating.toFixed(1);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+            return 'N/A';
+        }
+    };
+
+    useEffect(() => {
+        const fetchAllProductsData = async () => {
+            await Promise.all(
+                products.map(async (product) => {
+                    const averageRating = await fetchAverageRating(product.productId);
+                    const updatedProductData = {...product, averageRating };
+
+                    dispatch(updateProductById(product.productId, updatedProductData));
+                })
+            );
+            console.log("Products after updating ratings:", products);
+        };
+
+        if (products.length > 0) fetchAllProductsData();
+    }, [products, token, dispatch]);
+
 
     const handlePageChange = (event, value) => setPage(value);
-
-    const [isFilterVisible, setFilterVisible] = useState(false);
     const toggleFilter = () => setFilterVisible(!isFilterVisible);
 
     const handleDelete = (productId) => {
         const confirmDelete = window.confirm("Bạn có muốn xoá sản phẩm này không?");
         if (confirmDelete) {
-            // Update isActive directly in the Redux state
             const updatedProducts = products.map(product =>
                 product.productId === productId
                     ? { ...product, isActive: false }
@@ -76,51 +104,37 @@ export const ShopProduct = () => {
     return (
         <div className="w-full bg-white h-screen overflow-y-auto">
             <div className='h-screen p-6'>
-                <div className='bg-white rounded bg-light p-5 shadow md:p-8 mb-8 flex flex-col'>
-                    <div className='flex w-full flex-col items-center md:flex-row justify-between'>
-                        <h2 className="relative text-lg font-semibold text-heading text-[#1f2937] top-3">Products</h2>
-                        <div className='flex w-full flex-col items-center md:w-3/4 md:flex-row justify-between'>
-                            <div className='flex w-full items-center'>
-                                <div className="relative hidden w-full max-w-[710px] lg:flex items-center top-3">
-                                    <SearchIcon className="absolute left-4 text-gray-400 top-3 "/>
-                                    <input
-                                        type="text"
-                                        id="search"
-                                        name="searchText"
-                                        className="ps-10 pe-4 h-12 flex items-center w-full rounded-lg
-                                        appearance-none transition duration-300 ease-in-out text-heading
-                                        text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent"
-                                        placeholder="Search by Name"
-                                        aria-label="Search"
-                                        autoComplete="off"
-                                    />
-                                </div>
-                                <button className="inline-flex items-center justify-center flex-shrink-0 font-medium bg-[#019376]
-                                leading-none rounded-full outline-none transition duration-300 ease-in-out
-                                text-white px-5 py-0 h-12 text-[15px] lg:text-base ms-4" onClick={() => navigate("/shop-dashboard/shop-add-product")}>
-                                    <span className='hidden md:block'>+Add Product</span>
-                                </button>
+                <div className='bg-white rounded p-5 shadow mb-8 flex flex-col'>
+                    <div className='flex flex-col items-center md:flex-row justify-between'>
+                        <h2 className="text-lg font-semibold text-heading text-[#1f2937]">Products</h2>
+                        <div className='flex items-center'>
+                            <div className="relative hidden lg:flex items-center w-full max-w-[710px]">
+                                <SearchIcon className="absolute left-4 text-gray-400" />
+                                <input
+                                    type="text"
+                                    className="pl-10 pr-4 h-12 w-full rounded-lg border border-border-base focus:border-accent"
+                                    placeholder="Search by Name"
+                                    aria-label="Search"
+                                />
                             </div>
                             <button
+                                className="ml-4 h-12 px-5 text-white bg-[#019376] rounded-full"
+                                onClick={() => navigate("/shop-dashboard/shop-add-product")}
+                            >
+                                + Add Product
+                            </button>
+                            <button
                                 onClick={toggleFilter}
-                                className="mt-5 flex items-center whitespace-nowrap
-                                text-base font-semibold text-[#019376] md:mt-0 pl-3"
+                                className="ml-4 flex items-center text-base font-semibold text-[#019376]"
                             >
                                 Filter
-                                {isFilterVisible ? (
-                                    <ArrowDownwardIcon className="text-[#019376]"/>
-                                ) : (
-                                    <ArrowUpwardIcon className="text-[#019376]"/>
-                                )}
+                                {isFilterVisible ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                             </button>
                         </div>
                     </div>
-
                     {isFilterVisible && (
-                        <div className="flex w-full transition visible h-auto">
-                            <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center md:pt-8">
-                                <ShopFilter />
-                            </div>
+                        <div className="flex w-full mt-5 border-t border-gray-200 pt-5">
+                            <ShopFilter />
                         </div>
                     )}
                 </div>
@@ -129,28 +143,29 @@ export const ShopProduct = () => {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Product Type</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Price/Unit</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">ID</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Product</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Category</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Rate</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Price/Unit</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Quantity</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                         {currentProducts.map((product) => (
-                            <tr key={product.productId} className={"text-center"}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.productId}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.productName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.category.categoryName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.unitSellPrice}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.stock}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
-                                <td className="px-6 py-4 whitespace-nowrap
-                                text-sm text-gray-500 flex-col cursor-pointer">
-                                    <ModeEditIcon onClick={() => navigate(`/shop-dashboard/shop-edit-product/${product.productId}`)}/>
-                                    <RemoveRedEyeIcon onClick={() => navigate("/")}/>
+                            <tr key={product.productId} className="text-center">
+                                <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.productId}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">{product.productName}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">{product.category.categoryName}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">{product.averageRating || 'N/A'}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">{product.unitSellPrice}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">{product.stock}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500 flex-col cursor-pointer">
+                                    <ModeEditIcon onClick={() => navigate(`/shop-dashboard/shop-edit-product/${product.productId}`)} />
+                                    <RemoveRedEyeIcon onClick={() => navigate("/")} />
                                     <DeleteIcon onClick={() => handleDelete(product.productId)} />
                                 </td>
                             </tr>
@@ -159,7 +174,6 @@ export const ShopProduct = () => {
                     </table>
                 </div>
 
-                {/* Pagination */}
                 <div className="flex items-center justify-end mt-5">
                     <Stack spacing={2}>
                         <Pagination
