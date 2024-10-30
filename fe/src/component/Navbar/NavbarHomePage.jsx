@@ -22,12 +22,13 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     const [unverifiedShopId, setUnverifiedShopId] = useState(null);
     const [shopError, setShopError] = useState(false);
     const [unverifiedShopError, setUnverifiedShopError] = useState(false);
+    const [isRejected, setIsRejected] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
     const id = localStorage.getItem('userId');
     const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);  // Cập nhật giá trị tìm kiếm
+        setSearchQuery(event.target.value);
     };
 
     useEffect(() => {
@@ -91,6 +92,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 .then(response => {
                     setUnverifiedShopId(response.data);
                     setUnverifiedShopError(false);
+                    setIsRejected(response.data.isRejected)
                 })
                 .catch(error => {
                     console.error("Error fetching UnshopId:", error);
@@ -105,14 +107,20 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             navigate("/create-shop");
         }
         else if (shopError && unverifiedShopId) {
-            console.log("ShopID Error but Unverified ShopID is valid");
-            navigate("/processing");
+            if (!isRejected) {
+                console.log("Unverified ShopID is rejected");
+                navigate("/rejected-shop-creation");
+            } else {
+                console.log("ShopID Error but Unverified ShopID is valid");
+                navigate("/processing");
+            }
         }
         else if (shopId && unverifiedShopError) {
             console.log("Unverified ShopID Error but ShopID is valid");
             navigate("/vendor-dashboard");
         }
-    }, [shopError, unverifiedShopError, shopId, unverifiedShopId, navigate]);
+    }, [shopError, unverifiedShopError, shopId, unverifiedShopId, isRejected, navigate]);
+
 
 
     const handleJoin = () => {
