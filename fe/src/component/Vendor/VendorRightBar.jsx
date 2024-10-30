@@ -176,17 +176,6 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
       {selectedPage === 1 && (
         <div>
           <div className="w-full h-full  mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
-            <div className="mb-7 flex items-center justify-between">
-              <span
-                  className='font-semibold cursor-pointer hover:text-green-500 hover:border hover:border-solid hover:border-green-400 p-1 rounded-full'>Summary</span>
-              <button className={"bg-[#009f7f] inline-flex items-center justify-center flex-shrink-0 text-white" +
-                  " font-semibold rounded outline-none transition duration-300 ease-in-out" +
-                  " focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 bg-accent" +
-                  " border border-transparent hover:bg-accent-hover px-5 py-0 h-12 text-sm md:text-base"}
-              onClick={() => navigate("/rejected-shop-creation")}>
-                <AddIcon/>Add Shop
-              </button>
-            </div>
 
             <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
               <div

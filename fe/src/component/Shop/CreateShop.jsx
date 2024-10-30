@@ -222,12 +222,17 @@ export const CreateShop = () => {
                         <div className="mb-5">
                             <input type="text"
                                    className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
+                                   placeholder={"District"} value={country} onChange={(e) => setCountry(e.target.value)}/>
+                        </div>
+                        <div className="mb-5">
+                            <input type="text"
+                                   className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
                                    placeholder={"State"} value={state} onChange={(e) => setState(e.target.value)}/>
                         </div>
                         <div className="mb-5">
                             <input type="text"
                                    className="input-field px-4 h-10 w-full rounded border border-border-base focus:border-accent"
-                                   placeholder={"City"} value={city} onChange={(e) => setCity(e.target.value)}/>
+                                   placeholder={"SubDistrict"} value={city} onChange={(e) => setCity(e.target.value)}/>
                         </div>
                         <div className="mb-5">
                             <input type="text"
