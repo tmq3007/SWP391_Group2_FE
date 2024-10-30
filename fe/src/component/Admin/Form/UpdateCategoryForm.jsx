@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useParams } from 'react-router-dom'; // To get categoryId from the route
-import { getCategoryById, updateCategory } from '../../State/Admin/Action'; // Assuming these are your API functions
+import { getCategoryById, updateCategory } from '../../State/Admin/Action';
+import {Alert, Snackbar} from "@mui/material"; // Assuming these are your API functions
 
 export const UpdateCategoryForm = () => {
     const { categoryId } = useParams(); // Get categoryId from route
@@ -13,6 +14,26 @@ export const UpdateCategoryForm = () => {
 
     // State to manage if the form is edited
     const [isEdited, setIsEdited] = useState(false);
+
+    const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+    const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
+
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSnackBarOpen(false);
+    };
+
+    const handleCloseSuccessSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSuccessSnackBarOpen(false);
+    };
 
     // Fetch category data on component mount
     useEffect(() => {
@@ -47,11 +68,42 @@ export const UpdateCategoryForm = () => {
 
     // Handle file uploads
     const fileInputRef1 = useRef(null);
-    const handleFileUpload1 = (event) => {
+
+    const handleFileUpload = async (event, setPictureUrl, setPreviewPictureUrl) => {
         const file = event.target.files[0];
-        if (file) {
-            setPictureUrl1(file);
-            setPreviewPictureUrl1(URL.createObjectURL(file));
+
+        if (!file || file.size > 2 * 1024 * 1024) {
+            alert("Please select a file smaller than 2MB.");
+            return;
+        }
+
+        try {
+            const data = new FormData();
+            data.append("file", file);
+            data.append("upload_preset", "first_time");
+            data.append("cloud_name", "dkstc8tkg");
+
+            const res = await fetch("https://api.cloudinary.com/v1_1/dkstc8tkg/image/upload", {
+                method: "POST",
+                body: data,
+            });
+
+            // Parse the JSON response
+            const uploadedImage = await res.json();
+
+            // Check if the response contains the uploaded image URL
+            if (uploadedImage.url) {
+                console.log("Image uploaded successfully:", uploadedImage.url);
+                setPictureUrl(uploadedImage.url);
+                setPreviewPictureUrl(URL.createObjectURL(file));
+            } else {
+                setSnackBarMessage("Error uploading the file. Please try again later.");
+                setSnackBarOpen(true);
+            }
+        } catch (error) {
+            console.error("Error uploading the file:", error);
+            setSnackBarMessage("Error uploading the file. Please try again later.");
+            setSnackBarOpen(true);
         }
     };
 
@@ -64,24 +116,71 @@ export const UpdateCategoryForm = () => {
         setPreviewPictureUrl1(null);
     };
 
+    const handleFileUpload1 = (event) => handleFileUpload(event, setPictureUrl1, setPreviewPictureUrl1);
+
     // Handle category update
     const handleUpdateCategory = async () => {
         const updatedCategory = {
             categoryName,
             description,
-            pictureUrl1, // In a real scenario, you might need to upload this to a server and get back a URL
+            picture: pictureUrl1, // In a real scenario, you might need to upload this to a server and get back a URL
             isActive: true, // Assuming isActive is handled here
         };
 
         try {
             await updateCategory(categoryId, updatedCategory);
-            console.log('Category updated successfully');
+
+            setSuccessSnackBarMessage("Category updated successfully.");
+            setSuccessSnackBarOpen(true);
         } catch (error) {
-            console.error('Error updating category', error);
+            if (error.response && error.response.data?.message) {
+                setSnackBarMessage(error.response.data.message);
+                setSnackBarOpen(true);
+            } else if (!error.response) {
+                setSnackBarMessage("Unable to connect to the server. Please check your network connection.");
+                setSnackBarOpen(true);
+            } else {
+                setSnackBarMessage("An error occurred. Please try again later.");
+                setSnackBarOpen(true);
+            }
         }
     };
 
     return (
+        <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={successSnackBarOpen}
+                onClose={handleCloseSuccessSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSuccessSnackBar}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {successSnackBarMessage}
+                </Alert>
+            </Snackbar>
+
         <div className="w-full bg-gray-100 h-screen overflow-y-auto mt-12">
             <div className={"h-screen p-6"}>
                 <div className={"flex border-b border-dashed border-border-base pb-5 md:pb-7"}>
@@ -172,11 +271,12 @@ export const UpdateCategoryForm = () => {
                             onClick={handleUpdateCategory}
                             disabled={!isEdited} // Disable if no changes
                         >
-                            {isEdited ? 'Update Category' : 'No Changes'}
+                            {isEdited ? 'Save Changes' : 'No Changes'}
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

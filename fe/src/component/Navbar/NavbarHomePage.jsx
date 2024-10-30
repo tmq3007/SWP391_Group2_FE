@@ -107,8 +107,8 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             navigate("/create-shop");
         }
         else if (shopError && unverifiedShopId) {
-            if (isRejected === true) {
-                console.log("Unverified ShopID is rejected : ", unverifiedShopId);
+            if (isRejected !== true) {
+                console.log("Unverified ShopID is rejected : ", isRejected);
                 navigate(`/rejected-shop-creation/${unverifiedShopId}`);
             } else {
                 console.log("ShopID Error but Unverified ShopID is valid");

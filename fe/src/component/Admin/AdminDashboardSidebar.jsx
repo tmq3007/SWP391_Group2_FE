@@ -25,7 +25,7 @@ import {
     Group,
     NewReleases,
     RecentActors,
-    Settings,
+    Settings, Shop,
     Storefront
 } from "@mui/icons-material";
 import "../../style/ShopDashboard.css";
@@ -123,7 +123,7 @@ export const AdminDashboardSidebar = () => {
                 </ListItem>
                 <ListItem button onClick={() => handleNavigate('/all-vendors')}>
                     <ListItemIcon>
-                        <VolunteerActivismIcon fontSize="small"/>
+                        <Shop fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText primary="All Vendors"/>
                 </ListItem>
@@ -153,22 +153,8 @@ export const AdminDashboardSidebar = () => {
                 </ListItem>
             </List>
 
-            {/* SETTING MANAGEMENT section */}
-            <Divider className="mt-4 mb-4"/>
-            <List
-                subheader={
-                    <ListSubheader style={{ borderRadius: '12px', backgroundColor: '#f5f5f5' }} component="div" className="text-sm font-semibold text-gray-400">
-                        SETTING MANAGEMENT
-                    </ListSubheader>
-                }
-            >
-                <ListItem button onClick={() => handleNavigate('/settings')}>
-                    <ListItemIcon>
-                        <Settings fontSize="small"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Settings"/>
-                </ListItem>
-            </List>
+
+
 
 
         </div>

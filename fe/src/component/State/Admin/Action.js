@@ -189,3 +189,13 @@ export const getAllStatisticsShop = async () => {
         throw error;
     }
 }
+
+export const getStatisticsShop = async (shopId) => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/shops/get-statistic-shop/${shopId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching shop statistics", error);
+        throw error;
+    }
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import '../../../../style/AdminDashboard.css';
 import SearchIcon from "@mui/icons-material/Search";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import {ChevronLeft, ChevronRight, FilterList} from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import {
@@ -12,7 +12,7 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
+    DialogTitle, IconButton, Menu, MenuItem,
     Snackbar
 } from "@mui/material";
 import { banUser, unbanUser, getAllVendors} from "../../../State/Admin/Action";
@@ -26,11 +26,23 @@ function VendorsPage() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [usersData, setUsersData] = useState([]);
 
+    const [shopStatusFilter, setShopStatusFilter] = useState('');
+    const [anchorEl, setAnchorEl] = useState(null);
+
     const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
     const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
 
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleFilterClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleFilterClose = (status) => {
+        setAnchorEl(null);
+        setShopStatusFilter(status);
+    };
 
     const handleCloseSnackBar = (event, reason) => {
         if (reason === "clickaway") {
@@ -86,11 +98,12 @@ function VendorsPage() {
         fetchSummaryData();
     }, []);
 
-    const filteredUsers = usersData.filter(
-        (user) =>
-            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = usersData.filter((user) => {
+        const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) || user.shopName.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesFilter = !shopStatusFilter || user.shopStatus === shopStatusFilter;
+        return matchesSearch && matchesFilter;
+    });
 
     const handleOpenModal = (user) => {
         setSelectedUser(user);
@@ -106,12 +119,12 @@ function VendorsPage() {
             try {
                 if (selectedUser.status === 'Active') {
                     await banUser(selectedUser.id).then((response) => {
-                        setSuccessSnackBarMessage("User has been banned successfully.");
+                        setSuccessSnackBarMessage("Vendor has been banned successfully.");
                         setSuccessSnackBarOpen(true);
                     });
                 } else {
                     await unbanUser(selectedUser.id).then((response) => {
-                        setSuccessSnackBarMessage("User has been unbanned successfully.");
+                        setSuccessSnackBarMessage("Vendor has been unbanned successfully.");
                         setSuccessSnackBarOpen(true);
                     });
                 }
@@ -185,14 +198,27 @@ function VendorsPage() {
                         <div className="search-container mr-20 top-2">
                             <input
                                 type="text"
-                                placeholder="Search by Name"
+                                placeholder="Search by Name, Email, or Shop Name"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="search-input"
                             />
                             <span className="search-icon">
-                                <SearchIcon />
+                                <SearchIcon/>
                             </span>
+                        </div>
+                        <div className='flex'>
+                            <IconButton className="w-[40px] h-[40px] relative top-2.5" onClick={handleFilterClick}>
+                                <FilterList/>
+                            </IconButton>
+                            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => handleFilterClose('')}>
+                                <MenuItem onClick={() => handleFilterClose('')}>All</MenuItem>
+                                <MenuItem onClick={() => handleFilterClose('Active')}>Active</MenuItem>
+                                <MenuItem onClick={() => handleFilterClose('Pending Approve')}>Pending
+                                    Approve</MenuItem>
+                                <MenuItem onClick={() => handleFilterClose('Being Rejected')}>Being Rejected</MenuItem>
+                                <MenuItem onClick={() => handleFilterClose('Not Registered')}>Not Registered</MenuItem>
+                            </Menu>
                         </div>
                     </div>
                 </div>
@@ -215,7 +241,7 @@ function VendorsPage() {
                         <tr key={user.id}>
                             <td>#ID: {user.id}</td>
                             <td>
-                                <div className="customer-info">
+                            <div className="customer-info">
                                     <img src={user.avatar} alt="Avatar" className="avatar"/>
                                     <div className="customer-details">
                                         <span className="customer-name">{user.name}</span>
@@ -290,7 +316,7 @@ function VendorsPage() {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {`Are you sure you want to ${selectedUser?.status === 'Active' ? 'ban' : 'unban'} this customer?`}
+                        {`Are you sure you want to ${selectedUser?.status === 'Active' ? 'ban' : 'unban'} this vendor?`}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

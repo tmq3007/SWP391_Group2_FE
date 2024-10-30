@@ -5,7 +5,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import {ChevronLeft, ChevronRight, Edit} from "@mui/icons-material";
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+    Alert,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Snackbar
+} from '@mui/material';
 import {useNavigate} from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {deleteCategory, getAllCategoriesAdmin} from "../../../State/Admin/Action";
@@ -20,6 +29,27 @@ function CategoriesPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+    const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
+
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSnackBarOpen(false);
+    };
+
+    const handleCloseSuccessSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSuccessSnackBarOpen(false);
+    };
+
 
     // Fetch categories from the API on component mount
     useEffect(() => {
@@ -83,6 +113,9 @@ function CategoriesPage() {
             // Call the deleteCategory API function
             await deleteCategory(selectedCategory.id);
 
+            setSuccessSnackBarMessage("Category deleted successfully");
+            setSuccessSnackBarOpen(true);
+
             // Update local state to remove the deleted category
             setCategories(prevCategories =>
                 prevCategories.filter(category => category.id !== selectedCategory.id)
@@ -91,7 +124,16 @@ function CategoriesPage() {
             // Close the delete modal
             setIsDeleteModalOpen(false);
         } catch (error) {
-            console.error("Error deleting category", error);
+            if (error.response && error.response.data?.message) {
+                setSnackBarMessage(error.response.data.message);
+                setSnackBarOpen(true);
+            } else if (!error.response) {
+                setSnackBarMessage("Unable to connect to the server. Please check your network connection.");
+                setSnackBarOpen(true);
+            } else {
+                setSnackBarMessage("An error occurred. Please try again later.");
+                setSnackBarOpen(true);
+            }
         }
     };
 
@@ -108,6 +150,40 @@ function CategoriesPage() {
     const currentCategories = filteredCategories.slice(offset, offset + PER_PAGE);
 
     return (
+        <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={successSnackBarOpen}
+                onClose={handleCloseSuccessSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSuccessSnackBar}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {successSnackBarMessage}
+                </Alert>
+            </Snackbar>
+
         <div style={{ flex: 1, padding: '20px', marginTop: '36px' }}>
             <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
                 <div className='flex justify-between mt-3'>
@@ -149,10 +225,10 @@ function CategoriesPage() {
                         <tr key={category.id}>
                             <td>{category.id}</td>
                             <td>
-                                <div className="category-info flex relative left-40">
+                                <div className="category-info flex relative left-20">
                                     <img src={category.icon} alt="Category Icon" className="avatar" />
                                     <div className="category-details">
-                                        <span className="category-name relative top-2">{category.name}</span>
+                                        <span className="category-name relative top-2 font-semibold">{category.name}</span>
                                     </div>
                                 </div>
                             </td>
@@ -162,13 +238,6 @@ function CategoriesPage() {
                                 </span>
                             </td>
                             <td>
-                                <button onClick={() => handleStatusToggle(category)} className='toggle-status'>
-                                    {category.status === 'Active' ? (
-                                        <ToggleOnIcon style={{ color: 'green' }} />
-                                    ) : (
-                                        <ToggleOffIcon style={{ color: 'grey' }} />
-                                    )}
-                                </button>
                                 <button onClick={() => handleNavigate(`/edit-category/${category.id}`)} className='edit-category'>
                                     <Edit />
                                 </button>
@@ -230,6 +299,7 @@ function CategoriesPage() {
                     </Button>
                 </DialogActions>
             </Dialog>
+        </div>
         </div>
     );
 }

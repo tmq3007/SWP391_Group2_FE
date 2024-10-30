@@ -13,6 +13,7 @@ import SettingPage from "./AdminDashboardDetails/AdminPage/SettingPage";
 import CategoriesPage from "./AdminDashboardDetails/AdminPage/CategoriesPage";
 import {CreateCategoryForm} from "./Form/CreateCategoryForm";
 import {UpdateCategoryForm} from "./Form/UpdateCategoryForm";
+import {DetailShopPage} from "./AdminDashboardDetails/AdminPage/DetailShopPage";
 
 export const AdminDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -56,6 +57,8 @@ export const AdminDashboard = () => {
                     <Route path="/create-category" element={<CreateCategoryForm />} />
 
                     <Route path="/edit-category/:categoryId" element={<UpdateCategoryForm />} />
+
+                    <Route path="/detail-shop/:shopId" element={<DetailShopPage/>} />
 
                         {/* Add more routes here */}
 
