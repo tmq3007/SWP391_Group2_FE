@@ -92,14 +92,31 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 .then(response => {
                     setUnverifiedShopId(response.data.result);
                     setUnverifiedShopError(false);
-                    setIsRejected(response.data.isRejected)
+                    console.log("UnverifiedShopId : ", response.data.result);
                 })
                 .catch(error => {
                     console.error("Error fetching UnshopId:", error);
                     setUnverifiedShopError(true);
                 });
         }
-    }
+    };
+
+    useEffect(() => {
+        if (unverifiedShopId) {
+            axios.get(`http://localhost:8080/api/v1/get-status-rejected/${unverifiedShopId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    setIsRejected(response.data.result);
+                })
+                .catch(error => {
+                    console.error("Error fetching statusRejected:", error);
+                    setUnverifiedShopError(true);
+                });
+        }
+    }, [unverifiedShopId, token]);
 
     useEffect(() => {
         if (shopError && unverifiedShopError) {
@@ -107,8 +124,8 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             navigate("/create-shop");
         }
         else if (shopError && unverifiedShopId) {
-            if (isRejected === true) {
-                console.log("Unverified ShopID is rejected : ", unverifiedShopId);
+            if (!isRejected) {
+                console.log("Unverified ShopID is rejected: ", unverifiedShopId);
                 navigate(`/rejected-shop-creation/${unverifiedShopId}`);
             } else {
                 console.log("ShopID Error but Unverified ShopID is valid");
@@ -120,6 +137,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             navigate("/vendor-dashboard");
         }
     }, [shopError, unverifiedShopError, shopId, unverifiedShopId, isRejected, navigate]);
+
 
 
 
