@@ -90,7 +90,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 }
             })
                 .then(response => {
-                    setUnverifiedShopId(response.data);
+                    setUnverifiedShopId(response.data.result);
                     setUnverifiedShopError(false);
                     setIsRejected(response.data.isRejected)
                 })
@@ -108,8 +108,9 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
         }
         else if (shopError && unverifiedShopId) {
             if (!isRejected) {
-                console.log("Unverified ShopID is rejected");
-                navigate("/rejected-shop-creation");
+                console.log("Unverified ShopID is rejected : ", unverifiedShopId);
+
+                navigate(`/rejected-shop-creation/${unverifiedShopId}`);
             } else {
                 console.log("ShopID Error but Unverified ShopID is valid");
                 navigate("/processing");
