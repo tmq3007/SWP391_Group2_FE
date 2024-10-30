@@ -35,9 +35,9 @@ export const CreateShop = () => {
         const shopData = {
             shopName,
             description,
-            country,
+            district: country,
             city,
-            state,
+            subdistrict: state,
             address,
             phone,
             logo: logo,
