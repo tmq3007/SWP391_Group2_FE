@@ -5,7 +5,7 @@ export const Homepage = () => {
     return (
         <div style={{ display: 'flex', marginTop:'10px', marginLeft: '20px' }}>
             <div style={{ width: '75%' }}>
-                <h2 style={{fontWeight:"bold"}}>Discovery</h2>
+                <h4 style={{fontWeight:"bold"}}>Discovery</h4>
                 <ul>
                     <li>
                         <Link to="/help-center/order-payment" style={{color: '#019376', textDecoration: 'none'}}>

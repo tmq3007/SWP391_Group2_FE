@@ -18,7 +18,7 @@ export const NewUserPage = () => {
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
-                   <h2 style={{fontWeight:"bold"}}> How To Search Product On Shopii</h2>
+                   <h4 style={{fontWeight:"bold"}}> How To Search Product On Shopii</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>Step 1: On the Shopee application, select Search bar > enter related keywords > Search</p>
@@ -31,7 +31,7 @@ export const NewUserPage = () => {
                     aria-controls="panel2-content"
                     id="panel2-header"
                 >
-                    <h2 style={{fontWeight: "bold"}}> Product Favourite Feature On Shopii</h2>
+                    <h4 style={{fontWeight: "bold"}}> Product Favourite Feature On Shopii</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>The Like Products feature on Shopii is a very useful feature for you when you need to save/mark your favorite products into a separate list to monitor price status, inventory... and consider purchasing. shopping in the near future</p>

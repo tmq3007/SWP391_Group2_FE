@@ -17,7 +17,7 @@ export const OrderPaymentPage = () => {
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
-                    <h2 style={{fontWeight:"bold"}}> How to delete/remove products from the Shopping Cart?</h2>
+                    <h4 style={{fontWeight:"bold"}}> How to delete/remove products from the Shopping Cart?</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>In your Shopping Cart > select Delete Icon for the products you want to delete from the Shopping Cart.</p>
@@ -30,7 +30,7 @@ export const OrderPaymentPage = () => {
                     aria-controls="panel2-content"
                     id="panel2-header"
                 >
-                    <h2 style={{fontWeight: "bold"}}> Reduce the number of products to 0</h2>
+                    <h4 style={{fontWeight: "bold"}}> Reduce the number of products to 0</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>You can use this method when you want to manually remove each product from the Shopping Cart

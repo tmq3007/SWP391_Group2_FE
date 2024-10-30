@@ -17,7 +17,7 @@ export const ExplorePage = () => {
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
-                    <h2 style={{fontWeight:"bold"}}> Pay By QR Code</h2>
+                    <h4 style={{fontWeight:"bold"}}> Pay By QR Code</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>You can scan QR code to pay for the order by click QR Code in payment method</p>
@@ -33,7 +33,7 @@ export const ExplorePage = () => {
                     aria-controls="panel2-content"
                     id="panel2-header"
                 >
-                    <h2 style={{fontWeight: "bold"}}>Cash On Delivery</h2>
+                    <h4 style={{fontWeight: "bold"}}>Cash On Delivery</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>You can pay after receive orders by click COD in payment method</p>

@@ -8,6 +8,8 @@ import { NewUserPage } from "./HelpingCenterPage/NewUserPage";
 import { ExplorePage } from "./HelpingCenterPage/ExplorePage";
 import { OrderPaymentPage } from "./HelpingCenterPage/OrderPaymentPage";
 import PromotionsPage from "./HelpingCenterPage/PromotionsPage";
+import PolicyPage from "./HelpingCenterPage/PolicyPage";
+import AccountPage from "./HelpingCenterPage/AccountPage";
 
 export const HelpingCenter = () => {
     const [showPopup, setShowPopup] = useState(false);
@@ -51,6 +53,8 @@ export const HelpingCenter = () => {
                         <Route path="/explore" element={<ExplorePage />} />
                         <Route path="/order-payment" element={<OrderPaymentPage />} />
                         <Route path="/promotions" element={<PromotionsPage />} />
+                        <Route path="/shopii-policies" element={<PolicyPage/>}/>
+                        <Route path="/shopii-account" element={<AccountPage />}/>
                     </Routes>
                 </div>
             </div>

@@ -18,7 +18,7 @@ const PromotionsPage = () => {
                     aria-controls="panel1-content"
                     id="panel1-header"
                 >
-                    <h2 style={{fontWeight:"bold"}}> Sale Event</h2>
+                    <h4 style={{fontWeight:"bold"}}> Sale Event</h4>
                 </AccordionSummary>
                 <AccordionDetails>
                     <p>Free Ship For All Order</p>
