@@ -1,10 +1,11 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useDispatch, useSelector} from "react-redux";
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
 
 export const CreateShop = () => {
@@ -19,6 +20,8 @@ export const CreateShop = () => {
     const [coverImage, setCoverImage] = React.useState(null);
     const [previewLogo, setPreviewLogo] = React.useState(null);
     const [previewCoverImage, setPreviewCoverImage] = React.useState(null);
+    const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
+
 
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('jwt');
@@ -53,8 +56,8 @@ export const CreateShop = () => {
         })
             .then(response => {
                 console.log("Shop created successfully!", response);
-                alert("Shop created successfully!");
-                navigate("/processing")
+                setIsSuccessPopupOpen(true);
+
             })
             .catch(error => {
                 console.error("Error creating shop:", error);
@@ -115,8 +118,9 @@ export const CreateShop = () => {
         setPreviewCoverImage(null);
     };
 
-    const handleCountryChange = (event) => {
-        setCountry(event.target.value);
+    const handleSuccessPopupClose = () => {
+        setIsSuccessPopupOpen(false);
+        navigate("/processing");
     };
 
     const navigate = useNavigate();
@@ -259,6 +263,15 @@ export const CreateShop = () => {
                         Create Shop
                     </button>
                 </div>
+                {/* Success Popup */}
+                <Dialog open={isSuccessPopupOpen} onClose={handleSuccessPopupClose}>
+                    <DialogTitle>Success!</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Your shop creation has been sent successfully.
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
 
             </div>
         </div>
