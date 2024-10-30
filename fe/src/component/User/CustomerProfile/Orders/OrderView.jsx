@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-const OrderView = ({ order, loadingStatus }) => {
+const OrderView = (order) => {
     // Static order data for demonstration
     const staticOrder = {
         tracking_number: '12345ABC',
@@ -21,6 +21,9 @@ const OrderView = ({ order, loadingStatus }) => {
         order_status: 'Completed',
         delivery_time: '2024-10-05',
     };
+    if (!order) {
+        return <Typography>Select an order to view details.</Typography>; // Show a message if no order is selected
+    }
 
     // Calculate totals
     const total = `$${staticOrder.paid_total}`;
@@ -43,26 +46,31 @@ const OrderView = ({ order, loadingStatus }) => {
                         <div className="mb-6 grid gap-4 sm:grid-cols-2 md:mb-12 lg:grid-cols-4">
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Order Number</h3>
-                                <p className="text-sm text-body-dark">{staticOrder.tracking_number}</p>
+                                <p className="text-sm text-body-dark">{order.order.orderId}</p>
                             </div>
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Date</h3>
-                                <p className="text-sm text-body-dark">{staticOrder.created_at}</p>
+                                <p className="text-sm text-body-dark">{order.order.orderDate}</p>
                             </div>
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Total</h3>
-                                <p className="text-sm text-body-dark">{total}</p>
+                                <p className="text-sm text-body-dark">${order.order.finalTotal}</p>
                             </div>
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Payment Method</h3>
-                                <p className="text-sm text-body-dark">{staticOrder.payment_gateway}</p>
+                                <p className="text-sm text-body-dark">
+                                    {order.order.paymentId === 1 ? 'COD' : 'QR Code'}
+                                </p>
                             </div>
                         </div>
 
                         {/* Order Status */}
                         <div className="mb-8 flex w-full items-center justify-center md:mb-12">
-                            <Typography variant="h6" className="font-semibold text-center">
-                                Order Status: {staticOrder.order_status}
+                            <Typography
+                                variant="h6"
+                                className={`font-semibold rounded-full text-center p-2 rounded ${order.order.isPaid ? 'bg-green-100' : 'bg-red-100'}`}
+                            >
+                                Order Status: {order.order.isPaid ? 'Paid' : 'Not Paid'}
                             </Typography>
                         </div>
 
@@ -72,23 +80,16 @@ const OrderView = ({ order, loadingStatus }) => {
                                 <div>
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-5/12 text-sm font-semibold text-heading">Sub Total:</strong>
-                                        <span className="w-7/12 text-sm pl-4">{subTotal}</span>
+                                        <span className="w-7/12 text-sm pl-4">{order.order.total}</span>
                                     </p>
-                                    <p className="mt-5 flex text-body-dark">
-                                        <strong className="w-5/12 text-sm font-semibold text-heading">Shipping Charge:</strong>
-                                        <span className="w-7/12 text-sm pl-4">{shippingCharge}</span>
-                                    </p>
-                                    <p className="mt-5 flex text-body-dark">
-                                        <strong className="w-5/12 text-sm font-semibold text-heading">Tax:</strong>
-                                        <span className="w-7/12 text-sm pl-4">{tax}</span>
-                                    </p>
+
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-5/12 text-sm font-semibold text-heading">Discount:</strong>
                                         <span className="w-7/12 text-sm pl-4">{discount}</span>
                                     </p>
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-5/12 text-sm font-semibold text-heading">Total:</strong>
-                                        <span className="w-7/12 text-sm pl-4">{totalAmount}</span>
+                                        <span className="w-7/12 text-sm pl-4">${order.order.finalTotal}</span>
                                     </p>
                                 </div>
                             </div>
@@ -98,15 +99,15 @@ const OrderView = ({ order, loadingStatus }) => {
                                 <div>
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-4/12 text-sm font-semibold text-heading">Name:</strong>
-                                        <span className="w-8/12 text-sm pl-4">{staticOrder.customer_name}</span>
+                                        <span className="w-8/12 text-sm pl-4">{order.order.user.firstName +' ' + order.order.user.lastName}</span>
                                     </p>
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-4/12 text-sm font-semibold text-heading">Total Items:</strong>
-                                        <span className="w-8/12 text-sm pl-4">{staticOrder.products.length}</span>
+                                        <span className="w-8/12 text-sm pl-4">{order.order.orderItemsList.length}</span>
                                     </p>
                                     <p className="mt-5 flex text-body-dark">
-                                        <strong className="w-4/12 text-sm font-semibold text-heading">Delivery Time:</strong>
-                                        <span className="w-8/12 text-sm pl-4">{staticOrder.delivery_time}</span>
+                                        <strong className="w-4/12 text-sm font-semibold text-heading">Payment Time:</strong>
+                                        <span className="w-8/12 text-sm pl-4">{order.order.paymentDate}</span>
                                     </p>
                                 </div>
                             </div>
@@ -117,24 +118,24 @@ const OrderView = ({ order, loadingStatus }) => {
                             <Table>
                                 <TableHead className="bg-gray-100">
                                     <TableRow>
-                                        <TableCell className="text-left font-semibold">Item</TableCell>
+                                        <TableCell className="text-left font-semibold">Image</TableCell>
+                                        <TableCell className="text-left font-semibold">Name</TableCell>
+
                                         <TableCell className="text-center font-semibold">Quantity</TableCell>
                                         <TableCell className="text-right font-semibold">Price</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {staticOrder.products.map((item, index) => (
+                                    {order.order.orderItemsList.map((item, index) => (
                                         <TableRow key={index} className="border-b">
-                                            <TableCell className="flex flex-row items-center space-x-4">
-                                                <img src={item.image} alt={item.name} className="w-12 h-12 object-cover" />
-                                                <div className="flex flex-col">
-                                                    <p className="font-medium">{item.name}</p>
-                                                    <p className="text-gray-500">1</p> {/* Adjust this as needed */}
-                                                </div>
-                                            </TableCell>
+                                            <TableCell className="flex flex-row items-center space-x-4 flex">
+                                                <img src={item.productImage} alt={item.productName} className="w-12 h-12 object-cover" />
 
-                                            <TableCell className="text-center">{item.quantity}</TableCell>
-                                            <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
+                                            </TableCell>
+                                            <TableCell className="text-center">{item.productName}</TableCell>
+
+                                            <TableCell className="text-center">{item.productQuantity}</TableCell>
+                                            <TableCell className="text-right">${item.itemTotalPrice.toFixed(2)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
