@@ -27,10 +27,10 @@ export const CreateShop = () => {
 
 
     const handleCreateShop = () => {
-        // if (!shopName || !description || !country || !city || !state || !address || !phone ) {
-        //     alert("Please fill out all required fields.");
-        //     return;
-        // }
+         if (!shopName || !description || !city || !state || !address || !phone ) {
+            alert("Please fill out all required fields.");
+            return;
+         }
 
         const shopData = {
             shopName,
@@ -54,6 +54,7 @@ export const CreateShop = () => {
             .then(response => {
                 console.log("Shop created successfully!", response);
                 alert("Shop created successfully!");
+                navigate("/processing")
             })
             .catch(error => {
                 console.error("Error creating shop:", error);
@@ -249,7 +250,7 @@ export const CreateShop = () => {
                     </div>
                     <button
                         className="bg-[#009f7f] text-white py-2 px-6 rounded-md shadow hover:bg-[#007f63] transition duration-300 ease-in-out"
-                        onClick={handleCreateShop}>
+                        onClick={handleCreateShop} >
                         Create Shop
                     </button>
                 </div>

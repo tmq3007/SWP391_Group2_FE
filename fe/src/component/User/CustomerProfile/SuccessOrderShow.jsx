@@ -39,7 +39,7 @@ const getUserName = async (id, jwt) => {
 /////////////////////////////////////////////////////////////////////////
 const setIsPaid = async (id, jwt, choice) => {
     let url = "";
-    switch (i){
+    switch (choice){
         case 1:{ // set ISPAID to true
             url = `http://localhost:8080/api/v1/orders/isPaidToTrue/${id}`
             break;
@@ -151,7 +151,7 @@ async function processOrderItems(items, orderId, token) {
             itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
             finalPrice: (
                 (item.product.unitSellPrice * item.quantity) -
-                ((item.product.unitSellPrice * item.quantity) * (item.product.discount / 100))
+                ((item.product.unitSellPrice * item.quantity) * (item.product.discount  ))
             ).toFixed(2),
             orders: {
                 orderId: orderId,
@@ -172,7 +172,7 @@ async function processOrderItems(items, orderId, token) {
         await Promise.all(orderItemPromises);
         console.log("All order items processed successfully.");
 
-        // Delete amount of product in each items, which have been order
+        // Delete amount of product in each item, which have been order
         await deleteAmountProducts(items, token);
         // Delete cart items after processing all order items
         await deleteCartItems(items, items[0].userId, token); // Ensure items[0].userId exists
@@ -191,6 +191,20 @@ const SuccessOrderShow = () => {
     const [name, setName] = useState('');
     const [openWarning, setOpenWarning] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
+    const [openConfirmPayWhenRecieve, setOpenConfirmPayWhenRecieve] = useState(false);
+    const [openConfirmPayViaQr, setOpenConfirmPayViaQr] = useState(false);
+    const handleOpenConfirmPayWhenRecieve = () => {
+        setOpenConfirmPayWhenRecieve(false);
+    }
+    const handleOpenConfirmPayViaQr = () => {
+        setOpenConfirmPayViaQr(false);
+    }
+    const a = () => {
+        setOpenConfirmPayWhenRecieve(true);
+    }
+    const b = () => {
+        setOpenConfirmPayViaQr(true);
+    }
     const handleOpenSuccess = () => {
         navigate('/');
     }
@@ -252,15 +266,20 @@ const SuccessOrderShow = () => {
     const payByQr = async () => {
         try {
             order.paymentId = 2;
-            const response = await addOrder(order, token);
-            const orderId = response.orderId;
-            console.log(response);
-            console.log(orderId);
-            await processOrderItems(items, orderId, token);
+           // order.isPaid=true;
+            //const response = await addOrder(order, token);
+            //const orderId = response.orderId;
+            //const total = order.totalPrice;
+            //console.log("total final", order.totalPrice );
+            //console.log("orderId",orderId);
+            //await processOrderItems(items, orderId, token);
             //
             // NAVIGATE HERE AFTER SUCCESSFUL CREATE ORDER
             //
-            setOpenSuccess(true);
+            console.log("order succ", order)
+
+            navigate("/payment", { state: { order: order ,items:items, token: token} });
+            //setOpenSuccess(true);
         } catch (error) {
             console.error("Error adding order:", error);
         }
@@ -307,7 +326,7 @@ const SuccessOrderShow = () => {
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <PointOfSaleIcon className={"text-green-500"} style={{ fontSize: '15px' }}/>
                                             <Typography
-                                                className={"font-semibold text-1xl text-green-500"}>{`${item.product.unitSellPrice - (item.product.unitSellPrice * (item.product.discount / 100))}$`} / {item.product.measurementUnit}</Typography>
+                                                className={"font-semibold text-1xl text-green-500"}>{`${item.product.unitSellPrice - (item.product.unitSellPrice * (item.product.discount  ))}$`} / {item.product.measurementUnit}</Typography>
                                         </div>
                                     </div>
                                 </Box>
@@ -338,7 +357,7 @@ const SuccessOrderShow = () => {
                                                 className={"line-through"}>{item.product.unitSellPrice * item.quantity}$</Typography>
                                         </div>
                                         <Typography
-                                            className={"font-semibold text-green-500 "}>{item.product.unitSellPrice * item.quantity - (item.product.unitSellPrice * item.quantity * (item.product.discount / 100))}$</Typography>
+                                            className={"font-semibold text-green-500 "}>{item.product.unitSellPrice * item.quantity - (item.product.unitSellPrice * item.quantity * (item.product.discount ))}$</Typography>
                                     </div>
                                 </Box>
                             </Box>
@@ -409,11 +428,11 @@ const SuccessOrderShow = () => {
                                 </td>
                                 <td>
                                     <Typography className={"line-through"}>{item.quantity} x {item.product.unitSellPrice}$</Typography>
-                                    <Typography className={"text-green-500"}>{item.quantity} x {item.product.unitSellPrice - item.product.unitSellPrice * (item.product.discount / 100)}$</Typography>
+                                    <Typography className={"text-green-500"}>{item.quantity} x {item.product.unitSellPrice - item.product.unitSellPrice * (item.product.discount)}$</Typography>
                                 </td>
                                 <td>
                                     <Typography className={"line-through"}>{item.quantity * item.product.unitSellPrice}$</Typography>
-                                    <Typography className={"text-green-500"}>{(item.quantity * item.product.unitSellPrice - (item.quantity * item.product.unitSellPrice * (item.product.discount / 100))).toFixed(2)}$</Typography>
+                                    <Typography className={"text-green-500"}>{(item.quantity * item.product.unitSellPrice - (item.quantity * item.product.unitSellPrice * (item.product.discount ))).toFixed(2)}$</Typography>
                                 </td>
                             </tr>
                         ))}
@@ -435,7 +454,7 @@ const SuccessOrderShow = () => {
                     </div>
                     <Divider/>
                     <div className={"flex justify-between w-[100%] mt-3 cursor-pointer"} style={{gridTemplateColumns: "50% 50%"}}>
-                        <div onClick={payWhenRecieve}
+                        <div onClick={a}
                             className="w-[50%] flex justify-center items-center group hover:bg-white p-2 rounded transition bg-green-500 border-2 hover:border-green-500">
 
                             <PaidIcon className="text-white mr-2 group-hover:text-green-500 transition"/>
@@ -443,7 +462,7 @@ const SuccessOrderShow = () => {
                                 Pay when receive
                             </Typography>
                         </div>
-                        <div onClick={payByQr}
+                        <div onClick={b}
                             className="w-[50%] flex justify-center items-center group hover:bg-white p-2 rounded transition bg-green-500 border-2 hover:border-green-500">
                             <QrCodeIcon className="text-white mr-2 group-hover:text-green-500 transition"/>
                             <Typography className="font-semibold text-white group-hover:text-green-500 transition">
@@ -470,6 +489,24 @@ const SuccessOrderShow = () => {
                     <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>Create order success!</Typography>
                     <Typography marginTop={"20px"} margin={"15px"}>Back to homepage and see more item.</Typography>
                     <Button onClick={handleOpenSuccess} variant={"contained"} color={"primary"} className={"ml-[20px]"}>To home page</Button>
+                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to back to homepage.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openConfirmPayWhenRecieve} onClose={handleOpenConfirmPayWhenRecieve}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>Confirm pay when receive!</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>Pay when receive</Typography>
+                    <Button onClick={payWhenRecieve} variant={"contained"} color={"primary"} className={"ml-[20px]"}>Confirm</Button>
+                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to back to homepage.)</Typography>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openConfirmPayViaQr} onClose={handleOpenConfirmPayViaQr}>
+                <DialogContent >
+                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>Confirm payment via QR!</Typography>
+                    <Typography marginTop={"20px"} margin={"15px"}>Pay via QR</Typography>
+                    <Button onClick={payByQr} variant={"contained"} color={"primary"} className={"ml-[20px]"}>Confirm</Button>
                     <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to back to homepage.)</Typography>
                 </DialogContent>
             </Dialog>

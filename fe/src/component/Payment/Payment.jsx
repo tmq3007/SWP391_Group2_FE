@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NavbarHomePage } from "../Navbar/NavbarHomePage";
+import axios from "axios";
 
 // Popup component for showing success message
 const Popup = ({ message }) => (
@@ -23,59 +24,182 @@ const Popup = ({ message }) => (
 const Payment = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
+    // const token = localStorage.getItem("jwt");
+    const order = location.state?.order || {};
+    const { items, token } = location.state || {};
     // Access `amount`, `accountInfo`, and `orderId` from location.state
-    const { amount , accountInfo , orderId } = location.state || {};
+    //const { order } = location.state || {};
+    const randomInt = Math.floor(Math.random() * 10000) + 1;
 
+    console.log("order",order)
     const MY_BANK = {
         BANK_ID: "MBBank",
         ACCOUNT_ID: "99999300799999"
     };
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);  // State to show popup
-    const description = accountInfo + orderId;
+    const [showPopup, setShowPopup] = useState(false);
+   // const [hasCheckedPayment, setHasCheckedPayment] = useState(false);
+
+    const  amount = order.finalTotal;
+    //const  amount = 8400;
+    const accountInfo ="SHOPII"
+    const description = accountInfo + randomInt ;
+    //const description = "SHOPII1165"
     const vietQrContent = `https://img.vietqr.io/image/${MY_BANK.BANK_ID}-${MY_BANK.ACCOUNT_ID}-qr_only.png?amount=${amount}&addInfo=${description}&accountName=${accountInfo}`;
 
+    /////////
+    const deleteCartItem = async (uid,oid, jwt) => {
+        try {
+            const response = await axios.delete(`http://localhost:8080/api/v1/cart/delete/user/${uid}/cartItem/${oid}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log("Error fetching user data:", error);
+            throw error;
+        }
+    };
+    async function deleteCartItems(items, userId, token) {
+        const deletePromises = items.map((item) => deleteCartItem(userId, item.id, token)); // No need for async/await here
+
+        try {
+            await Promise.all(deletePromises);
+            console.log('All items deleted successfully');
+        } catch (error) {
+            console.error('Error deleting items:', error);
+        }
+    }
+    const addOrderItems = async (id,orderItems, jwt) => {
+        try {
+            const response = await axios.post(`http://localhost:8080/api/v1/orderItems/${id}`,orderItems, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log("Error fetching user data:", error);
+            throw error;
+        }
+    };
+    const deleteAmountProduct = async (id,amount,token) => {
+        try {
+            const response = await axios.delete(`http://localhost:8080/api/v1/products/deleteAmount/${id}/${amount}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log("Error fetching user data:", error);
+            throw error;
+        }
+    }
+    const deleteAmountProducts = async (items, jwt) => {
+        const deleteAmountPromises = items.map((item) => deleteAmountProduct(item.product.productId, item.quantity, jwt));
+        try {
+            await Promise.all(deleteAmountPromises);
+            console.log('All items deleted successfully');
+        } catch (error) {
+            console.error('Error deleting items:', error);
+        }
+    };
+    const addOrder = async (order, jwt) => {
+        try {
+            const response = await axios.post(`http://localhost:8080/api/v1/orders`,order, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log("Error fetching user data:", error);
+            throw error;
+        }
+    };
+    async function processOrderItems(items, orderId, token) {
+        const orderItemPromises = items.map(async (item) => {
+            const orderItems = {
+                productName: item.product.productName,
+                productImage: item.product.pictureUrl,
+                productSellPrice: item.product.unitSellPrice,
+                discount: item.product.discount,
+                productQuantity: item.quantity,
+                itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
+                finalPrice: (
+                    (item.product.unitSellPrice * item.quantity) -
+                    ((item.product.unitSellPrice * item.quantity) * (item.product.discount  ))
+                ).toFixed(2),
+                orders: {
+                    orderId: orderId,
+                },
+                shop: {
+                    shopId: item.product.shop.shopId,
+                }
+            };
+
+            console.log("Order Item:", orderItems);
+
+            // Call addOrderItems and wait for the result
+            await addOrderItems(orderId, orderItems, token);
+        });
+
+        try {
+            // Wait for all order item promises to complete
+            await Promise.all(orderItemPromises);
+            console.log("All order items processed successfully.");
+
+            // Delete amount of product in each item, which have been order
+            await deleteAmountProducts(items, token);
+            // Delete cart items after processing all order items
+            await deleteCartItems(items, items[0].userId, token); // Ensure items[0].userId exists
+            console.log("Cart items deleted after processing orders.");
+
+        } catch (error) {
+            console.error("Error processing order items:", error);
+        }
+    }
+    const getUserName = async (id, jwt) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/users/getUsername/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log("Error fetching user data:", error);
+            throw error;
+        }
+    };
+
+    /////////
     useEffect(() => {
         const timer = setTimeout(() => {
             navigate('/payment-time-out');
-        }, 30000);
+        }, 50000);
 
         return () => clearTimeout(timer);
     }, [navigate]);
 
+
+
     useEffect(() => {
-        // Check payment status every second
-        const interval = setInterval(() => {
-            if (!paymentSuccess) {
+        // Check payment status only once if not already checked
+        if (!paymentSuccess  ) {
+            const interval = setInterval(() => {
                 checkPaid(amount, description);
-            }
-        }, 1000);
+            }, 2000);
 
-        return () => clearInterval(interval);
-    }, [amount, description, paymentSuccess]);
+            return () => {
+                clearInterval(interval);
 
-    async function checkPaid(price, content) {
-        try {
-            const response = await fetch(
-                "https://script.google.com/macros/s/AKfycbxpG2eiN-BiWieYCoGF5IIp_2FbwYA4vrBqzLQtv43oI53zH5n8AqyzL8DcG6s_Hw4g/exec"
-            );
-            const data = await response.json();
-            const lastPaid = data.data[data.data.length - 1];
-            const lastPrice = lastPaid["Giá trị"];
-            const lastContent = lastPaid["Mô tả"];
-
-            if (price >= lastPrice && lastContent.includes(content)) {
-                setPaymentSuccess(true); // Update the payment success state
-                setShowPopup(true);      // Show the popup
-            } else {
-                console.log("Không thành công");
-            }
-        } catch (error) {
-            console.log(error);
+            };
         }
-    }
+    }, [amount, description, paymentSuccess ]);
 
     useEffect(() => {
         // If payment is successful, show popup and navigate to home after 1 second
@@ -88,6 +212,38 @@ const Payment = () => {
             return () => clearTimeout(timer);
         }
     }, [paymentSuccess, navigate]);
+
+    async function checkPaid(price, content) {
+        if(paymentSuccess){
+            return;
+        }else{
+            try {
+                const response = await fetch(
+                    "https://script.google.com/macros/s/AKfycbxpG2eiN-BiWieYCoGF5IIp_2FbwYA4vrBqzLQtv43oI53zH5n8AqyzL8DcG6s_Hw4g/exec"
+                );
+                const data = await response.json();
+                const lastPaid = data.data[data.data.length - 1];
+                const lastPrice = lastPaid["Giá trị"];
+                const lastContent = lastPaid["Mô tả"];
+
+                if (price >= lastPrice && lastContent.includes(content)) {
+                    setPaymentSuccess(true);
+                    const response = await addOrder(order, token);
+                    const orderId = response.orderId;
+                    order.isPaid=true;
+                    await processOrderItems(items, orderId, token);
+                    setShowPopup(true);
+                } else {
+                    console.log("Không thành công");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+    }
+
+
 
     return (
         <div style={{ fontFamily: "Roboto, sans-serif", padding: "40px", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center" }}>

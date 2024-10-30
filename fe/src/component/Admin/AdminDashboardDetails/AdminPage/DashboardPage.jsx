@@ -16,10 +16,6 @@ const DashboardPage = () => {
             </div>
 
             <div className='mt-10'>
-                <OrderStatus/>
-            </div>
-
-            <div className='mt-10'>
                 <RecentOrders/>
             </div>
 

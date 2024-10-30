@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Divider } from '@mui/material';
 import FolderOffIcon from '@mui/icons-material/FolderOff';
-const VendorDisplayNotification = ({ data }) => {
+const VendorDisplayNotification = ({ data,user }) => {
+    const cuser = user;
+    console.log("3",user);
   return (
     <Box
       sx={{

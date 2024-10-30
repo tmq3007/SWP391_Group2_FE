@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { IconButton } from "@mui/material";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import AddIcon from '@mui/icons-material/Add';
+import {jwtDecode} from "jwt-decode";
+import axios from "axios";
 
 
 /*
@@ -132,10 +134,43 @@ const notificationData = [
   { message: 'Your profile has been updated.', date: '2024-10-03' },
 ];
 
-
-const VendorRightBar = ({ selectedPage }) => {
+const getShopOrderItemsData = async (id, jwt) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/v1/orderItems/getAllByShopId/${id}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching user data:", error);
+    throw error;
+  }
+};
+const VendorRightBar = ({ selectedPage , ooo }) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('jwt');
+  const id = jwtDecode(token).userId;
+  const [user, setUser] = useState(ooo);
+  const [orderItems, setOrderItems] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getShopOrderItemsData(user.shopId, token);
+        setOrderItems(userData);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
+      }
+    };
+    fetchData();
+  }, [id, token]);
+  if (loading) {
+    return <div>Loading...</div>; // Show loading message until data is fetched
+  }
   return (
     <div className="h-[90vh] w-[81.7%]  p-4 overflow-x-hidden overflow-scroll mt-6">
       {selectedPage === 1 && (
@@ -148,7 +183,7 @@ const VendorRightBar = ({ selectedPage }) => {
                   " font-semibold rounded outline-none transition duration-300 ease-in-out" +
                   " focus:outline-none focus:shadow focus:ring-1 focus:ring-accent-700 bg-accent" +
                   " border border-transparent hover:bg-accent-hover px-5 py-0 h-12 text-sm md:text-base"}
-              onClick={() => navigate("/create-shop")}>
+              onClick={() => navigate("/rejected-shop-creation")}>
                 <AddIcon/>Add Shop
               </button>
             </div>
@@ -373,7 +408,7 @@ const VendorRightBar = ({ selectedPage }) => {
       {selectedPage === 3 && (
         <div className="w-full h-fit mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
           <div className="mb-5 items-center justify-between sm:flex md:mb-7">
-              <VendorDisplayNotification data={notificationData}/>
+              <VendorDisplayNotification data={notificationData} user={(user) ? user : {}}/>
           </div>
         </div>
       )}
@@ -382,11 +417,33 @@ const VendorRightBar = ({ selectedPage }) => {
         <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
           <div className="h-full w-full overflow-hidden rounded-lg bg-gray-200 p-6 shadow-sm md:p-7">
             <div className="overflow-hidden rounded-lg bg-gray-200 hover:bg[#fff] cursor-pointer" onClick={() => navigate("/shop-dashboard")}>
-                <VendorShopDisplay shop={shopData} />
+                <VendorShopDisplay shop={user} />
               
             </div>
           </div>
         </div>
+      )}
+
+      {selectedPage === 4 && (
+          <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
+            <div className="h-full w-full overflow-hidden rounded-lg bg-gray-200 p-6 shadow-sm md:p-7">
+              <div className="overflow-hidden rounded-lg bg-gray-200 hover:bg[#fff] cursor-pointer" onClick={() => navigate("/shop-dashboard")}>
+                <VendorShopDisplay shop={shopData} />
+
+              </div>
+            </div>
+          </div>
+      )}
+
+      {selectedPage === 5 && (
+          <div className="w-full h-full mb-8 rounded-lg bg-light p-5 md:p-8 border bg-white">
+            <div className="h-full w-full overflow-hidden rounded-lg bg-gray-200 p-6 shadow-sm md:p-7">
+              <div className="overflow-hidden rounded-lg bg-gray-200 hover:bg[#fff] cursor-pointer" onClick={() => navigate("/shop-dashboard")}>
+                <VendorShopDisplay shop={shopData} />
+
+              </div>
+            </div>
+          </div>
       )}
     </div>
   );

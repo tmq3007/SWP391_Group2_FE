@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavbarHelp } from "../Navbar/NavbarHelp";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Homepage } from "./HelpingCenterPage/Homepage";
@@ -10,6 +10,7 @@ import { OrderPaymentPage } from "./HelpingCenterPage/OrderPaymentPage";
 import PromotionsPage from "./HelpingCenterPage/PromotionsPage";
 
 export const HelpingCenter = () => {
+    const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
 
     const handleSearch = (term) => {
@@ -27,10 +28,10 @@ export const HelpingCenter = () => {
         if (route) {
             navigate(`/help-center${keywordMap[route]}`);
         } else {
-            alert("No matching content found!");
+            setShowPopup(true);
+            setTimeout(() => setShowPopup(false), 1000); // Đóng modal sau 2 giây
         }
     };
-
 
     return (
         <section className="main flex flex-col h-screen">
@@ -53,6 +54,15 @@ export const HelpingCenter = () => {
                     </Routes>
                 </div>
             </div>
+
+            {showPopup && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded shadow-lg w-80">
+                        <h2 className="text-lg font-bold mb-4">Notice</h2>
+                        <p>No matching content found!</p>
+                    </div>
+                </div>
+            )}
         </section>
     );
 };

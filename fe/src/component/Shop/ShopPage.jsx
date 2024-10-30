@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,35 +19,72 @@ import {
 import "../../style/ShopDashboard.css";
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
 import {NavbarShop} from "../Navbar/NavbarShop";
+import axios from "axios";
 
 export const ShopPage = () => {
+    const [shopId, setShopId] = useState("");
+    const [shopData, setShopData] = useState(null);
+    const token = localStorage.getItem('jwt');
     const [open, setOpen] = React.useState(true);
 
     const handleClick = () => {
         setOpen(!open);
     };
+
+    //get shopId by userId
+    useEffect(() => {
+        const userId = localStorage.getItem("userId");
+
+        let isMounted = true; // to prevent memory leaks
+        axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (isMounted) setShopId(response.data.result);
+            })
+            .catch(error => {
+                console.error("Error fetching shopId:", error);
+            });
+
+        return () => { isMounted = false; };
+    }, [token]);
+
+    // Fetch shop details by shopId
+    useEffect(() => {
+        if (shopId) {
+            axios.get(`http://localhost:8080/api/v1/shops/${shopId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(response => setShopData(response.data.result))
+                .catch(error => console.error("Error fetching shop details:", error));
+            console.log("shop id: ", shopData);
+        }
+    }, [shopId, token]);
+
+
     return (
         //Main content
             <div className="w-full bg-white h-screen overflow-y-auto">
                 <div className="h-screen p-6">
                     <div className="w-full h-full bg-cover bg-center"
-                         style={{backgroundImage: `url('https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F883%2FUntitled-6.jpg&w=1920&q=75')`}}>
+                         style={{ backgroundImage: `url(${shopData?.cover || 'default-cover-url'})` }}>
                     </div>
 
                     <div className='relative z-10 px-4 lg:px-6 xl:px-10'>
                         <div className='-mt-16 flex flex-wrap gap-6 lg:-mt-[6.0625rem] 2xl:flex-nowrap'>
-                            <img src="https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F882%2FFurniture.png&w=1920&q=75" alt=""
+                            <img src={shopData?.logo || 'default-logo-url'} alt="Shop Logo"
                                  className="rounded-full object-cover h-28 w-28 lg:h-[11.125rem] lg:w-[11.125rem]"/>
                         </div>
                         <div className='flex w-full flex-wrap justify-between self-end 2xl:flex-1'>
                             <div className='flex-auto pr-5 xl:flex-1'>
-                                <h1 className='font-semibold leading-none text-muted-black text-3xl py-3'>Furniture
-                                    Shop</h1>
+                                <h1 className='font-semibold leading-none text-muted-black text-3xl py-3'>{shopData?.shopName}</h1>
                                 <div className='flex flex-col space-y-3 divide-[#E7E7E7] leading-none xl:flex-row
                                 xl:space-y-0 xl:space-x-5 xl:divide-x'>
                                     <div>
-                                        <AlternateEmailIcon fontSize='small'/>
-                                        <a href="">store_owner@gmail.com</a>
+                                        <PhoneIcon fontSize='small'/>
+                                        <a href="">{shopData?.phone}</a>
                                     </div>
                                     <Divider orientation="vertical" variant="middle" flexItem/>
                                     <div>
@@ -83,7 +120,7 @@ export const ShopPage = () => {
                                 <div className='relative mt-5 pt-5 xl:pt-7'>
                                     <h2 className='mb-4 text-lg font-semibold text-muted-black xl:text-xl'>Bio</h2>
                                     <div className='text-sm leading-[171.429%] text-[#666]'>
-                                        The furniture shop is the best shop around the city. This is being run under the store owner and our aim is to provide quality product and hassle free customer service.
+                                        {shopData?.description}
                                     </div>
 
                                 </div>
@@ -111,29 +148,6 @@ export const ShopPage = () => {
                                         </p>
                                     </div>
 
-                                    <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
-                                        <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
-                                            0%
-                                        </h2>
-                                        <p className='truncate text-sm text-base-dark'>
-                                            Admin Commission Rate
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
-                                        <p className='truncate text-sm text-base-dark'>
-                                            Gross Sales
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
-                                        <p className='truncate text-sm text-base-dark'>
-                                            Current Balance
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
                         </div>

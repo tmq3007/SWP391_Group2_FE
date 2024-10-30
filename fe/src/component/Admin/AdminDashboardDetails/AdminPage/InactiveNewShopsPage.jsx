@@ -116,7 +116,7 @@ function InactiveNewShopsPage() {
                 setSnackBarMessage("Error verifying shop");
                 setSnackBarOpen(true);
             }
-            await announceVerifyShop(selectedShop.email);
+            await announceVerifyShop({email: selectedShop.email});
         }
     };
 
