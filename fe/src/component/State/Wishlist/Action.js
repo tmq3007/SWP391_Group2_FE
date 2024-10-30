@@ -3,9 +3,9 @@ import {
  ADD_ITEM_TO_WISHLIST_SUCCESS ,
  ADD_ITEM_TO_WISHLIST_FAILURE ,
 
- REMOVE_ITEM_TO_WISHLIST_REQUEST ,
- REMOVE_ITEM_TO_WISHLIST_SUCCESS ,
- REMOVE_ITEM_TO_WISHLIST_FAILURE,
+ REMOVE_ITEM_FROM_WISHLIST_REQUEST ,
+ REMOVE_ITEM_FROM_WISHLIST_SUCCESS ,
+ REMOVE_ITEM_FROM_WISHLIST_FAILURE,
 
  GET_ALL_WISHLIST_REQUEST ,
  GET_ALL_WISHLIST_SUCCESS ,
@@ -36,17 +36,38 @@ export const getAllWishlist = (userId,jwt) => async (dispatch) => {
 };
 
 
-export const addItemToWishlist = (userId,item, jwt) => async (dispatch) => {
+export const addItemToWishlist = (request,jwt) => async (dispatch) => {
     dispatch({ type: ADD_ITEM_TO_WISHLIST_REQUEST });
     try {
-        const {response} = await axios.post('${API_URL}/api/v1/wishlist', item,{
+        const {response} = await axios.post('http://localhost:8080/api/v1/wishlist',request,{
             headers:{
                 Authorization: `Bearer ${jwt}`
             }
         });
         dispatch({ type: ADD_ITEM_TO_WISHLIST_SUCCESS, payload: response.data });
+        console.log("w",response)
         return response;
     } catch (error) {
         dispatch({ type: ADD_ITEM_TO_WISHLIST_FAILURE, payload: error.message  });
     }
 };
+export const removeItemFromWishlist = (userId, productId, jwt) => async (dispatch) => {
+    dispatch({ type: REMOVE_ITEM_FROM_WISHLIST_REQUEST });
+    try {
+        const response = await axios.delete(
+            `http://localhost:8080/api/v1/wishlist/user/${userId}/${productId}`, // Pass userId and productId in the URL
+            {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            }
+        );
+        dispatch({ type: REMOVE_ITEM_FROM_WISHLIST_SUCCESS, payload: response.data });
+        console.log("Removed from wishlist:", response);
+        return response;
+    } catch (error) {
+        dispatch({ type: REMOVE_ITEM_FROM_WISHLIST_FAILURE, payload: error.message });
+        console.error('Error removing from wishlist:', error);
+    }
+};
+

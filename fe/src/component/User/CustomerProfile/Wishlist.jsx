@@ -2,13 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {getUser} from "../../State/Authentication/Action";
 import {getAllWishlist} from "../../State/Wishlist/Action";
+import {removeItemFromWishlist} from "../../State/Wishlist/Action";
 
-const WishlistItem = ({ item }) => {
+const WishlistItem = ({ item, userId, jwt, onRemove }) => {
+    const dispatch = useDispatch();
+
+    const handleRemove = () => {
+        dispatch(removeItemFromWishlist(userId, item.productId, jwt))
+            .then(() => {
+                onRemove(item.productId);  // Call onRemove to update local state
+            })
+            .catch((error) => {
+                console.error("Error removing item from wishlist:", error);
+            });
+    };
+
     return (
         <div className="mx-10">
-            <div className="flex justify-between items-center p-4  my-3">
+            <div className="flex justify-between items-center p-4 my-3">
                 <div className="flex items-center space-x-4">
-                    <img src={item.image} alt={item.name} className="w-20 h-20 border shadow-md"/>
+                    <img src={item.image} alt={item.name} className="w-20 h-20 border shadow-md" />
                     <div>
                         <h3 className="font-semibold">{item.name}</h3>
                         <p className="text-gray-500">{item.store}</p>
@@ -23,7 +36,7 @@ const WishlistItem = ({ item }) => {
                     <div className="flex space-x-4 mt-2">
                         <button className="text-green-500">Add to Cart</button>
                         <div className="border-l border-gray-300 h-5"></div>
-                        <button className="text-red-500">Remove</button>
+                        <button onClick={handleRemove} className="text-red-500">Remove</button>
                     </div>
                 </div>
             </div>
@@ -52,18 +65,17 @@ export const Wishlist = () => {
         if (userId && jwt) {
             dispatch(getAllWishlist(userId, jwt))
                 .then((data) => {
-                    const products = data.result.products || [];  // Safely access products array
+                    const products = data.result.products || [];
                     const formattedWishlist = products.map(product => ({
-                        name: product.productName || 'Unnamed Product',  // Fallback for missing product name
-                        price: product.unitSellPrice || 0,  // Fallback for missing price
-                        originalPrice: product.originalPrice || null,  // Handle original price
-                        store: product.shop?.shopName || 'Unknown Store',  // Fallback for missing shop
-                        rating: product.review?.rating || 'No Rating',  // Fallback for missing rating
-                        image: product.pictureUrl1 || 'default-image-url',  // Fallback for missing image
+                        productId: product.productId, // Ensure productId is included
+                        name: product.productName || 'Unnamed Product',
+                        price: product.unitSellPrice || 0,
+                        originalPrice: product.originalPrice || null,
+                        store: product.shop?.shopName || 'Unknown Store',
+                        rating: product.review?.rating || 'No Rating',
+                        image: product.pictureUrl1 || 'default-image-url',
                     }));
                     setWishlist(formattedWishlist);
-                    console.log("Wishlist data:", data);
-                    console.log("Wishlist Products", products);
                 })
                 .catch((error) => {
                     console.error('Error fetching wishlist:', error);
@@ -71,13 +83,17 @@ export const Wishlist = () => {
         }
     }, [dispatch, userId, jwt]);
 
+    // Function to handle removal in local state
+    const handleRemoveFromWishlist = (productId) => {
+        setWishlist((prevWishlist) => prevWishlist.filter(item => item.productId !== productId));
+    };
 
     return (
         <div className="mx-auto rounded-lg mx-10">
             <h2 className="text-2xl font-semibold text-center p-4">My Wishlists</h2>
             {wishlist.length > 0 ? (
                 wishlist.map((item, index) => (
-                    <WishlistItem key={index} item={item} />
+                    <WishlistItem key={index} item={item} userId={userId} jwt={jwt} onRemove={handleRemoveFromWishlist} />
                 ))
             ) : (
                 <p className="text-center">Your wishlist is empty.</p>

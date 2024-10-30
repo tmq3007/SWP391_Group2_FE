@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React,  { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Button, TextField, IconButton, Box } from '@mui/material';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -7,25 +7,39 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ProductDetail from "./ProductDetail";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ProductCard = ({ cart, item, addToCart }) => {
+const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromWishlist }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0;
     const discountPrice = originalPrice * (1 - discount / 100);
     const discountPercentage = Math.round(discount);
 
-    const [isFavorite, setIsFavorite] = useState(false);
+
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [open, setOpen] = useState(false);
-
     const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
+
+
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
-    console.log("currentQuantityInCart",currentQuantityInCart);
+
 
     // Calculate available stock
     const availableStock = item.stock - currentQuantityInCart;
     // Bỏ giới hạn kho hàng
+    const currentWish = wishlist.find(wishlistItem => wishlistItem.productId == item.productId);
+
+    const [isFavorite, setIsFavorite] = useState(false);
+    //console.log("meo",wishlist)
+    useEffect(() => {
+        const inWishlist = wishlist.some(product => product.productId === item.productId);
+        setIsFavorite(inWishlist);
+    }, [wishlist, item.productId]);
     const handleFavoriteToggle = () => {
+        if (isFavorite) {
+            removeFromWishlist(item.productId);
+        } else {
+            addToWishlist(item);
+        }
         setIsFavorite((prev) => !prev);
 
     };
@@ -205,7 +219,7 @@ const ProductCard = ({ cart, item, addToCart }) => {
                                     backgroundColor: 'rgba(1, 147, 118, 0.2)',
                                 }
                             }}>
-                                {isFavorite ? <FavoriteIcon sx={{ color: '#019376' }} /> : <FavoriteBorderIcon />}
+                                {isFavorite ? <FavoriteIcon sx={{ color: '#ff4d4f' }} /> : <FavoriteBorderIcon />}
                             </IconButton>
                         </Box>
                     )}
