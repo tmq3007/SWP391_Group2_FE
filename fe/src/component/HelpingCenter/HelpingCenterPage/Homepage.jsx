@@ -1,16 +1,29 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
 export const Homepage = () => {
     return (
-        <div style={{display: 'flex', padding: '20px', marginLeft: '20px'}}>
-
-            <div style={{width: '75%'}}>
-                <h2>Khám phá</h2>
+        <div style={{ display: 'flex', marginTop:'10px', marginLeft: '20px' }}>
+            <div style={{ width: '75%' }}>
+                <h2 style={{fontWeight:"bold"}}>Discovery</h2>
                 <ul>
-                    <li>Tôi Có Thể Xem Lại Các Shop Đã Bấm "Theo Dõi" Ở Đâu?</li>
-                    <li>Shopee có cung cấp bảo hiểm hàng hóa cho đơn hàng của tôi không?</li>
-                    <li>Tại Sao Không Bình Luận Được Trên Shopee Livestream?</li>
-                    {/* Add more help articles here */}
+                    <li>
+                        <Link to="/help-center/order-payment" style={{color: '#019376', textDecoration: 'none'}}>
+                            Where can I see order?
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/help-center/new-user" style={{color: '#019376', textDecoration: 'none'}}>
+                            How to get favourite product?
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/help-center/explore" style={{color: '#019376', textDecoration: 'none'}}>
+                            How can I pay?
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </div>
     );
-}
+};
