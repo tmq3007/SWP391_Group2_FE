@@ -96,7 +96,6 @@ const deleteCartItem = async (uid,oid, jwt) => {
 
 async function deleteCartItems(items, userId, token) {
     const deletePromises = items.map((item) => deleteCartItem(userId, item.id, token)); // No need for async/await here
-
     try {
         await Promise.all(deletePromises);
         console.log('All items deleted successfully');
@@ -106,7 +105,7 @@ async function deleteCartItems(items, userId, token) {
 }
 const addOrderItems = async (id,orderItems, jwt) => {
     try {
-        const response = await axios.post(`http://localhost:8080/api/v1/orderItems/${id}`,orderItems, {
+        const response = await axios.post(`http://localhost:8080/api/v1/orderItems`,orderItems, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
@@ -146,6 +145,11 @@ async function processOrderItems(items, orderId, token) {
             productName: item.product.productName,
             productImage: item.product.pictureUrl,
             productSellPrice: item.product.unitSellPrice,
+            /*orderItemsDate: '2024-10-09',
+            orderItemsPaymentDate: "2024-10-09",
+            isPaid: true,
+            paymentId: 2,*/
+            orderId: orderId,
             discount: item.product.discount,
             productQuantity: item.quantity,
             itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),

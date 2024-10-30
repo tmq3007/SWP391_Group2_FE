@@ -87,7 +87,7 @@ const VendorLeftBar = ({ onSelect, ooo }) => {
                 <CategoryRoundedIcon/>
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Product" className="select-none"/>
+            <ListItemText primary="Top 10 paid product" className="select-none"/>
           </ListItem>
         </List>
       </div>
