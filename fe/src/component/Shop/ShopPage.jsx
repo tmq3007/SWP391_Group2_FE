@@ -92,10 +92,6 @@ export const ShopPage = () => {
                                         <a href="">588 Finwood Road, East Dover, New Jersey, 08753, USA</a>
                                     </div>
                                     <Divider orientation="vertical" variant="middle" flexItem/>
-                                    <div>
-                                        <PhoneIcon fontSize='small'/>
-                                        <a href="">+213 42 12 12 21</a>
-                                    </div>
                                 </div>
                             </div>
 
@@ -129,7 +125,7 @@ export const ShopPage = () => {
                                 <div className='grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 xl:gap-5
                                 2xl:grid-cols-3 2xl:gap-7'>
                                     <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
+                                        className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
                                         <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
                                             55
                                         </h2>
@@ -139,7 +135,7 @@ export const ShopPage = () => {
                                     </div>
 
                                     <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
+                                        className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
                                         <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
                                             2
                                         </h2>

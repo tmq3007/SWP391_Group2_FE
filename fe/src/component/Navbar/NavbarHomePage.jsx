@@ -110,6 +110,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             })
                 .then(response => {
                     setIsRejected(response.data.result);
+                    console.log("is rejected: " , isRejected);
                 })
                 .catch(error => {
                     console.error("Error fetching statusRejected:", error);
@@ -124,7 +125,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             navigate("/create-shop");
         }
         else if (shopError && unverifiedShopId) {
-            if (!isRejected) {
+            if (isRejected) {
                 console.log("Unverified ShopID is rejected: ", unverifiedShopId);
                 navigate(`/rejected-shop-creation/${unverifiedShopId}`);
             } else {
