@@ -34,15 +34,27 @@ const RejectedShopCreation = () => {
             <Title>Oops! Your Store Creation was Rejected</Title>
             <Message>Please double-check your information and try again.</Message>
             <Message>Detail in your Email</Message>
-            <div className={"flex"}>
-                <StyledWrapper className={"mt-3"} onClick={() => navigate("/auth/login")}>
-                    <button className="button">
-                        <svg className="svgIcon" viewBox="0 0 448 512">
-                            <path
-                                d="M257.5 445.1c12.5 12.5 12.5 32.75 0 45.25c-12.5 12.5-32.75 12.5-45.25 0l-192-192C6.344 290.3 0 277.5 0 264s6.344-26.34 20.25-36.31l192-192c12.5-12.5 32.75-12.5 45.25 0c12.5 12.5 12.5 32.75 0 45.25L97.25 232H416c17.67 0 32 14.33 32 32s-14.33 32-32 32H97.25L257.5 445.1z"/>
-                        </svg>
-                    </button>
-                </StyledWrapper>
+            <div className={"flex space-x-4"}>
+                <Button
+                    onClick={() => navigate("/auth/login")}
+                    sx={{
+                        padding: '10px 20px',
+                        fontSize: '1rem',
+                        fontWeight: 'bold',
+                        background: 'linear-gradient(90deg, #019376, #00b88d)',
+                        color: '#ffffff',
+                        borderRadius: '25px',
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                        '&:hover': {
+                            background: 'linear-gradient(90deg, #00a37c, #00c9a3)',
+                            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.3)',
+                            transform: 'scale(1.05)',
+                        },
+                    }}
+                >
+                    Back To Home Page
+                </Button>
 
                 <Button
                     onClick={handleNewCreationRequest}
