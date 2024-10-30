@@ -156,6 +156,7 @@ const navigate = useNavigate();
                             key={item.id}
                             cart={cart?.result?.cartItems || []}
                             item={item}
+
                             addToCart={(buyUnit, quantity) => addToCart(buyUnit, quantity, item)}
                         />
                     ))}
