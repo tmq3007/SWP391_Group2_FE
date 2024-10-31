@@ -39,7 +39,7 @@ const Payment = () => {
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
-   // const [hasCheckedPayment, setHasCheckedPayment] = useState(false);
+    // const [hasCheckedPayment, setHasCheckedPayment] = useState(false);
 
     const  amount = order.finalTotal;
     //const  amount = 8400;
@@ -192,7 +192,7 @@ const Payment = () => {
         if (!paymentSuccess  ) {
             const interval = setInterval(() => {
                 checkPaid(amount, description);
-            }, 2000);
+            }, 1000);
 
             return () => {
                 clearInterval(interval);
@@ -219,7 +219,7 @@ const Payment = () => {
         }else{
             try {
                 const response = await fetch(
-                    "https://script.google.com/macros/s/AKfycbytMZ-GQ3Qk8eIGQsbPDcE1TZNkuraFYGqfMEytatbGJ9kAFXoUI7zoDoo6bdPtFeHh/exec"
+                    "https://script.google.com/macros/s/AKfycbysOrpaEO6-6v5kC_wkHGTd7OFTHHQT0DIX_sCYBQMNYVYG4rhSuyuQ5GiQmYr7kwLv/exec"
                 );
                 const data = await response.json();
                 const lastPaid = data.data[data.data.length - 1];
@@ -251,22 +251,22 @@ const Payment = () => {
 
             <div style={{ maxWidth: "800px", width: "100%", marginTop: "50px", padding: "30px", borderRadius: "20px", boxShadow: "0 8px 20px rgba(0, 128, 128, 0.15)", backgroundColor: "#ffffff", display: "flex", alignItems: "center", gap: "20px" }}>
                 <div style={{ flex: "1", textAlign: "left", padding: "20px" }}>
-                    <h2 style={{ color: "#00796b", fontWeight: "bold", fontSize: "26px", marginBottom: "20px" }}>Thông tin thanh toán</h2>
+                    <h2 style={{ color: "#00796b", fontWeight: "bold", fontSize: "26px", marginBottom: "20px" }}>Payment Information</h2>
 
                     <p style={{ fontSize: "18px", margin: "15px 0", color: "#004d40" }}>
-                        Số tiền: <strong style={{ color: "#d32f2f" }}>{amount.toLocaleString()} VND</strong>
+                        Amount: <strong style={{ color: "#d32f2f" }}>{amount.toLocaleString()} VND</strong>
                     </p>
 
                     <p style={{ fontSize: "18px", margin: "15px 0", color: "#004d40" }}>
-                        Tài khoản: <strong>{MY_BANK.ACCOUNT_ID}</strong>
+                        Account Number: <strong>{MY_BANK.ACCOUNT_ID}</strong>
                     </p>
 
                     <p style={{ fontSize: "18px", margin: "15px 0", color: "#004d40" }}>
-                        Ngân hàng: <strong>{MY_BANK.BANK_ID}</strong>
+                        Bank: <strong>{MY_BANK.BANK_ID}</strong>
                     </p>
 
                     <p style={{ fontSize: "18px", margin: "15px 0", color: "#004d40" }}>
-                        Mô tả: <strong>{description}</strong>
+                       Description: <strong>{description}</strong>
                     </p>
                 </div>
 
@@ -276,9 +276,11 @@ const Payment = () => {
             </div>
 
             {/* Show Popup if paymentSuccess is true */}
-            {showPopup && <Popup message="Thanh toán thành công!" />}
+            {showPopup && <Popup message="Pay Success!" />}
         </div>
     );
 };
 
 export default Payment;
+
+

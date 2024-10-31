@@ -2,9 +2,12 @@ import React from 'react';
 import { Avatar, Box, Typography, Grid, Divider } from '@mui/material';
 import { LocationOn, Phone } from '@mui/icons-material';
 
-const ShopDisplay = ({ shop }) => {
+const ShopDisplay = ({ shop, orderItems }) => {
   const user = shop;
-
+  console.log(orderItems);
+  const a = orderItems.filter(a => !a.isPaid).length;
+  const b = orderItems.filter(a => a.isPaid).length;
+  const c = orderItems.length;
   return (
     <Box
       sx={{
@@ -34,7 +37,7 @@ const ShopDisplay = ({ shop }) => {
           <Typography variant="h6">{user.shopName}</Typography>
           <Typography variant="body2" color="text.secondary">
             <LocationOn fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {user.country+", "+user.city+", "+user.address}
+            {user.city+", "+user.address}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             <Phone fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
@@ -49,34 +52,26 @@ const ShopDisplay = ({ shop }) => {
       <Grid container spacing={2} justifyContent="space-between">
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {0}
+            {a}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
-            Commission
+            Un paid order
           </Typography>
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {0}
+            {b}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
-            Sale
+            Paid order
           </Typography>
         </Grid>
         <Grid item xs={3}>
           <Typography align="center" variant="h6">
-            {0}
+            {c}
           </Typography>
           <Typography align="center" variant="body2" color="text.secondary">
-            Balance
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography align="center" variant="h6">
-            {0}
-          </Typography>
-          <Typography align="center" variant="body2" color="text.secondary">
-            Withdraw
+            Total order
           </Typography>
         </Grid>
       </Grid>

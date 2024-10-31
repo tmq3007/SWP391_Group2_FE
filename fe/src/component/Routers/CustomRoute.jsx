@@ -85,11 +85,11 @@ const CustomRoute = () => {
                     </ProtectedRoute>
                 }/>
 
-                <Route path="/edit-shop/:shopId" element={
-                    <ProtectedRoute role={"ROLE_VENDOR"}>
-                        <EditShop/>
-                    </ProtectedRoute>
-                }/>
+                {/*<Route path="/edit-shop/:shopId" element={*/}
+                {/*    <ProtectedRoute role={"ROLE_VENDOR"}>*/}
+                {/*        <EditShop/>*/}
+                {/*    </ProtectedRoute>*/}
+                {/*}/>*/}
 
                 <Route path="/auth/unauthorized" element={<UnAuthorizedPage/>} />
                 <Route path="/admin-dashboard/*"
