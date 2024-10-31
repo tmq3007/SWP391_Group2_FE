@@ -20,13 +20,14 @@ import "../../style/ShopDashboard.css";
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
 import {NavbarShop} from "../Navbar/NavbarShop";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export const ShopPage = () => {
     const [shopId, setShopId] = useState("");
     const [shopData, setShopData] = useState(null);
     const token = localStorage.getItem('jwt');
     const [open, setOpen] = React.useState(true);
-
+    const navigate = useNavigate();
     const handleClick = () => {
         setOpen(!open);
     };
@@ -59,7 +60,7 @@ export const ShopPage = () => {
             })
                 .then(response => setShopData(response.data.result))
                 .catch(error => console.error("Error fetching shop details:", error));
-            console.log("shop id: ", shopData);
+            console.log("shop id: ", shopId);
         }
     }, [shopId, token]);
 
@@ -99,7 +100,8 @@ export const ShopPage = () => {
                                 <a href=""
                                    className='inline-flex items-center justify-center w-28 h-10 rounded-lg
                                     bg-[#019376] text-xs font-medium text-white hover:bg-green-600'>
-                                    <EditIcon fontSize='small'/>
+                                    <EditIcon fontSize='small'
+                                    onClick={() => navigate(`/edit-shop/${shopId}`)}/>
                                     Edit Shop
                                 </a>
                             </div>
