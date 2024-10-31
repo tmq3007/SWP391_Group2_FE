@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "../../style/Home.css";
+import axios from 'axios';
 import MultiItemCarousel from "./MultiItemCarousel";
 import { Divider, PaginationItem } from "@mui/material";
 import CategoryMenu from "../Category/CategoryMenu";
