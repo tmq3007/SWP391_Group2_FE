@@ -53,12 +53,12 @@ export const EditShop = () => {
             }
         })
             .then(response => {
-                console.log("Shop created successfully!", response);
+                console.log("Shop updated successfully!", response);
                 setIsSuccessPopupOpen(true);
 
             })
             .catch(error => {
-                console.error("Error creating shop:", error);
+                console.error("Error updated shop:", error);
                 alert("Error creating shop. Please try again.");
             });
     };

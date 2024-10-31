@@ -44,6 +44,7 @@ export const UpdateCategoryForm = () => {
                 setCategoryName(data.result.categoryName);
                 setDescription(data.result.description);
                 if (data.result.picture) {
+                    setPictureUrl1(data.result.picture);
                     setPreviewPictureUrl1(data.result.picture);
                 }
             } catch (error) {
@@ -60,7 +61,7 @@ export const UpdateCategoryForm = () => {
             const isFormEdited =
                 categoryName !== originalData.categoryName ||
                 description !== originalData.description ||
-                pictureUrl1 !== null; // Check if a new picture is uploaded
+                pictureUrl1 !== originalData.picture; // Check if a new picture is uploaded
 
             setIsEdited(isFormEdited);
         }
