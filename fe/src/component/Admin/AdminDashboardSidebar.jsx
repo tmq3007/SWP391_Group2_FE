@@ -100,7 +100,7 @@ export const AdminDashboardSidebar = () => {
                         </ListItemButton>
 
                         <ListItemButton onClick={() => handleNavigate('/inactive-new-shops')} sx={{pl: 4}}>
-                            <ListItemText primary="Inactive/New shops"/>
+                            <ListItemText primary="Shop Register Request"/>
                         </ListItemButton>
                     </List>
                 </Collapse>
