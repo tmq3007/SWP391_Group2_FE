@@ -35,7 +35,7 @@ function UsersPage() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
 
-    const [sortOption, setSortOption] = useState('name-asc'); // State to hold selected sort option
+    const [sortOption, setSortOption] = useState('id-asc'); // State to hold selected sort option
     const [anchorEl, setAnchorEl] = useState(null); // For managing dropdown menu
 
     const handleCloseSnackBar = (event, reason) => {
@@ -64,7 +64,7 @@ function UsersPage() {
                     avatar: 'https://via.placeholder.com/40', // Placeholder image for now
                     phone: user.phone,
                     permissions: user.roles.map((role) => role.name), // Extract roles
-                    status: user.isActive ? 'Active' : 'Inactive' // Determine status from `isActive`
+                    status: user.isActive ? 'Active' : 'Banned' // Determine status from `isActive`
                 }));
                 setUsersData(transformedData); // Update state with transformed data
             } catch (e) {
@@ -80,7 +80,8 @@ function UsersPage() {
     const filteredUsers = usersData.filter(
         (user) =>
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase())
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Sort users based on selected option
@@ -129,7 +130,7 @@ function UsersPage() {
                 // Update local state with the new status
                 const updatedUsers = usersData.map((user) =>
                     user.id === selectedUser.id
-                        ? { ...user, status: user.status === 'Active' ? 'Inactive' : 'Active' }
+                        ? { ...user, status: user.status === 'Active' ? 'Banned' : 'Active' }
                         : user
                 );
                 setUsersData(updatedUsers); // Update users data
@@ -211,7 +212,7 @@ function UsersPage() {
                             <div className="search-container mr-20 top-2">
                                 <input
                                     type="text"
-                                    placeholder="Search by Name"
+                                    placeholder="Search by Name, Email or Status"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="search-input"

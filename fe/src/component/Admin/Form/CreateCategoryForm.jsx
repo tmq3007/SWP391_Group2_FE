@@ -1,7 +1,7 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {useDispatch, useSelector} from "react-redux";
 import {addCategory} from "../../State/Admin/Action";
+import {Alert, Snackbar} from "@mui/material";
 
 
 export const CreateCategoryForm = () => {
@@ -10,38 +10,57 @@ export const CreateCategoryForm = () => {
     const [pictureUrl1, setPictureUrl1] = React.useState(null);
     const [previewPictureUrl1, setPreviewPictureUrl1] = React.useState(null);
 
-    const dispatch = useDispatch();
+    const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+    const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
+
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSnackBarOpen(false);
+    };
+
+    const handleCloseSuccessSnackBar = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setSuccessSnackBarOpen(false);
+    };
 
     // when click add product
     const handleAddCategory = async () => {
         const newCategory = {
             categoryName,
             description,
-            pictureUrl1,
+            picture: pictureUrl1,
             isActive: true
         };
         try {
 
             await addCategory(newCategory);
 
-            console.log("Category added successfully");
+            setSuccessSnackBarMessage("Category added successfully");
+            setSuccessSnackBarOpen(true);
 
         } catch (error) {
-            console.error("Error adding category", error);
+            if (error.response && error.response.data?.message) {
+                setSnackBarMessage(error.response.data.message);
+                setSnackBarOpen(true);
+            } else if (!error.response) {
+                setSnackBarMessage("Unable to connect to the server. Please check your network connection.");
+                setSnackBarOpen(true);
+            } else {
+                setSnackBarMessage("An error occurred. Please try again later.");
+                setSnackBarOpen(true);
+            }
         }
     };
 
     // Handle file uploads for the two images
     const fileInputRef1 = useRef(null);
-
-    const handleFileUpload1 = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setPictureUrl1(file);
-            setPreviewPictureUrl1(URL.createObjectURL(file));
-        }
-    };
-
 
     const handleDivClick1 = () => {
         fileInputRef1.current.click();
@@ -52,9 +71,80 @@ export const CreateCategoryForm = () => {
         setPreviewPictureUrl1(null);
     };
 
+    const handleFileUpload = async (event, setPictureUrl, setPreviewPictureUrl) => {
+        const file = event.target.files[0];
+
+        if (!file || file.size > 2 * 1024 * 1024) {
+            alert("Please select a file smaller than 2MB.");
+            return;
+        }
+
+        try {
+            const data = new FormData();
+            data.append("file", file);
+            data.append("upload_preset", "first_time");
+            data.append("cloud_name", "dkstc8tkg");
+
+            const res = await fetch("https://api.cloudinary.com/v1_1/dkstc8tkg/image/upload", {
+                method: "POST",
+                body: data,
+            });
+
+            // Parse the JSON response
+            const uploadedImage = await res.json();
+
+            // Check if the response contains the uploaded image URL
+            if (uploadedImage.url) {
+                console.log("Image uploaded successfully:", uploadedImage.url);
+                setPictureUrl(uploadedImage.url);
+                setPreviewPictureUrl(URL.createObjectURL(file));
+            } else {
+                alert("Image upload failed.");
+            }
+        } catch (error) {
+            console.error("Error uploading the file:", error);
+            alert("There was an error uploading the file.");
+        }
+    };
+
+    const handleFileUpload1 = (event) => handleFileUpload(event, setPictureUrl1, setPreviewPictureUrl1);
+
 
 
     return (
+        <div>
+
+            <Snackbar
+                open={snackBarOpen}
+                onClose={handleCloseSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={successSnackBarOpen}
+                onClose={handleCloseSuccessSnackBar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseSuccessSnackBar}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    {successSnackBarMessage}
+                </Alert>
+            </Snackbar>
 
         <div className="w-full bg-gray-100 h-screen overflow-y-auto mt-12">
             <div className={"h-screen p-6"}>
@@ -156,11 +246,12 @@ export const CreateCategoryForm = () => {
                             data-metatip="true"
                             data-label-id="0" onClick={handleAddCategory}
                         >
-                            Add Category
+                            Add
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+</div>
     )
 }

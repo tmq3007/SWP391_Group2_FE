@@ -3,20 +3,13 @@ import ReactPaginate from 'react-paginate';
 import '../../../../style/AdminDashboard.css';
 import SearchIcon from "@mui/icons-material/Search";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';   // For active status
-import ToggleOffIcon from '@mui/icons-material/ToggleOff'; // For inactive status
 import {
     Alert,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Snackbar
 } from '@mui/material';
 import {getAllStatisticsShop} from "../../../State/Admin/Action";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import {useNavigate} from "react-router-dom";
 
 
 const PER_PAGE = 4;
@@ -25,6 +18,7 @@ function ShopsPage() {
     const [currentPage, setCurrentPage] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [shops, setShops] = useState([]);
+    const navigate = useNavigate();
 
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
@@ -43,7 +37,7 @@ function ShopsPage() {
                 const data = await getAllStatisticsShop();
                 // Map the API data to the format expected by the component
                 const formattedData = data.result.map((shop) => ({
-                    id: `#ID: ${shop.shopID}`, // Formatting ID for unique key
+                    id: shop.shopID, // Formatting ID for unique key
                     shop: {
                         avatar: shop.logo,
                         name: shop.shopName,
@@ -155,7 +149,7 @@ function ShopsPage() {
                                 </div>
                             </td>
                             <td>
-                                <button className='toggle-status'>
+                                <button onClick={() => navigate(`/admin-dashboard/detail-shop/${shop.id}`)} className='toggle-status'>
                                     <RemoveRedEyeIcon />
                                 </button>
                             </td>
