@@ -375,7 +375,7 @@ const SuccessOrderShow = () => {
                         <div className={"flex mt-2"}>
                             <div className={"flex mb-1 mr-2"}>
                                 <PersonIcon className={"mr-2 text-green-500"}></PersonIcon>
-                                <Typography>Reciever: </Typography>
+                                <Typography>Receive: </Typography>
                             </div>
 
                             <Typography>{(name !== '') ? "  " + name : ""}</Typography>
