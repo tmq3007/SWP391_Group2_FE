@@ -28,7 +28,7 @@ const VendorProductDisplay = ({ products}) => {
         };
     if(!products || products.length === 0) {
         return (
-            <div>No data</div>
+            <div className={"items-center text-green-500"}>No data</div>
         )}else{
             return (
             <div className="flex flex-col items-center">
