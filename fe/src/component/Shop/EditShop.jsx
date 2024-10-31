@@ -3,7 +3,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useDispatch, useSelector} from "react-redux";
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
@@ -25,7 +25,7 @@ export const EditShop = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('jwt');
     const dispatch = useDispatch();
-
+    const {shopId} = useParams();
 
     const handleEditShop = () => {
         if (!shopName || !description || !city || !state || !address || !phone ) {
@@ -47,19 +47,18 @@ export const EditShop = () => {
         }
 
 
-        axios.post('http://localhost:8080/api/v1/request-shop-creation', shopData, {
+        axios.patch(`http://localhost:8080/api/v1/shops/${shopId}`, shopData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
         })
             .then(response => {
-                console.log("Shop created successfully!", response);
+                console.log("Shop updated successfully!", response);
                 setIsSuccessPopupOpen(true);
-
             })
             .catch(error => {
-                console.error("Error creating shop:", error);
-                alert("Error creating shop. Please try again.");
+                console.error("Error updating shop:", error);
+                alert("Error updating shop. Please try again.");
             });
     };
 
@@ -266,7 +265,7 @@ export const EditShop = () => {
                     <DialogTitle>Success!</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Your shop creation has been sent successfully.
+                            Your Shop Have Been Updated Successfully
                         </DialogContentText>
                     </DialogContent>
                 </Dialog>
