@@ -27,6 +27,9 @@ function InactiveNewShopsPage() {
     const [openRejectModal, setOpenRejectModal] = useState(false);
     const [selectedShop, setSelectedShop] = useState(null);
 
+    const [shopDetails, setShopDetails] = useState(null);
+    const [openDetailsModal, setOpenDetailsModal] = useState(false);
+
     const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
     const [successSnackBarMessage, setSuccessSnackBarMessage] = useState("");
 
@@ -52,6 +55,7 @@ function InactiveNewShopsPage() {
             try {
                 const response = await getAllUnverifiedShop();
                 const mappedShops = response.result.map((shop) => ({
+                    ...shop,
                     shopId: shop.shopId,
                     shopName: shop.shopName,
                     owner: `${shop.user.firstName} ${shop.user.lastName}`,
@@ -94,6 +98,7 @@ function InactiveNewShopsPage() {
     const handleClose = () => {
         setOpenVerifyModal(false);
         setOpenRejectModal(false);
+        setOpenDetailsModal(false);
     };
 
     const handleRejectReasonChange = (e) => {
@@ -147,6 +152,11 @@ function InactiveNewShopsPage() {
         }
     };
 
+    const viewShopDetails = (shop) => {
+        setShopDetails(shop);
+        setOpenDetailsModal(true);
+    };
+
     return (
         <div>
             <Snackbar
@@ -185,7 +195,7 @@ function InactiveNewShopsPage() {
                 <div className="container overflow-hidden rounded-lg bg-white p-6 md:p-7 col-span-full">
                     <div className='flex justify-between mt-3'>
                         <div className='recent-orders-header relative top-3'>
-                            <h2 className='text-2xl font-semibold'>Inactive/New Shops</h2>
+                            <h2 className='text-2xl font-semibold'>Shop Register Request</h2>
                         </div>
 
                         <div className="search-container top-2">
@@ -215,39 +225,41 @@ function InactiveNewShopsPage() {
                         <tbody>
                         {currentShops.map((shop, index) => (
                             <tr key={index}>
-                                <td>{shop.shopName}</td>
+
                                 <td>
                                     <div className="customer-info">
-                                        <img src={shop.avatar} alt="Avatar" className="avatar" />
+                                        <img src={shop.avatar} alt="Avatar" className="avatar"/>
                                         <div className="customer-details">
-                                            <span className="customer-name">{shop.owner}</span>
+                                            <span className="customer-name">{shop.shopName}</span>
                                             <small className="customer-email">{shop.email}</small>
                                         </div>
                                     </div>
                                 </td>
+                                <td>{shop.owner}</td>
                                 <td>
                                     <button
                                         className='action-button'
                                         onClick={() => handleOpenVerifyModal(shop)}
                                         title="Verify"
-                                        style={{ cursor: 'pointer' }}
+                                        style={{cursor: 'pointer'}}
                                     >
-                                        <Check style={{ color: 'green' }} />
+                                        <Check style={{color: 'green'}}/>
                                     </button>
                                     <button
                                         className='action-button'
                                         onClick={() => handleOpenRejectModal(shop)}
                                         title="Reject"
-                                        style={{ cursor: 'pointer' }}
+                                        style={{cursor: 'pointer'}}
                                     >
-                                        <Close style={{ color: 'red' }} />
+                                        <Close style={{color: 'red'}}/>
                                     </button>
                                     <button
                                         className='action-button'
                                         title="View Details"
-                                        style={{ cursor: 'pointer' }}
+                                        style={{cursor: 'pointer'}}
+                                        onClick={() => viewShopDetails(shop)}
                                     >
-                                        <Visibility style={{ color: 'blue' }} />
+                                        <Visibility style={{color: 'blue'}}/>
                                     </button>
                                 </td>
                             </tr>
@@ -305,6 +317,7 @@ function InactiveNewShopsPage() {
                             Please provide a reason for rejecting the shop "{selectedShop?.shopName}".
                         </DialogContentText>
                         <textarea
+                            required
                             value={rejectReason}
                             onChange={handleRejectReasonChange}
                             placeholder="Enter reason for rejection"
@@ -320,6 +333,73 @@ function InactiveNewShopsPage() {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog
+                    open={openDetailsModal}
+                    onClose={handleClose}
+                    aria-labelledby="shop-details-dialog-title"
+                    maxWidth="md"
+                    fullWidth
+                >
+                    <DialogContent style={{ padding: 0 }}>
+                        {shopDetails && (
+                            <div style={{ position: 'relative', textAlign: 'center' }}>
+                                {/* Cover Image */}
+                                <div style={{ position: 'relative', height: '300px', overflow: 'hidden' }}>
+                                    <img
+                                        src={shopDetails.cover}
+                                        alt="Shop Cover"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </div>
+
+                                {/* Logo as Circular Overlay */}
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        top: '250px', // Adjust this value as needed
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        borderRadius: '50%',
+                                        width: '120px',
+                                        height: '120px',
+                                        overflow: 'hidden',
+                                        border: '5px solid white',
+                                        backgroundColor: '#fff'
+                                    }}
+                                >
+                                    <img
+                                        src={shopDetails.logo}
+                                        alt="Shop Logo"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </div>
+
+                                {/* Shop Details */}
+                                <div style={{ paddingTop: '80px', textAlign: 'center' }}>
+                                    <h2 className='text-center'>{shopDetails.shopName}</h2>
+                                    <p>
+                                        <span style={{ display: 'block', fontWeight: 'bold' }}>Phone:</span>
+                                        {shopDetails.phone}
+                                    </p>
+                                    <p>
+                                        <span style={{ display: 'block', fontWeight: 'bold' }}>Address:</span>
+                                        {shopDetails.address}, {shopDetails.city}, {shopDetails.district}, {shopDetails.subdistrict}
+                                    </p>
+                                </div>
+
+                                {/* Bio and Stats Cards */}
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px', marginBottom: '30px' }}>
+                                    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', width: '150px' }}>
+                                        <h4>Bio</h4>
+                                        <p>{shopDetails.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
+
             </div>
         </div>
     );

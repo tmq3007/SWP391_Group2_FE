@@ -18,6 +18,7 @@ import Payment from "../Payment/Payment";
 import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
 import Review from "../Review/Review";
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
+import {EditShop} from "../Shop/EditShop";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -83,6 +84,12 @@ const CustomRoute = () => {
                         <RejectedShopCreation/>
                     </ProtectedRoute>
                 }/>
+
+                {/*<Route path="/edit-shop/:shopId" element={*/}
+                {/*    <ProtectedRoute role={"ROLE_VENDOR"}>*/}
+                {/*        <EditShop/>*/}
+                {/*    </ProtectedRoute>*/}
+                {/*}/>*/}
 
                 <Route path="/auth/unauthorized" element={<UnAuthorizedPage/>} />
                 <Route path="/admin-dashboard/*"

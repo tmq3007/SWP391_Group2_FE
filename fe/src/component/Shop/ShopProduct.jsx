@@ -79,7 +79,6 @@ export const ShopProduct = () => {
                     dispatch(updateProductById(product.productId, updatedProductData));
                 })
             );
-            console.log("Products after updating ratings:", products);
         };
 
         if (products.length > 0) fetchAllProductsData();
@@ -89,17 +88,40 @@ export const ShopProduct = () => {
     const handlePageChange = (event, value) => setPage(value);
     const toggleFilter = () => setFilterVisible(!isFilterVisible);
 
-    const handleDelete = (productId) => {
-        const confirmDelete = window.confirm("Bạn có muốn xoá sản phẩm này không?");
+    const handleDelete = async (productId) => {
+        const confirmDelete = window.confirm("Do you want to delete this product?");
         if (confirmDelete) {
-            const updatedProducts = products.map(product =>
-                product.productId === productId
-                    ? { ...product, isActive: false }
-                    : product
-            );
-            dispatch({ type: 'UPDATE_PRODUCTS', payload: updatedProducts });
+            const product = products.find(product => product.productId === productId);
+
+            // Ensure all necessary fields are included in the update
+            const updatedProductData = {
+                productId: product.productId,
+                productName: product.productName,
+                category: product.category.categoryId,
+                shop: product.shop.shopId,
+                description: product.description,
+                measurementUnit: product.measurementUnit,
+                unitBuyPrice: product.unitBuyPrice,
+                unitSellPrice: product.unitSellPrice,
+                discount: product.discount,
+                stock: product.stock,
+                pictureUrl: product.pictureUrl,
+                pictureUrl2: product.pictureUrl2,
+                isActive: false,
+                averageRating: product.averageRating,
+            };
+
+
+            try {
+                await dispatch(updateProductById(productId, updatedProductData));
+                dispatch(getAllProductsByShopIdAction(shopId));
+            } catch (error) {
+                console.error("Error updating product:", error);
+            }
         }
     };
+
+
 
     return (
         <div className="w-full bg-white h-screen overflow-y-auto">
@@ -167,6 +189,7 @@ export const ShopProduct = () => {
                                     <ModeEditIcon onClick={() => navigate(`/shop-dashboard/shop-edit-product/${product.productId}`)} />
                                     <RemoveRedEyeIcon onClick={() => navigate("/")} />
                                     <DeleteIcon onClick={() => handleDelete(product.productId)} />
+
                                 </td>
                             </tr>
                         ))}

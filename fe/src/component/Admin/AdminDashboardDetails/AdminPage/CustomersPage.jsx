@@ -56,7 +56,7 @@ function CustomersPage() {
                     name: `${user.firstName} ${user.lastName}`, // Combine first and last names
                     email: user.email,
                     avatar: 'https://via.placeholder.com/40', // Placeholder image for now
-                    permissions: user.roles.map((role) => role.name), // Extract roles
+                    totalOrders: user.totalOrder,
                     walletPoints: '', // No wallet points in the original data
                     status: user.isActive ? 'Active' : 'Inactive' // Determine status from `isActive`
                 }));
@@ -94,12 +94,12 @@ function CustomersPage() {
                 // Call the appropriate function based on the user's current status
                 if (selectedUser.status === 'Active') {
                     await banUser(selectedUser.id).then((response) => {
-                        setSuccessSnackBarMessage("User has been banned successfully.");
+                        setSuccessSnackBarMessage("Customer has been banned successfully.");
                         setSuccessSnackBarOpen(true);
                     });
                 } else {
                     await unbanUser(selectedUser.id).then((response) => {
-                        setSuccessSnackBarMessage("User has been unbanned successfully.");
+                        setSuccessSnackBarMessage("Customer has been unbanned successfully.");
                         setSuccessSnackBarOpen(true);
                     });
                 }
@@ -197,8 +197,7 @@ function CustomersPage() {
                     <tr>
                         <th id='center'>ID</th>
                         <th id='center'>Name</th>
-                        <th id='center'>Permissions</th>
-                        <th id='center'>Available wallet points</th>
+                        <th id='center'>Total Orders</th>
                         <th id='center'>Status</th>
                         <th id='center'>Actions</th>
                     </tr>
@@ -216,14 +215,7 @@ function CustomersPage() {
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                {user.permissions.map((perm, i) => (
-                                    <span key={i} className="permission-badge">
-                                            {perm}
-                                    </span>
-                                ))}
-                            </td>
-                            <td>{user.walletPoints || 'N/A'}</td>
+                            <td>{user.totalOrders}</td>
                             <td>
                                 <span className={user.status === 'Active' ? 'active-status' : 'inactive-status'}>
                                     {user.status}

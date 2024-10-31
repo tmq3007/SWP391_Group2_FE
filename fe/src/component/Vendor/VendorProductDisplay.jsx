@@ -2,70 +2,52 @@ import React, { useState } from 'react';
 import { Grid, Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
 import { useSwipeable } from 'react-swipeable';
 
-const VendorProductDisplay = ({ products }) => {
-  const [currentPage, setCurrentPage] = useState(0);
+const VendorProductDisplay = ({ products}) => {
+    const paidOnly = products.filter(a => a.isPaid);
+    const groupedItems = paidOnly.reduce((acc, item) => {
+        const existingProduct = acc.find(product => product.productName === item.productName);
+        if (existingProduct) {
+            existingProduct.finalPrice += item.finalPrice;
+            existingProduct.productQuantity += item.productQuantity;
+            existingProduct.itemTotalPrice += item.itemTotalPrice;
+        } else {
+            acc.push({ ...item });
+        }
+        return acc;
+    }, []);
+    const b = groupedItems.sort((a, b) => b.finalPrice - a.finalPrice);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
-    setCurrentPage((prevPage) => (prevPage + 1) % products.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % b.length);
   };
 
   const handlePrevious = () => {
-    setCurrentPage((prevPage) =>
-      prevPage === 0 ? products.length - 1 : prevPage - 1
-    );
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + b.length) % b.length);
   };
 
-  // Swipe handlers using react-swipeable
-  const handlers = useSwipeable({
-    onSwipedLeft: () => handleNext(),
-    onSwipedRight: () => handlePrevious(),
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: true, // Allows mouse swipes as well
-  });
-
-  const product = products[currentPage]; // Get the product for the current page
-
   return (
-    <div {...handlers} className='w-[90%] h-[90%] pb-8'>
-      <Grid className=' justify-center items-center'>
-        <Grid>
-          <Card>
-            <CardMedia
-              component="img"
-              height="140px"
-              width="140px"
-              image={product.image}
-              alt={product.name}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                {product.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {product.description}
-              </Typography>
-              <Typography variant="h6" color="primary">
-                ${product.price}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <div className="flex flex-col items-center">
+          <div className={"flex justify-start w-[100%] mb-1"}>
+              <Typography><span className={"text-green-500 mr-2 text-2xl font-semibold"}>Top {currentIndex + 1}</span>{b[currentIndex].productName}</Typography>
+          </div>
 
-      <Grid container justifyContent="center" spacing={2} sx={{ marginTop: 2 }}>
-        <Grid item>
-          <Button variant="contained" onClick={handlePrevious}>
-            Previous
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={handleNext}>
-            Next
-          </Button>
-        </Grid>
-      </Grid>
-    </div>
+        <div className="overflow-hidden rounded-lg bg-gray-200">
+
+          <img src={b[currentIndex].productImage} alt="Slider" className="object-cover w-[275px] h-[300px]"/>
+        </div>
+          <div className={"ml-2 block justify-start w-[100%] mb-1"}>
+              <p>Price: {(b[currentIndex].itemTotalPrice / b[currentIndex].productQuantity).toFixed(2)}VND</p>
+              <p>Discount: {(b[currentIndex].finalPrice / b[currentIndex].productQuantity).toFixed(2)}VND</p>
+          </div>
+          <Typography></Typography>
+        <div className="flex mt-4 space-x-4">
+          <button onClick={handlePrevious} className="w-[100px] bg-green-500 text-white p-2 rounded">Previous</button>
+          <button onClick={handleNext} className=" w-[100px] bg-green-500 text-white p-2 rounded">Next</button>
+        </div>
+      </div>
   );
-};
+}
 
-export default VendorProductDisplay;
+
+  export default VendorProductDisplay;

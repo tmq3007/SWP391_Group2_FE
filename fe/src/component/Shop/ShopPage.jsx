@@ -20,13 +20,14 @@ import "../../style/ShopDashboard.css";
 import {ExpandLess, ExpandMore, LocationOn, StarBorder} from "@mui/icons-material";
 import {NavbarShop} from "../Navbar/NavbarShop";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export const ShopPage = () => {
     const [shopId, setShopId] = useState("");
     const [shopData, setShopData] = useState(null);
     const token = localStorage.getItem('jwt');
     const [open, setOpen] = React.useState(true);
-
+    const navigate = useNavigate();
     const handleClick = () => {
         setOpen(!open);
     };
@@ -59,7 +60,7 @@ export const ShopPage = () => {
             })
                 .then(response => setShopData(response.data.result))
                 .catch(error => console.error("Error fetching shop details:", error));
-            console.log("shop id: ", shopData);
+            console.log("shop id: ", shopId);
         }
     }, [shopId, token]);
 
@@ -92,18 +93,17 @@ export const ShopPage = () => {
                                         <a href="">588 Finwood Road, East Dover, New Jersey, 08753, USA</a>
                                     </div>
                                     <Divider orientation="vertical" variant="middle" flexItem/>
-                                    <div>
-                                        <PhoneIcon fontSize='small'/>
-                                        <a href="">+213 42 12 12 21</a>
-                                    </div>
                                 </div>
                             </div>
 
                             <div className='flex items-center'>
-                                <a href=""
+                                <a href="/shop-dashboard/edit-shop/${shopId}"
                                    className='inline-flex items-center justify-center w-28 h-10 rounded-lg
                                     bg-[#019376] text-xs font-medium text-white hover:bg-green-600'>
-                                    <EditIcon fontSize='small'/>
+                                    <EditIcon fontSize='small'
+                                    //onClick={() => navigate(`/shop-dashboard/edit-shop/${shopId}`)}/>
+                                   // onClick={() => navigate(`/shop-dashboard/edit-shop/${shopId}`)}/>
+                                        />
                                     Edit Shop
                                 </a>
                             </div>
@@ -129,7 +129,7 @@ export const ShopPage = () => {
                                 <div className='grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 xl:gap-5
                                 2xl:grid-cols-3 2xl:gap-7'>
                                     <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
+                                        className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
                                         <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
                                             55
                                         </h2>
@@ -139,7 +139,7 @@ export const ShopPage = () => {
                                     </div>
 
                                     <div
-                                        className='flex items-center rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
+                                        className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
                                         <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
                                             2
                                         </h2>

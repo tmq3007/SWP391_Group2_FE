@@ -2,26 +2,38 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 const VendorProductTable = ({ products }) => {
+    const paidOnly = products.filter(a => a.isPaid);
+    const groupedItems = paidOnly.reduce((acc, item) => {
+        const existingProduct = acc.find(product => product.productName === item.productName);
+        if (existingProduct) {
+            existingProduct.finalPrice += item.finalPrice;
+            existingProduct.productQuantity += item.productQuantity;
+        } else {
+            acc.push({ ...item });
+        }
+        return acc;
+    }, []);
+    const b = groupedItems.sort((a, b) => b.finalPrice - a.finalPrice);
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Product Id</TableCell>
+            <TableCell>Rank</TableCell>
             <TableCell>Product Name</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Price</TableCell>
+            <TableCell>Total quantity</TableCell>
+            <TableCell>Total revenue</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id}>
+          {b.map((product, index) => (
+            <TableRow key={index}>
               <TableCell>
-                {product.id}
+                {index + 1}
               </TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{product.description}</TableCell>
-              <TableCell>${product.price.toFixed(2)}</TableCell>
+              <TableCell>{product.productName}</TableCell>
+              <TableCell>{product.productQuantity}</TableCell>
+              <TableCell>${product.finalPrice.toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
