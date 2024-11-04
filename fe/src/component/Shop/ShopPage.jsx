@@ -52,15 +52,14 @@ export const ShopPage = () => {
         return () => { isMounted = false; };
     }, [token]);
 
-    // Fetch shop details by shopId
+    // Fetch shop statistics by shopId
     useEffect(() => {
         if (shopId) {
-            axios.get(`http://localhost:8080/api/v1/shops/${shopId}`, {
+            axios.get(`http://localhost:8080/api/v1/shops/get-statistic-shop/${shopId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
                 .then(response => setShopData(response.data.result))
-                .catch(error => console.error("Error fetching shop details:", error));
-            console.log("shop id: ", shopId);
+                .catch(error => console.error("Error fetching shop statistics:", error));
         }
     }, [shopId, token]);
 
@@ -85,12 +84,12 @@ export const ShopPage = () => {
                                 xl:space-y-0 xl:space-x-5 xl:divide-x'>
                                     <div>
                                         <PhoneIcon fontSize='small'/>
-                                        <a href="">{shopData?.phone}</a>
+                                        <p >{shopData?.phone}</p>
                                     </div>
                                     <Divider orientation="vertical" variant="middle" flexItem/>
                                     <div>
                                         <LocationOn fontSize='small'/>
-                                        <a href="">588 Finwood Road, East Dover, New Jersey, 08753, USA</a>
+                                        <p >588 Finwood Road, East Dover, New Jersey, 08753, USA</p>
                                     </div>
                                     <Divider orientation="vertical" variant="middle" flexItem/>
                                 </div>
@@ -130,7 +129,7 @@ export const ShopPage = () => {
                                     <div
                                         className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
                                         <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
-                                            55
+                                            <h2 className='text-xl font-medium'>{shopData?.totalProduct || 0}</h2>
                                         </h2>
                                         <p className='truncate text-sm text-base-dark'>
                                             Total Product
@@ -139,9 +138,7 @@ export const ShopPage = () => {
 
                                     <div
                                         className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
-                                        <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
-                                            2
-                                        </h2>
+                                        <h2 className='text-xl font-medium'>{shopData?.totalOrders || 0}</h2>
                                         <p className='truncate text-sm text-base-dark'>
                                             Total Order
                                         </p>

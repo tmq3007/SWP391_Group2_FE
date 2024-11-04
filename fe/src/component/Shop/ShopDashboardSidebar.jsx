@@ -84,9 +84,6 @@ export const ShopDashboardSidebar = () => {
                             <ListItemButton className="pl-8 sidebar-item" onClick={() => navigate("/shop-dashboard/shop-add-product")} >
                                 <ListItemText primary="Add New Product"/>
                             </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item">
-                                <ListItemText primary="All Low & Out of Stock Product"/>
-                            </ListItemButton>
                         </List>
                     </Collapse>
                     <ListItem button className="sidebar-item">
@@ -94,36 +91,6 @@ export const ShopDashboardSidebar = () => {
                             <InventoryIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
                         <ListItemText primary="Inventory"/>
-                    </ListItem>
-                    <ListItem button className="sidebar-item">
-                        <ListItemIcon>
-                            <BookIcon fontSize="small" className="text-gray-600"/>
-                        </ListItemIcon>
-                        <ListItemText primary="Attributes"/>
-                    </ListItem>
-                </List>
-
-                {/* FINANCIAL MANAGEMENT section */}
-                <Divider className="mt-4 mb-4"/>
-                <List className="cursor-pointer"
-                    subheader={
-                        <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
-                                       className="text-sm font-semibold text-gray-500">
-                            FINANCIAL MANAGEMENT
-                        </ListSubheader>
-                    }
-                >
-                    <ListItem button className="sidebar-item">
-                        <ListItemIcon>
-                            <StarIcon fontSize="small" className="text-gray-600"/>
-                        </ListItemIcon>
-                        <ListItemText primary="Withdrawals"/>
-                    </ListItem>
-                    <ListItem button className="sidebar-item">
-                        <ListItemIcon>
-                            <VolunteerActivismIcon fontSize="small" className="text-gray-600"/>
-                        </ListItemIcon>
-                        <ListItemText primary="Refunds"/>
                     </ListItem>
                 </List>
 
@@ -217,43 +184,6 @@ export const ShopDashboardSidebar = () => {
                     </ListItem>
                 </List>
 
-                {/* PROMOTIONAL CONTROL section */}
-                <Divider className="mt-4 mb-4"/>
-                <List className="cursor-pointer"
-                    subheader={
-                        <ListSubheader style={{borderRadius: '8px', backgroundColor: '#f9f9f9'}} component="div"
-                                       className="text-sm font-semibold text-gray-500">
-                            PROMOTIONAL CONTROL
-                        </ListSubheader>
-                    }
-                >
-                    <ListItem button className="sidebar-item">
-                        <ListItemIcon>
-                            <CardGiftcardIcon fontSize="small" className="text-gray-600"/>
-                        </ListItemIcon>
-                        <ListItemText primary="Coupons"/>
-                    </ListItem>
-                    <ListItemButton onClick={handleClick} className="sidebar-item">
-                        <ListItemIcon>
-                            <ShoppingBagIcon className="text-gray-600"/>
-                        </ListItemIcon>
-                        <ListItemText primary="Flash Sale"/>
-                        {open ? <ExpandLess className="text-gray-600"/> : <ExpandMore className="text-gray-600"/>}
-                    </ListItemButton>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItemButton className="pl-8 sidebar-item">
-                                <ListItemText primary="Available Flash deals"/>
-                            </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item">
-                                <ListItemText primary="My Products in Deals"/>
-                            </ListItemButton>
-                            <ListItemButton className="pl-8 sidebar-item">
-                                <ListItemText primary="Ask for Enrollment"/>
-                            </ListItemButton>
-                        </List>
-                    </Collapse>
-                </List>
 
                 {/* Layout/Page management section */}
                 <Divider className="mt-4 mb-4"/>
