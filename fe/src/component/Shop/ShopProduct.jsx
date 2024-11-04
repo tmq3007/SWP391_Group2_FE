@@ -126,40 +126,55 @@ export const ShopProduct = () => {
     return (
         <div className="w-full bg-white h-screen overflow-y-auto">
             <div className='h-screen p-6'>
-                <div className='bg-white rounded p-5 shadow mb-8 flex flex-col'>
-                    <div className='flex flex-col items-center md:flex-row justify-between'>
-                        <h2 className="text-lg font-semibold text-heading text-[#1f2937]">Products</h2>
-                        <div className='flex items-center'>
-                            <div className="relative hidden lg:flex items-center w-full max-w-[710px]">
-                                <SearchIcon className="absolute left-4 text-gray-400" />
+                <div className="bg-white rounded-lg p-6 shadow-md mb-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        {/* Title */}
+                        <h2 className="text-xl mt-5 font-semibold text-gray-800">Products</h2>
+
+                        {/* Search, Add Product, and Filter Buttons */}
+                        <div className="flex items-center gap-4">
+                            {/* Search Bar */}
+                            <div className="relative w-full max-w-md hidden lg:flex items-center mt-4 ">
+                                <SearchIcon className="-mt-4 absolute left-4 text-gray-400"/>
                                 <input
                                     type="text"
-                                    className="pl-10 pr-4 h-12 w-full rounded-lg border border-border-base focus:border-accent"
+                                    className="pl-12 pr-4 h-12 w-full rounded-full border border-gray-300 focus:ring focus:ring-[#019376] focus:border-[#019376] transition-shadow"
                                     placeholder="Search by Name"
                                     aria-label="Search"
                                 />
                             </div>
+
+                            {/* Add Product Button */}
                             <button
-                                className="ml-4 h-12 px-5 text-white bg-[#019376] rounded-full"
+                                className="flex items-center justify-center h-12 px-6 bg-[#019376] text-white font-medium rounded-full shadow hover:bg-[#01765c] transition-colors"
                                 onClick={() => navigate("/shop-dashboard/shop-add-product")}
                             >
                                 + Add Product
                             </button>
+
+                            {/* Filter Button */}
                             <button
                                 onClick={toggleFilter}
-                                className="ml-4 flex items-center text-base font-semibold text-[#019376]"
+                                className="flex items-center text-[#019376] font-semibold hover:text-[#01765c] transition-colors"
                             >
                                 Filter
-                                {isFilterVisible ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                                {isFilterVisible ? (
+                                    <ArrowDownwardIcon className="ml-1"/>
+                                ) : (
+                                    <ArrowUpwardIcon className="ml-1"/>
+                                )}
                             </button>
                         </div>
                     </div>
+
+                    {/* Filter Section */}
                     {isFilterVisible && (
-                        <div className="flex w-full mt-5 border-t border-gray-200 pt-5">
-                            <ShopFilter />
+                        <div className="mt-6 pt-4 border-t border-gray-200">
+                            <ShopFilter/>
                         </div>
                     )}
                 </div>
+
 
                 <div className="rc-table-content">
                     <table className="min-w-full divide-y divide-gray-200">
