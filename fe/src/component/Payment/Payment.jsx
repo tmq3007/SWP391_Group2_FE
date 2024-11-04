@@ -233,6 +233,14 @@ const Payment = () => {
                     const orderId = response.orderId;
                     console.log("order id pay",orderId)
                     order.isPaid=true;
+                    /*const dat = new Date();
+                    const year = dat.getFullYear();
+                    const month = String(dat.getMonth() + 1).padStart(2, '0');
+                    const day = String(dat.getDate()).padStart(2, '0');
+                    const time = `${year}-${month}-${day}`;
+                    order.orderItemsPaymentDate = time;
+                    */
+
                     await processOrderItems(items, orderId, token);
                     setShowPopup(true);
                 } else {

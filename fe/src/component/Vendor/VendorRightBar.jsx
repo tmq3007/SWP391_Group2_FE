@@ -172,7 +172,7 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
   }, [id, token]);
   console.log(orderItems);
   //IMPORTANT PART
-  if (loading) {
+  if (loading || orderItems.length === 0) {
     return <div>No data</div>; // Show loading message until data is fetched
   }
   const paidOrder = (orderItems.length > 0) ? (orderItems.filter(a => a.isPaid).length) : 0;
