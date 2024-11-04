@@ -145,10 +145,7 @@ async function processOrderItems(items, orderId, token) {
             productName: item.product.productName,
             productImage: item.product.pictureUrl,
             productSellPrice: item.product.unitSellPrice,
-            /*orderItemsDate: '2024-10-09',
-            orderItemsPaymentDate: "2024-10-09",
-            isPaid: true,
-            paymentId: 2,*/
+
             orderId: orderId,
             discount: item.product.discount,
             productQuantity: item.quantity,
