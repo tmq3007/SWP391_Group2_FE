@@ -184,9 +184,6 @@ function CustomersPage() {
                                 <SearchIcon />
                             </span>
                         </div>
-                        <button className="add-user-button w-1/10 h-12 relative top-2">
-                            + Add Customer
-                        </button>
                     </div>
                 </div>
             </div>

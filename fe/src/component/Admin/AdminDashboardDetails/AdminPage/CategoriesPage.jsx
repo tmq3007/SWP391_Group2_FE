@@ -65,7 +65,8 @@ function CategoriesPage() {
                 }));
                 setCategories(mappedCategories);  // Set categories in state
             } catch (error) {
-                console.error("Error fetching categories", error);
+                setSnackBarMessage("Cannot connect to the server. Please check your internet connection.");
+                setSnackBarOpen(true);
             }
         };
 

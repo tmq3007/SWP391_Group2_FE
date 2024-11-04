@@ -127,7 +127,7 @@ export const EditShop = () => {
         <div className="w-full bg-gray-100 h-screen overflow-y-auto mt-8">
             <div className={"h-screen p-6"}>
                 <div className={"flex border-b border-dashed border-border-base pb-5 md:pb-7 "}>
-                    <h1 className={"text-lg font-semibold text-heading text-[#1f2937]"}> Edit Shop</h1>
+                    <h1 className={"text-lg font-semibold text-heading text-[#1f2937]"}>Create New Shop</h1>
                 </div>
 
                 {/* Logo Upload Section */}

@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getAllCategoriesAction} from "../State/Category/Action";
 import {createProductAction} from "../State/Product/Action";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 export const ShopAddProduct = () => {
@@ -26,7 +27,7 @@ export const ShopAddProduct = () => {
 
     const dispatch = useDispatch();
     const {categories} = useSelector((store) => store.categories || {});
-
+    const navigate = useNavigate();
 
     // Fetch categories on component mount
     useEffect(() => {
@@ -80,6 +81,8 @@ export const ShopAddProduct = () => {
             .then(() => {
                 console.log("Product created successfully!");
                 alert("Product created successfully!");
+                navigate("/shop-dashboard/shop-product");
+
             })
             .catch((error) => {
                 console.error("Error creating product:", error);

@@ -74,7 +74,7 @@ const Payment = () => {
     }
     const addOrderItems = async (id,orderItems, jwt) => {
         try {
-            const response = await axios.post(`http://localhost:8080/api/v1/orderItems/${id}`,orderItems, {
+            const response = await axios.post(`http://localhost:8080/api/v1/orderItems`,orderItems, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -127,6 +127,7 @@ const Payment = () => {
                 productImage: item.product.pictureUrl,
                 productSellPrice: item.product.unitSellPrice,
                 discount: item.product.discount,
+                orderId: orderId,
                 productQuantity: item.quantity,
                 itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
                 finalPrice: (
@@ -230,6 +231,7 @@ const Payment = () => {
                     setPaymentSuccess(true);
                     const response = await addOrder(order, token);
                     const orderId = response.orderId;
+                    console.log("order id pay",orderId)
                     order.isPaid=true;
                     await processOrderItems(items, orderId, token);
                     setShowPopup(true);
