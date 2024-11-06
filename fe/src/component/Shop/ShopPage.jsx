@@ -52,106 +52,92 @@ export const ShopPage = () => {
         return () => { isMounted = false; };
     }, [token]);
 
-    // Fetch shop details by shopId
+    // Fetch shop statistics by shopId
     useEffect(() => {
         if (shopId) {
-            axios.get(`http://localhost:8080/api/v1/shops/${shopId}`, {
+            axios.get(`http://localhost:8080/api/v1/shops/get-statistic-shop/${shopId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
                 .then(response => setShopData(response.data.result))
-                .catch(error => console.error("Error fetching shop details:", error));
-            console.log("shop id: ", shopId);
+                .catch(error => console.error("Error fetching shop statistics:", error));
         }
     }, [shopId, token]);
 
 
     return (
         //Main content
-            <div className="w-full bg-white h-screen overflow-y-auto">
-                <div className="h-screen p-6">
-                    <div className="w-full h-full bg-cover bg-center"
-                         style={{ backgroundImage: `url(${shopData?.cover || 'default-cover-url'})` }}>
+        <div className="w-full bg-gray-50 min-h-screen overflow-y-auto">
+            <div className="p-6">
+                {/* Cover Image */}
+                <div
+                    className="w-full h-60 bg-cover bg-center relative"
+                    style={{backgroundImage: `url(${shopData?.cover || 'default-cover-url'})`}}
+                >
+                    <div className="absolute inset-0 bg-black opacity-20"></div>
+                </div>
+
+                {/* Profile Section */}
+                <div className="relative z-10 px-6 -mt-20">
+                    <div className="flex flex-wrap items-start gap-6">
+                        {/* Logo */}
+                        <img
+                            src={shopData?.logo || 'default-logo-url'}
+                            alt="Shop Logo"
+                            className="rounded-full object-cover h-32 w-32 lg:h-40 lg:w-40 shadow-lg border-4 border-white"
+                        />
+
+                        {/* Shop Information */}
+                        <div className="flex-1 mt-24">
+                            <h1 className="text-3xl font-bold text-gray-800">{shopData?.shopName}</h1>
+                            <div className="flex items-center text-gray-600 space-x-4 mt-2">
+                                <div className="flex items-center space-x-2">
+                                    <PhoneIcon className="text-gray-500" fontSize="small"/>
+                                    <p>{shopData?.phone || 'N/A'}</p>
+                                </div>
+                                <span className="mx-2">|</span>
+                                <div className="flex items-center space-x-2">
+                                    <LocationOn className="text-gray-500" fontSize="small"/>
+                                    <p>{shopData?.address || 'N/A'}, {shopData?.subdistrict || 'N/A'},
+                                        {shopData?.district || 'N/A'}, {shopData?.subdistrict || 'N/A'}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Edit Button */}
+                        <button
+                            className="inline-flex mt-24 items-center px-6 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+                            onClick={() => navigate(`/shop-dashboard/edit-shop/${shopId}`)}
+                        >
+                            <EditIcon className="mr-2" fontSize="small"/>
+                            Edit Shop
+                        </button>
                     </div>
 
-                    <div className='relative z-10 px-4 lg:px-6 xl:px-10'>
-                        <div className='-mt-16 flex flex-wrap gap-6 lg:-mt-[6.0625rem] 2xl:flex-nowrap'>
-                            <img src={shopData?.logo || 'default-logo-url'} alt="Shop Logo"
-                                 className="rounded-full object-cover h-28 w-28 lg:h-[11.125rem] lg:w-[11.125rem]"/>
-                        </div>
-                        <div className='flex w-full flex-wrap justify-between self-end 2xl:flex-1'>
-                            <div className='flex-auto pr-5 xl:flex-1'>
-                                <h1 className='font-semibold leading-none text-muted-black text-3xl py-3'>{shopData?.shopName}</h1>
-                                <div className='flex flex-col space-y-3 divide-[#E7E7E7] leading-none xl:flex-row
-                                xl:space-y-0 xl:space-x-5 xl:divide-x'>
-                                    <div>
-                                        <PhoneIcon fontSize='small'/>
-                                        <a href="">{shopData?.phone}</a>
-                                    </div>
-                                    <Divider orientation="vertical" variant="middle" flexItem/>
-                                    <div>
-                                        <LocationOn fontSize='small'/>
-                                        <a href="">588 Finwood Road, East Dover, New Jersey, 08753, USA</a>
-                                    </div>
-                                    <Divider orientation="vertical" variant="middle" flexItem/>
-                                </div>
+                    {/* Additional Info Boxes */}
+                    <div className="my-10 flex flex-wrap gap-6">
+                        {/* Registered Since and Bio */}
+                        <div className="w-full lg:w-1/3 p-6 bg-white rounded-lg shadow-md">
+                            <div className="mt-6">
+                                <h4 className="text-lg font-semibold text-gray-800">Bio</h4>
+                                <p className="mt-2 text-gray-600">{shopData?.description || 'No bio available.'}</p>
                             </div>
-
-                            <div className='flex items-center'>
-                                <button
-                                    className="inline-flex items-center justify-center w-28 h-10 rounded-lg bg-[#019376] text-xs font-medium text-white hover:bg-green-600"
-                                    onClick={() => navigate(`/shop-dashboard/edit-shop/${shopId}`)}
-                                >
-                                    <EditIcon fontSize="small"/>
-                                    Edit Shop
-                                </button>
-
-                            </div>
-
                         </div>
 
-                        <div className='my-10 flex flex-wrap items-stretch gap-4 lg:gap-4 xl:gap-10'>
-                            <div className='relative w-full shrink-0 overflow-hidden
-                            rounded-lg bg-white p-4 lg:w-[18rem] lg:p-6 xl:w-[22.375rem] xl:p-8'>
-                                <h4 className="mb-1 text-sm font-normal text-[#666]" data-label-id="0">Registered
-                                    Since</h4>
-                                <p className='text-muted-black'>October 3 2024</p>
-
-                                <div className='relative mt-5 pt-5 xl:pt-7'>
-                                    <h2 className='mb-4 text-lg font-semibold text-muted-black xl:text-xl'>Bio</h2>
-                                    <div className='text-sm leading-[171.429%] text-[#666]'>
-                                        {shopData?.description}
-                                    </div>
-
-                                </div>
+                        {/* Total Products and Orders */}
+                        <div
+                            className="w-full lg:w-1/3 p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-800">{shopData?.totalProduct || 0}</h2>
+                                <p className="text-gray-600">Total Product</p>
                             </div>
-                            <div className='w-full flex-1 rounded-lg bg-white p-4 lg:p-6 xl:p-7 2xl:p-10'>
-                                <div className='grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 xl:gap-5
-                                2xl:grid-cols-3 2xl:gap-7'>
-                                    <div
-                                        className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
-                                        <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
-                                            55
-                                        </h2>
-                                        <p className='truncate text-sm text-base-dark'>
-                                            Total Product
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        className='flex items-center space-x-2 rounded-lg border border-[#E5E5E5] bg-white px-4 py-5 3xl:px-6 3xl:py-8'>
-                                        <h2 className='mb-1.5 text-xl md:text-2xl font-medium text-muted-black'>
-                                            2
-                                        </h2>
-                                        <p className='truncate text-sm text-base-dark'>
-                                            Total Order
-                                        </p>
-                                    </div>
-
-                                </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-800">{shopData?.totalOrders || 0}</h2>
+                                <p className="text-gray-600">Total Order</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     );
 };
