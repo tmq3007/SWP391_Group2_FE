@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NavbarHomePage } from "../Navbar/NavbarHomePage";
 import axios from "axios";
@@ -34,7 +34,8 @@ const Payment = () => {
     console.log("order",order)
     const MY_BANK = {
         BANK_ID: "MBBank",
-        ACCOUNT_ID: "0867726950"
+        ACCOUNT_ID: "99999300799999"
+        //ACCOUNT_ID: "0867726950"
     };
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -74,7 +75,7 @@ const Payment = () => {
     }
     const addOrderItems = async (id,orderItems, jwt) => {
         try {
-            const response = await axios.post(`http://localhost:8080/api/v1/orderItems/${id}`,orderItems, {
+            const response = await axios.post(`http://localhost:8080/api/v1/orderItems`,orderItems, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -127,6 +128,7 @@ const Payment = () => {
                 productImage: item.product.pictureUrl,
                 productSellPrice: item.product.unitSellPrice,
                 discount: item.product.discount,
+                orderId: orderId,
                 productQuantity: item.quantity,
                 itemTotalPrice: (item.product.unitSellPrice * item.quantity).toFixed(2),
                 finalPrice: (
@@ -187,29 +189,31 @@ const Payment = () => {
 
 
 
+    const intervalRef = useRef(null);  // Reference to hold the interval ID
+
     useEffect(() => {
-        // Check payment status only once if not already checked
-        if (!paymentSuccess  ) {
-            const interval = setInterval(() => {
+        // Check payment status every 5 seconds if not already successful
+        if (!paymentSuccess) {
+            intervalRef.current = setInterval(() => {
                 checkPaid(amount, description);
-            }, 1000);
-
-            return () => {
-                clearInterval(interval);
-
-            };
+            }, 5000);
         }
-    }, [amount, description, paymentSuccess ]);
+
+        return () => {
+            clearInterval(intervalRef.current); // Clear interval when component unmounts
+        };
+    }, [amount, description, paymentSuccess]);
 
     useEffect(() => {
-        // If payment is successful, show popup and navigate to home after 1 second
+        // When payment is successful, navigate to home and clear the interval
         if (paymentSuccess) {
             const timer = setTimeout(() => {
                 setShowPopup(false);  // Hide popup after 1 second
-                navigate('/');
+                clearInterval(intervalRef.current); // Stop checking payment status
+                navigate('/');  // Navigate to home page
             }, 1000);
 
-            return () => clearTimeout(timer);
+            return () => clearTimeout(timer); // Clear timer if the effect is cleaned up
         }
     }, [paymentSuccess, navigate]);
 
@@ -217,9 +221,11 @@ const Payment = () => {
         if(paymentSuccess){
             return;
         }else{
+            // "https://script.google.com/macros/s/AKfycbysOrpaEO6-6v5kC_wkHGTd7OFTHHQT0DIX_sCYBQMNYVYG4rhSuyuQ5GiQmYr7kwLv/exec"
             try {
                 const response = await fetch(
-                    "https://script.google.com/macros/s/AKfycbysOrpaEO6-6v5kC_wkHGTd7OFTHHQT0DIX_sCYBQMNYVYG4rhSuyuQ5GiQmYr7kwLv/exec"
+                    "https://script.google.com/macros/s/AKfycbwXhY05yiY7aV_G4R_7D-pJcnNwDQJ_zGHu8q_fGUxtkT-u93WFJUmC94YAI_uS-g3v/exec"
+
                 );
                 const data = await response.json();
                 const lastPaid = data.data[data.data.length - 1];
@@ -228,9 +234,25 @@ const Payment = () => {
 
                 if (price >= lastPrice && lastContent.includes(content)) {
                     setPaymentSuccess(true);
+                    const dat = new Date();
+                    const year = dat.getFullYear();
+                    const month = String(dat.getMonth() + 1).padStart(2, '0');
+                    const day = String(dat.getDate()).padStart(2, '0');
+                    const time = `${year}-${month}-${day}`;
+                    order.isPaid=true;
+                    order.paymentDate = time;
                     const response = await addOrder(order, token);
                     const orderId = response.orderId;
-                    order.isPaid=true;
+                    console.log("order id pay",orderId)
+
+                    /*const dat = new Date();
+                    const year = dat.getFullYear();
+                    const month = String(dat.getMonth() + 1).padStart(2, '0');
+                    const day = String(dat.getDate()).padStart(2, '0');
+                    const time = `${year}-${month}-${day}`;
+                    order.orderItemsPaymentDate = time;
+                    */
+
                     await processOrderItems(items, orderId, token);
                     setShowPopup(true);
                 } else {

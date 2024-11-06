@@ -3,7 +3,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useDispatch, useSelector} from "react-redux";
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 
@@ -25,7 +25,7 @@ export const EditShop = () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('jwt');
     const dispatch = useDispatch();
-    const {shopId} = useParams();
+
 
     const handleEditShop = () => {
         if (!shopName || !description || !city || !state || !address || !phone ) {
@@ -47,18 +47,19 @@ export const EditShop = () => {
         }
 
 
-        axios.patch(`http://localhost:8080/api/v1/shops/${shopId}`, shopData, {
+        axios.post('http://localhost:8080/api/v1/request-shop-creation', shopData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
         })
             .then(response => {
-                console.log("Shop updated successfully!", response);
+                console.log("Shop created successfully!", response);
                 setIsSuccessPopupOpen(true);
+
             })
             .catch(error => {
-                console.error("Error updating shop:", error);
-                alert("Error updating shop. Please try again.");
+                console.error("Error creating shop:", error);
+                alert("Error creating shop. Please try again.");
             });
     };
 
@@ -126,7 +127,7 @@ export const EditShop = () => {
         <div className="w-full bg-gray-100 h-screen overflow-y-auto mt-8">
             <div className={"h-screen p-6"}>
                 <div className={"flex border-b border-dashed border-border-base pb-5 md:pb-7 "}>
-                    <h1 className={"text-lg font-semibold text-heading text-[#1f2937]"}> Edit Shop</h1>
+                    <h1 className={"text-lg font-semibold text-heading text-[#1f2937]"}>Create New Shop</h1>
                 </div>
 
                 {/* Logo Upload Section */}
@@ -265,7 +266,7 @@ export const EditShop = () => {
                     <DialogTitle>Success!</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Your Shop Have Been Updated Successfully
+                            Your shop creation has been sent successfully.
                         </DialogContentText>
                     </DialogContent>
                 </Dialog>

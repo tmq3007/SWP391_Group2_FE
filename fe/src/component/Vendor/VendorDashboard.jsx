@@ -41,6 +41,7 @@ const VendorDashboard = () => {
         };
         fetchData();
     }, [id, token]);
+    console.log("user", user);
 
     if (loading) {
         return <div>Loading...</div>; // Show loading message until data is fetched
