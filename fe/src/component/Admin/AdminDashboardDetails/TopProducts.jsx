@@ -36,6 +36,7 @@ const TopProducts = () => {
         },
     };
 
+
     const getStarIcons = (rating) => {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
@@ -43,22 +44,20 @@ const TopProducts = () => {
                 // Full star
                 stars.push(<span key={i} className="text-yellow-500">★</span>);
             } else if (rating >= i - 0.5) {
-                // Half star
+                // Half star with overlay
                 stars.push(
-                    <span key={i} className="relative inline-block text-yellow-500 overflow-hidden" style={{ width: '0.5em' }}>
-                    ★
-                </span>
-                );
-            } else if (rating >= i - 0.25) {
-                // Quarter star
-                stars.push(
-                    <span key={i} className="relative inline-block text-yellow-500 overflow-hidden" style={{ width: '0.25em' }}>
-                    ★
+                    <span key={i} className="relative inline-block text-gray-300">
+                    {/* Outline of empty star */}
+                        ★
+                        {/* Overlay filled half-star */}
+                        <span className="absolute left-0 top-0 text-yellow-500 overflow-hidden" style={{ width: '50%' }}>
+                        ★
+                    </span>
                 </span>
                 );
             } else {
                 // Empty star
-                stars.push(<span key={i} className="text-gray-300">☆</span>);
+                stars.push(<span key={i} className="text-gray-300">★</span>);
             }
         }
         return stars;
