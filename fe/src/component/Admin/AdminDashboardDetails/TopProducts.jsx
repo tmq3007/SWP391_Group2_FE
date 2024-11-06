@@ -36,6 +36,34 @@ const TopProducts = () => {
         },
     };
 
+    const getStarIcons = (rating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            if (rating >= i) {
+                // Full star
+                stars.push(<span key={i} className="text-yellow-500">★</span>);
+            } else if (rating >= i - 0.5) {
+                // Half star
+                stars.push(
+                    <span key={i} className="relative inline-block overflow-hidden" style={{ width: '50%' }}>
+                    <span className="text-yellow-500">★</span>
+                </span>
+                );
+            } else if (rating >= i - 0.25) {
+                // Quarter star
+                stars.push(
+                    <span key={i} className="relative inline-block overflow-hidden" style={{ width: '25%' }}>
+                    <span className="text-yellow-500">★</span>
+                </span>
+                );
+            } else {
+                // Empty star
+                stars.push(<span key={i} className="text-gray-300">☆</span>);
+            }
+        }
+        return stars;
+    };
+
     return (
         <div className="card">
             <div className='summary-header'>
@@ -56,7 +84,7 @@ const TopProducts = () => {
                                         <p className='mb-3 text-sm font-normal text-gray-500 truncate'>{product.description}</p>
                                         <span className='text-base font-semibold text-heading/80'>{product.price}</span>
                                     </div>
-                                    <span className="rating">{'★'.repeat(product.rating)}</span>
+                                    <span className="rating">{getStarIcons(product.rating)}</span>
                                 </div>
                             </SwiperSlide>
                         </div>
