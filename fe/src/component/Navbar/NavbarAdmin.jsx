@@ -103,8 +103,8 @@ export const NavbarAdmin = () => {
                         </IconButton>
 
                         <div className="flex flex-col">
-                            <span className="font-semibold text-sm text-black">Siu</span>
-                            <span className="text-xs text-gray-400">Store Owner</span>
+                            <span className="font-semibold text-sm text-black">Admin</span>
+                            <span className="text-xs text-gray-400">Website Owner</span>
                         </div>
                     </div>
 
