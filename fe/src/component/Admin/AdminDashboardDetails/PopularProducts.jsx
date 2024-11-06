@@ -43,7 +43,7 @@ const PopularProducts = () => {
                                 <div className="product-category">{product.category}</div>
                             </div>
                         </div>
-                        <div className="product-price">${product.price.toFixed(2)}</div>
+                        <div className="product-price">{product.price.toFixed(0)} VND</div>
                     </li>
                 ))}
             </ul>

@@ -17,7 +17,7 @@ const TopProducts = () => {
                 const mappedProducts = result.result.map((product) => ({
                     name: product.productName,
                     description: product.description,
-                    price: `$${product.unitSellPrice.toFixed(2)}`,
+                    price: `${product.unitSellPrice.toFixed(0)} VND`,
                     rating: product.averageRating,
                     image: product.pictureUrl,
                 }));
