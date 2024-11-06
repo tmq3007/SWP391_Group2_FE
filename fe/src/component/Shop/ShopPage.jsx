@@ -87,7 +87,7 @@ export const ShopPage = () => {
                         />
 
                         {/* Shop Information */}
-                        <div className="flex-1 mt-20">
+                        <div className="flex-1 mt-24">
                             <h1 className="text-3xl font-bold text-gray-800">{shopData?.shopName}</h1>
                             <div className="flex items-center text-gray-600 space-x-4 mt-2">
                                 <div className="flex items-center space-x-2">
