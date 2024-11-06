@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import '../../../style/AdminDashboard.css';
-
 import 'swiper/css';
 import 'swiper/css/pagination';
-
 import { Pagination } from 'swiper/modules';
-
-const products = [
-    {
-        name: "Brussels Sprout",
-        description: "The Brussels sprout is a member of the Gemmifera Group...",
-        price: "$3.00",
-        rating: 5,
-        image: "https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F20%2FVeggiePlatter.jpg&w=1920&q=75"
-    },
-    {
-        name: "Brussels Sprout",
-        description: "The Brussels sprout is a member of the Gemmifera Group...",
-        price: "$3.00",
-        rating: 5,
-        image: "https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F20%2FVeggiePlatter.jpg&w=1920&q=75"
-    },
-    // Add more product objects here
-];
+import {getTop10ProductsByHighestAverageRating} from "../../State/Admin/Action";
 
 const TopProducts = () => {
+    const [products, setProducts] = useState([]);
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const result = await getTop10ProductsByHighestAverageRating();
+                const mappedProducts = result.result.map((product) => ({
+                    name: product.productName,
+                    description: product.description,
+                    price: `$${product.unitSellPrice.toFixed(2)}`,
+                    rating: product.averageRating,
+                    image: product.pictureUrl,
+                }));
+                setProducts(mappedProducts);
+            } catch (error) {
+                console.error("Error fetching top products:", error);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     const pagination = {
         clickable: true,
@@ -38,10 +39,9 @@ const TopProducts = () => {
     return (
         <div className="card">
             <div className='summary-header'>
-                <h2 className='text-2xl font-semibold'>Top 10 most rated products</h2>
+                <h2 className='text-2xl font-semibold'>Top 10 Most Rating Products</h2>
             </div>
-            <Swiper pagination={false} modules={[Pagination]} className="mySwiper">
-
+            <Swiper pagination={pagination} modules={[Pagination]} className="mySwiper">
                 <div className="slider-wrapper" style={{transform: `translateX(-${currentSlide * 100}%)`}}>
                     {products.map((product, index) => (
                         <div className="slide" key={index}>
@@ -62,7 +62,6 @@ const TopProducts = () => {
                         </div>
                     ))}
                 </div>
-
             </Swiper>
         </div>
     );

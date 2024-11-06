@@ -53,7 +53,7 @@ function RecentOrders() {
 
             <div className='flex justify-between mt-3 mb-4'>
             <div className='recent-orders-header'>
-                <h2 className='text-2xl font-semibold'>Recent Orders</h2>
+                <h2 className='text-2xl font-semibold'>Top Users</h2>
             </div>
 
                 <div className="search-container">

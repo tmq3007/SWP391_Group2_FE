@@ -199,3 +199,33 @@ export const getStatisticsShop = async (shopId) => {
         throw error;
     }
 }
+
+export const getTop10ProductsByHighestAverageRating = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/products/top10ByHighestAverageRating`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching top 10 products by highest average rating", error);
+        throw error;
+    }
+}
+
+export const getTop10ProductsByMostSold = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/products/top10ByMostSold`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching top 10 products by most sold", error);
+        throw error;
+    }
+}
+
+export const getTop10CategoriesByMostProducts = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/categories/get-top-10-by-most-products`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching top 10 categories by most products", error);
+        throw error;
+    }
+}
