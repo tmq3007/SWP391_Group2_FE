@@ -36,11 +36,13 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
             console.log("start");
             let orderId = -1;
             const orderNote = cnote;
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0'); 
-            const day = String(date.getDate()).padStart(2, '0');
+
+            const dat = new Date();
+            const year = dat.getFullYear();
+            const month = String(dat.getMonth() + 1).padStart(2, '0');
+            const day = String(dat.getDate()).padStart(2, '0');
             const time = `${year}-${month}-${day}`;
+
             const orderAddress = `${address.city} / ${address.district} / ${address.street} / ${address.subDistrict}`;
             const a = items.reduce((acc, cur) => acc + cur.product.unitSellPrice * cur.quantity, 0);
             const b = items.reduce((acc, cur) => acc + ((cur.product.unitSellPrice * cur.quantity) - ((cur.product.unitSellPrice * cur.quantity) * (cur.product.discount ))), 0);

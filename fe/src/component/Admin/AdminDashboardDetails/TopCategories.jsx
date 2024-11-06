@@ -1,36 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../../style/AdminDashboard.css';
+import {getTop10CategoriesByMostProducts} from "../../State/Admin/Action";
 
-const categories = [
-    { id: "ID: 7", name: "Snacks", shop: "Grocery Shop", count: 73 },
-    { id: "ID: 125", name: "Bakery", shop: "Grocery Shop", count: 60 },
-    { id: "ID: 122", name: "Fruits", shop: "Grocery Shop", count: 60 },
-    { id: "ID: 118", name: "Snacks", shop: "Grocery Shop", count: 54 },
-    // Add more category objects here
-];
 
 const TopCategories = () => {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await getTop10CategoriesByMostProducts();
+                const mappedCategories = response.result.map((category) => ({
+                    id: `ID: ${category.categoryId}`,
+                    name: category.categoryName,
+                }));
+                setCategories(mappedCategories);
+            } catch (error) {
+                console.error("Error fetching top categories:", error);
+            }
+        };
+        fetchCategories();
+    }, []);
+
     return (
         <div className="card">
-            <div className='summary-header'>
-                <h2 className='text-2xl font-semibold'>Top 10 Category with most products</h2>
+            <div className="summary-header">
+                <h2 className="text-2xl font-semibold">Top 10 Categories with Most Products</h2>
             </div>
             <table>
                 <thead>
                 <tr>
-                    <th id='non-center'>Category ID</th>
-                    <th id='non-center'>Category Name</th>
-                    <th id='non-center'>Shop</th>
-                    <th id='center'>Product Count</th>
+                    <th id="non-center">Category ID</th>
+                    <th id="non-center">Category Name</th>
                 </tr>
                 </thead>
                 <tbody>
                 {categories.map((category, index) => (
                     <tr key={index}>
-                        <td id='td-non-center'>{category.id}</td>
-                        <td id='td-non-center'>{category.name}</td>
-                        <td id='td-non-center'>{category.shop}</td>
-                        <td >{category.count}</td>
+                        <td id="td-non-center">{category.id}</td>
+                        <td id="td-non-center">{category.name}</td>
                     </tr>
                 ))}
                 </tbody>

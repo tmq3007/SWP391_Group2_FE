@@ -67,7 +67,7 @@ const SaleHistoryChart = () => {
     return (
         <div>
         <div className='sale-history-header'>
-            <h2 className='text-2xl font-semibold'>Order Status</h2>
+            <h2 className='text-2xl font-semibold'>Sale History</h2>
         </div>
     <Bar className='p-5' data={data} options={options}/>
 </div>

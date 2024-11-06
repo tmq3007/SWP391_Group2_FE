@@ -1,35 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../../style/AdminDashboard.css';
+import {getTop10ProductsByMostSold} from "../../State/Admin/Action";
+
 
 const PopularProducts = () => {
-    const products = [
-        { name: 'Brussels Sprout', category: 'Grocery', price: 3.00 },
-        { name: 'Apples', category: 'Grocery', price: 1.60 },
-        { name: 'Blueberries', category: 'Grocery', price: 3.00 },
-        { name: 'Celery Stick', category: 'Grocery', price: 5.00 },
-        { name: 'The Bedtime Stories Part One', category: 'Books', price: 100.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-        { name: 'NutriBlend Pro-Stage Baby Formula', category: 'Medicine', price: 32.00 },
-    ];
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await getTop10ProductsByMostSold();
+                const mappedProducts = response.result.map((product) => ({
+                    name: product.productName,
+                    category: product.category.categoryName,
+                    price: product.unitSellPrice,
+                    image: product.pictureUrl || 'https://placehold.co/100', // Use placeholder if image is missing
+                }));
+                setProducts(mappedProducts);
+            } catch (error) {
+                console.error("Error fetching top products:", error);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     return (
         <div className="popular-products">
-            <div className='popular-products-header'>
-                <h2 className='text-2xl font-semibold'>Popular Products</h2>
+            <div className="popular-products-header">
+                <h2 className="text-2xl font-semibold">Popular Products</h2>
             </div>
             <ul className="product-list">
                 {products.map((product, index) => (
                     <li key={index} className="product-item">
                         <div className="product-details">
                             <img
-                                src={`https://pickbazar-react-admin-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F20%2FVeggiePlatter.jpg&w=1920&q=75`} // Placeholder image; you can replace it with product images
+                                src={product.image}
                                 alt={product.name}
                                 className="rounded-lg border border-gray-200 w-16 h-16"
                             />
@@ -38,7 +43,7 @@ const PopularProducts = () => {
                                 <div className="product-category">{product.category}</div>
                             </div>
                         </div>
-                        <div className="product-price">${product.price.toFixed(2)}</div>
+                        <div className="product-price">{product.price.toFixed(0)} VND</div>
                     </li>
                 ))}
             </ul>

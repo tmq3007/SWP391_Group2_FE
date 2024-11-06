@@ -14,7 +14,7 @@ import {getAllProductsByShopIdAction, updateProductById} from "../State/Product/
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export const ShopProduct = () => {
+export const ShopInventory = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const token = localStorage.getItem('jwt');
@@ -29,10 +29,7 @@ export const ShopProduct = () => {
     const totalPages = Math.ceil(products.length / productsPerPage);
     const indexOfLastProduct = page * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products
-        .filter(product => product.isActive)
-        .slice(indexOfFirstProduct, indexOfLastProduct);
-
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
 
     useEffect(() => {
         let isMounted = true;
@@ -132,7 +129,7 @@ export const ShopProduct = () => {
                 <div className="bg-white rounded-lg p-6 shadow-md mb-8">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         {/* Title */}
-                        <h2 className="text-xl mt-5 font-semibold text-gray-800">Products</h2>
+                        <h2 className="text-xl mt-5 font-semibold text-gray-800">Inventory</h2>
 
                         {/* Search, Add Product, and Filter Buttons */}
                         <div className="flex items-center gap-4">

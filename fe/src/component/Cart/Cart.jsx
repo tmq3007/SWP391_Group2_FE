@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateCartItem, removeCartItem, getAllCartItems, findCart } from '../State/Cart/Action';
 import { getUser } from "../State/Authentication/Action";
 import { NavbarHomePage } from "../Navbar/NavbarHomePage";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -28,12 +28,35 @@ const Cart = () => {
     const [cart, setCart] = useState(null);
     const [userId, setUserId] = useState(null);
     const [localCart, setLocalCart] = useState([]);
-    const [selectedItems, setSelectedItems] = useState({}); // To track selected items
+    const [selectedItems, setSelectedItems] = useState({});
     const [openWarning, setOpenWarning] = useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
     const navigate = useNavigate();
+
+    // Hàm xử lý chọn tất cả checkbox
+    const handleSelectAll = () => {
+        const newSelectedItems = {};
+        localCart.forEach(item => {
+            if (!item.deleted) {
+                newSelectedItems[item.id] = true;
+            }
+        });
+        setSelectedItems(newSelectedItems);
+    };
+
+    // Hàm xử lý bỏ chọn tất cả checkbox
+    const handleDeselectAll = () => {
+        setSelectedItems({});
+    };
     const handleCloseWarning = () => {
         setOpenWarning(false);
-    }
+    };
+
+    const handleCloseConfirmDelete = () => {
+        setOpenConfirmDelete(false);
+    };
+
     useEffect(() => {
         if (cart && cart.result) {
             setLocalCart(cart.result.cartItems || []);
@@ -66,7 +89,7 @@ const Cart = () => {
         const newQuantity = item.quantity + change;
 
         if (newQuantity <= 0) {
-            handleRemoveItem(item);
+            handleDeleteConfirmation(item);
         } else if (newQuantity <= item.product.stock) {
             dispatch(updateCartItem(userId, item.id, { quantity: newQuantity }, jwt))
                 .then(() => {
@@ -81,27 +104,28 @@ const Cart = () => {
         }
     };
 
-    const handleRemoveItem = (item) => {
-        dispatch(removeCartItem(userId, item.id, jwt))
+    const handleDeleteConfirmation = (item) => {
+        setItemToDelete(item);
+        setOpenConfirmDelete(true);
+    };
+
+    const confirmDeleteItem = () => {
+        dispatch(removeCartItem(userId, itemToDelete.id, jwt))
             .then(() => {
-                setLocalCart(prevCart => prevCart.filter(cartItem => cartItem.id !== item.id));
-                // Remove from selectedItems as well
+                setLocalCart(prevCart => prevCart.filter(cartItem => cartItem.id !== itemToDelete.id));
                 const newSelectedItems = { ...selectedItems };
-                delete newSelectedItems[item.id];
+                delete newSelectedItems[itemToDelete.id];
                 setSelectedItems(newSelectedItems);
+                setOpenConfirmDelete(false);
             })
             .catch((error) => console.error('Error removing item:', error));
     };
 
     const handleToggleSelect = (itemId) => {
-        setSelectedItems(prev => {
-            const newState = {
-                ...prev,
-                [itemId]: !prev[itemId]
-            };
-            console.log("Updated selected items:", newState);
-            return newState;
-        });
+        setSelectedItems(prev => ({
+            ...prev,
+            [itemId]: !prev[itemId]
+        }));
     };
 
     const getSelectedItems = () => {
@@ -110,10 +134,10 @@ const Cart = () => {
 
     const handleCheckout = () => {
         const selectedItemsList = getSelectedItems();
-        if(selectedItemsList.length === 0){
+        if (selectedItemsList.length === 0) {
             setOpenWarning(true);
-        }else {
-            navigate('/my-payment', {state: {selectedItems: selectedItemsList}});
+        } else {
+            navigate('/my-payment', { state: { selectedItems: selectedItemsList } });
         }
     };
 
@@ -125,7 +149,7 @@ const Cart = () => {
     }, 0);
 
     const selectedTotalPrice = localCart.reduce((total, item) => {
-        if (item.deleted || !selectedItems[item.id]) return total; // Only count selected items
+        if (item.deleted || !selectedItems[item.id]) return total;
         const originalPrice = item.product.unitSellPrice || 0;
         const discount = item.product.discount || 0;
         return total + (originalPrice * (1 - discount) * item.quantity);
@@ -137,65 +161,169 @@ const Cart = () => {
             <Typography variant="h4" sx={{ textAlign: 'center', margin: '20px 0', color: '#333', marginTop: "100px" }}>
                 Your Shopping Cart
             </Typography>
-            <List sx={{ maxWidth: '600px', margin: '0 auto', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: 2 }}>
-                {localCart.map((item) => (
-                    !item.deleted && (
-                        <div key={item.cartItemId || item.id}>
-                            <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 20px' }}>
-                                <Checkbox
-                                    checked={!!selectedItems[item.id]}
-                                    onChange={() => handleToggleSelect(item.id)}
-                                    sx={{
-                                        color: '#019376', // Màu mặc định của checkbox
-                                        '&.Mui-checked': {
-                                            color: '#019376', // Màu khi checkbox được chọn
-                                        },
-                                    }}
-                                />
-                                <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
-                                    <IconButton onClick={() => handleQuantityChange(item, -1)} size="small">
-                                        <RemoveIcon />
-                                    </IconButton>
-                                    <Typography>{item.quantity}</Typography>
-                                    <IconButton onClick={() => handleQuantityChange(item, 1)} size="small" disabled={item.quantity >= item.product.stock}>
-                                        <AddIcon />
-                                    </IconButton>
-                                </Box>
-                                <Avatar alt={item.product.pictureUrl2} src={item.product.pictureUrl} sx={{ width: 48, height: 48, marginRight: 2, marginLeft: 4 }} />
-                                <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
-                                    <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.product.productName}</Typography>
-                                    <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${((item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2))}</Typography>
-                                </Box>
-                                <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>
-                                    ${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}
-                                </Typography>
-                                <IconButton onClick={() => handleRemoveItem(item)} size="small">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItem>
-                            <Divider sx={{ marginY: '8px' }} />
-                        </div>
-                    )
-                ))}
-                <ListItem sx={{ padding: '16px 20px' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '20px', color: '#333', textAlign: 'right', flexGrow: 1 }}>
-                        Total: ${newTotalPrice.toFixed(2)}
-                    </Typography>
-                </ListItem>
-                <ListItem sx={{ padding: '16px 20px' }}>
-                    <Button onClick={handleCheckout} variant="contained" fullWidth sx={{ backgroundColor: '#019376', borderRadius: '24px', padding: '12px 0', fontWeight: 'bold', fontSize: '16px' }}>
-                        Checkout
-                        <Typography variant="body1" sx={{ color: '#fff', fontWeight: 'bold', marginLeft: '100px' }}>${selectedTotalPrice.toFixed(2)}</Typography>
+            <Box sx={{ display: 'flex', maxWidth: '1000px', margin: '0 auto' }}>
+
+                <List sx={{ flex: 1, marginRight: 2, border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: 2, maxHeight: '450px', overflowY: 'auto', }}>
+                    <Button
+                        onClick={handleSelectAll}
+                        variant="outlined"
+                        sx={{
+                            borderColor: '#019376',
+                            color: '#019376',
+                            borderRadius: '24px',
+
+                            fontWeight: 'bold',
+                            marginLeft:'30px',
+                            fontSize: '12px',
+                            '&:hover': {
+                                backgroundColor: '#019376',
+                                color: '#fff',
+                                borderColor: '#019376'
+                            },
+                        }}
+                    >
+                        Select All
                     </Button>
-                </ListItem>
-            </List>
-            <Dialog open={openWarning} onClose={handleCloseWarning}>
-                <DialogContent >
-                    <Typography fontSize={"30px"} color={"#019376"} margin={"20px"}>No products</Typography>
-                    <Typography marginTop={"20px"} margin={"15px"}>You need to chose some products to check out.</Typography>
-                    <Typography marginTop={"20px"} margin={"15px"}>( Click out from the message to close.)</Typography>
+
+                    {localCart.length === 0 ? (
+                        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '20px', color: '#999' }}>
+                            Your cart is empty
+                        </Typography>
+                    ) : (
+                        localCart.map((item) => (
+                            !item.deleted && (
+                                <div key={item.cartItemId || item.id}>
+                                    <ListItem sx={{ display: 'flex', alignItems: 'center', padding: '16px 20px' }}>
+                                        <Checkbox
+                                            checked={!!selectedItems[item.id]}
+                                            onChange={() => handleToggleSelect(item.id)}
+                                            sx={{
+                                                color: '#019376',
+                                                '&.Mui-checked': {
+                                                    color: '#019376',
+                                                },
+                                            }}
+                                        />
+                                        <Box sx={{ display: 'flex', alignItems: 'center', width: '60px', justifyContent: 'space-between' }}>
+                                            <IconButton onClick={() => handleQuantityChange(item, -1)} size="small">
+                                                <RemoveIcon />
+                                            </IconButton>
+                                            <Typography>{item.quantity}</Typography>
+                                            <IconButton onClick={() => handleQuantityChange(item, 1)} size="small" disabled={item.quantity >= item.product.stock}>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Box>
+                                        <Avatar alt={item.product.pictureUrl2} src={item.product.pictureUrl} sx={{ width: 48, height: 48, marginRight: 2, marginLeft: 4 }} />
+                                        <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
+                                            <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.product.productName}</Typography>
+                                            <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${((item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2))}</Typography>
+                                        </Box>
+                                        <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>
+                                            ${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}
+                                        </Typography>
+                                        <IconButton onClick={() => handleDeleteConfirmation(item)} size="small">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItem>
+                                    <Divider sx={{ marginY: '8px' }} />
+                                </div>
+                            )
+                        ))
+                    )}
+                </List>
+
+                <Box sx={{ width: '300px', padding: '16px', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: 2 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '20px', color: '#333', marginBottom: 2 }}>
+                        Order Summary
+                    </Typography>
+                    <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                        Total Items: {localCart.length}
+                    </Typography>
+                    <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                        Total Price: ${newTotalPrice.toFixed(2)}
+                    </Typography>
+                    <Typography variant="body1" sx={{ marginBottom: 2 }}>
+                        Selected Total Price: ${selectedTotalPrice.toFixed(2)}
+                    </Typography>
+                    <Button onClick={handleCheckout} variant="outlined" fullWidth sx={{ borderColor: '#019376', color: '#019376', borderRadius: '24px', padding: '12px 0',
+                        fontWeight: 'bold', fontSize: '16px',marginTop:'10px',
+                        '&:hover': {
+                            backgroundColor: '#019376',
+                            color: '#fff',
+                            borderColor: '#019376'
+                        },
+                    }}>
+                        Checkout
+                    </Button>
+                    <Button
+                        onClick={() => navigate("/")}
+                        variant="outlined"
+                        fullWidth
+
+                        sx={{ borderColor: '#019376', color: '#019376', borderRadius: '24px', padding: '12px 0',
+                            fontWeight: 'bold', fontSize: '16px',marginTop:'10px',
+                            '&:hover': {
+                                backgroundColor: '#019376',
+                                color: '#fff',
+                                borderColor: '#019376'
+                            },
+                        }}
+                    >
+                        Continue Shopping
+                    </Button>
+                </Box>
+            </Box>
+
+            <Dialog open={openWarning} onClose={handleCloseWarning} sx={{ "& .MuiDialog-paper": { borderRadius: "12px", padding: "20px", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" } }}>
+                <DialogTitle sx={{ fontSize: "18px", fontWeight: "bold", color: "#019376", textAlign: "center" }}>Warning</DialogTitle>
+                <DialogContent sx={{ textAlign: "center", color: "#333" }}>
+                    <Typography variant="body1" sx={{ marginBottom: 2 }}>
+                        Please select items before checking out.
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                        <Button onClick={handleCloseWarning} color="primary" sx={{
+                            backgroundColor: "#019376",
+                            color: "#fff",
+                            padding: "10px 20px",
+                            borderRadius: "24px",
+                            '&:hover': { backgroundColor: "#017c65" },
+                        }}>
+                            Close
+                        </Button>
+                    </Box>
                 </DialogContent>
             </Dialog>
+
+            <Dialog open={openConfirmDelete} onClose={handleCloseConfirmDelete} sx={{ "& .MuiDialog-paper": { borderRadius: "12px", padding: "20px", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" } }}>
+                <DialogTitle sx={{ fontSize: "18px", fontWeight: "bold", color: "#e74c3c", textAlign: "center" }}>Confirm Deletion</DialogTitle>
+                <DialogContent sx={{ textAlign: "center", color: "#333" }}>
+                    <Typography variant="body1" sx={{ marginBottom: 2 }}>
+                        Are you sure you want to delete this item from the cart?
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                        <Button onClick={handleCloseConfirmDelete} color="primary" sx={{
+                            backgroundColor: "#ccc",
+                            color: "#333",
+                            padding: "10px 20px",
+                            borderRadius: "24px",
+                            marginRight: "10px",
+                            '&:hover': { backgroundColor: "#b0b0b0" },
+                        }}>
+                            Cancel
+                        </Button>
+                        <Button onClick={confirmDeleteItem} color="secondary" sx={{
+                            backgroundColor: "#e74c3c",
+                            color: "#fff",
+                            padding: "10px 20px",
+                            borderRadius: "24px",
+                            '&:hover': { backgroundColor: "#c0392b" },
+                        }}>
+                            Delete
+                        </Button>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 };

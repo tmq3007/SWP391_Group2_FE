@@ -18,10 +18,16 @@ export const HelpingCenter = () => {
     const handleSearch = (term) => {
         const keywordMap = {
             "new user": "/new-user",
+            "all":"/",
+            "user":"/new-user",
             "payment": "/explore",
             "order": "/order-payment",
             "cart": "/order-payment",
             "sale": "/promotions",
+            "policies":"/shopii-policies",
+            "policy": "/shopii-policies",
+            "account": "/shopii-account",
+            "accounts":"/shopii-account"
         };
 
         const lowerTerm = term.toLowerCase();

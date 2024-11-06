@@ -1,19 +1,38 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Button, IconButton, Menu} from '@mui/material';
+import { Button, IconButton, Menu } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import '../../style/NavbarShop.css';
 import Divider from '@mui/material/Divider';
-import {useNavigate} from "react-router-dom";
-import ProfileList from "../User/ProfileList";
-import {useDispatch} from "react-redux";
-import {logout} from "../State/Authentication/Action";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getUser, logout } from "../State/Authentication/Action";
 import MenuItem from "@mui/material/MenuItem";
-
+import axios from "axios";
 
 export const NavbarShop = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    const [userName, setUserName] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const token = localStorage.getItem('jwt');
+    const role = localStorage.getItem('role');
+
+    useEffect(() => {
+        if (token) {
+            dispatch(getUser(token)).then((data) => {
+                const firstName = data.result.firstName;
+                const lastName = data.result.lastName;
+                setUserName(`${firstName} ${lastName}`);
+            }).catch((error) => {
+                console.error('Error getting user:', error);
+            });
+        }
+    }, [dispatch, token]);
+
+    console.log("Name", userName)
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -25,43 +44,26 @@ export const NavbarShop = () => {
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
-
-        dispatch(logout({token: token}));
-
+        dispatch(logout({ token }));
         localStorage.removeItem('jwt');
         localStorage.removeItem('role');
         setIsLoggedIn(false);
-        setUserRole(null);
         navigate("/auth/login");
-        console.log('isLoggedIn:', false);
     };
-
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const token = localStorage.getItem('jwt');
-    const [userRole, setUserRole] = useState(null);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const role = localStorage.getItem('role');
-
 
     useEffect(() => {
         if (token && role) {
             setIsLoggedIn(true);
-            setUserRole(role);
-            console.log("Role from localStorage:", role);
         }
-    }, [token]);
-
+    }, [token, role]);
 
     const handleJoin = () => {
         navigate("/auth/login");
-        console.log('Redirecting to login page');
     };
 
     const handleClick = () => {
         navigate("/vendor-dashboard");
-        return null;
-    }
+    };
 
     return (
         <div className="navbar navbar-padding flex items-center justify-between px-6 py-4 bg-white shadow-md">
@@ -75,7 +77,6 @@ export const NavbarShop = () => {
                 <IconButton className="block lg:hidden">
                     <MenuIcon sx={{ fontSize: '1.5rem' }} />
                 </IconButton>
-
             </div>
             {/* Search Bar */}
             <div className="relative hidden w-full max-w-[710px] lg:flex items-center top-3">
@@ -105,7 +106,7 @@ export const NavbarShop = () => {
                         </IconButton>
 
                         <div className="flex flex-col">
-                            <span className="font-semibold text-sm text-black">Siu</span>
+                            <span className="font-semibold text-sm text-black">{userName}</span>
                             <span className="text-xs text-gray-400">Store Owner</span>
                         </div>
                     </div>
@@ -140,7 +141,6 @@ export const NavbarShop = () => {
                     <span style={{ color: "#FFFFFF" }}>Join</span>
                 </Button>
             )}
-
         </div>
     );
 };
