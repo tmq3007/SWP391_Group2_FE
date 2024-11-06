@@ -1,44 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import Review from "./Review";
+
 const OrderView = (order) => {
-    // Static order data for demonstration
-    const staticOrder = {
-        tracking_number: '12345ABC',
-        created_at: '2024-10-01T10:00:00Z',
-        paid_total: 150,
-        payment_gateway: 'Credit Card',
-        amount: 150,
-        shipping_fee: 5,
-        sales_tax: 10,
-        discount: 5,
-        customer_name: 'John Doe',
-        products: [
-            { name: "Hersheys Kisses", weight: "0.2lb", quantity: 1, price: 3.50, image: "https://th.bing.com/th/id/OIP._Gbmd5sS4pqCGTXdoZeO2wHaHa?rs=1&pid=ImgDetMain" },
-            { name: "M & M Funsize", weight: "0.1lb", quantity: 1, price: 1.00, image: "https://th.bing.com/th/id/OIP._Gbmd5sS4pqCGTXdoZeO2wHaHa?rs=1&pid=ImgDetMain" },
-            { name: "Dairy Milk Recloise", weight: "0.2lb", quantity: 1, price: 3.50, image: "https://th.bing.com/th/id/OIP._Gbmd5sS4pqCGTXdoZeO2wHaHa?rs=1&pid=ImgDetMain" },
-        ],
-        order_status: 'Completed',
-        delivery_time: '2024-10-05',
+    const [isReviewOpen, setIsReviewOpen] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+
+    // Open Review popup with productId
+    const handleOpenReview = (productId) => {
+        setSelectedProductId(productId);
+        setIsReviewOpen(true);
     };
+
+    // Close Review popup
+    const handleCloseReview = () => {
+        setIsReviewOpen(false);
+        setSelectedProductId(null);
+    };
+
+
     if (!order) {
         return <Typography>Select an order to view details.</Typography>; // Show a message if no order is selected
     }
 
-    // Calculate totals
-    const total = `$${staticOrder.paid_total}`;
-    const shippingCharge = `$${staticOrder.shipping_fee}`;
-    const tax = `$${staticOrder.sales_tax}`;
-    const discount = `$${staticOrder.discount}`;
-    const subTotal = `$${staticOrder.amount}`;
-    const totalAmount = `$${staticOrder.paid_total + staticOrder.shipping_fee}`;
 
     return (
         <div className=" border border-gray-200 rounded-lg">
             <div className="mx-auto w-full max-w-screen-lg ">
                 <div className='px-5'>
                     <Typography variant="h5" className="py-5  text-heading font-semibold">
-                        My Orders
+                        Order Details
                     </Typography>
                 </div>
                 <div className="relative overflow-hidden ">
@@ -83,10 +75,7 @@ const OrderView = (order) => {
                                         <span className="w-7/12 text-sm pl-4">{order.order.total}</span>
                                     </p>
 
-                                    <p className="mt-5 flex text-body-dark">
-                                        <strong className="w-5/12 text-sm font-semibold text-heading">Discount:</strong>
-                                        <span className="w-7/12 text-sm pl-4">{discount}</span>
-                                    </p>
+
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-5/12 text-sm font-semibold text-heading">Total:</strong>
                                         <span className="w-7/12 text-sm pl-4">${order.order.finalTotal}</span>
@@ -118,24 +107,38 @@ const OrderView = (order) => {
                             <Table>
                                 <TableHead className="bg-gray-100">
                                     <TableRow>
-                                        <TableCell className="text-left font-semibold">Image</TableCell>
-                                        <TableCell className="text-left font-semibold">Name</TableCell>
-
+                                        <TableCell className="text-left font-semibold">Item</TableCell>
                                         <TableCell className="text-center font-semibold">Quantity</TableCell>
                                         <TableCell className="text-right font-semibold">Price</TableCell>
+                                        <TableCell className="text-right font-semibold"></TableCell>
+
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {order.order.orderItemsList.map((item, index) => (
                                         <TableRow key={index} className="border-b">
                                             <TableCell className="flex flex-row items-center space-x-4 flex">
-                                                <img src={item.productImage} alt={item.productName} className="w-12 h-12 object-cover" />
+                                                <div className="flex text-center items-center gap-2">
+                                                    <img src={item.productImage} alt={item.productName} className="w-12 h-12 object-cover" />
+                                                    {item.productName}
+                                                </div>
 
                                             </TableCell>
-                                            <TableCell className="text-center">{item.productName}</TableCell>
+
 
                                             <TableCell className="text-center">{item.productQuantity}</TableCell>
-                                            <TableCell className="text-right">${item.itemTotalPrice.toFixed(2)}</TableCell>
+                                            <TableCell className="text-right">
+                                                {order.order.isPaid ? (
+                                                    <button className="bg-green-900" onClick={() => handleOpenReview(order.productId)}>Review</button>
+                                                ) : null}
+                                            </TableCell>
+                                            <Review
+                                                open={isReviewOpen}
+                                                onClose={handleCloseReview}
+                                                productId={selectedProductId}
+                                                userId={order.order.user.id} // Pass userId if needed
+                                            />
+
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -147,5 +150,4 @@ const OrderView = (order) => {
         </div>
     );
 };
-
 export default OrderView;

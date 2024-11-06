@@ -16,7 +16,7 @@ import {HelpingCenter} from "../HelpingCenter/HelpingCenter";
 import PaymentTimeOut from "../Payment/PaymentTimeOut";
 import Payment from "../Payment/Payment";
 import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
-import Review from "../Review/Review";
+
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
 
@@ -100,7 +100,7 @@ const CustomRoute = () => {
                        }/>
                 <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
                 <Route path="/payment" element={<Payment/>}/>
-                <Route path="/review" element={<Review/>}/>
+
 
 
             </Routes>

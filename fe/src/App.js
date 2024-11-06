@@ -11,6 +11,7 @@ import Payment from "./component/Payment/Payment";
 import PaymentTimeOut from "./component/Payment/PaymentTimeOut";
 
 
+
 function App() {
 
 
@@ -22,6 +23,7 @@ function App() {
             {/*<Home />*/}
             {/*<VendorDashboard/>*/}
             <CustomRoute />
+
 {/*<Payment/>*/}
             {/*<PaymentTimeOut/>*/}
             {/*<CustomerPayment/>*/}

@@ -131,7 +131,7 @@ const CustomerPayment = () => {
         const fetchData = async () => {
             try {
                 const addressData = await getAddressData(token);
-                setAddress(addressData);
+                setAddress(addressData.result);
             } catch (error) {
                 console.error('Error:', error);
             }

@@ -12,7 +12,8 @@ import {
 } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
 
-const Review = ({ open = true, onClose }) => {
+const Review = ({ open = true, onClose, productId, userId }) => {
+    console.log("he",userId)
     const [rating, setRating] = useState(0);
     const [description, setDescription] = useState('');
     const [uploadedImage, setUploadedImage] = useState(null);
