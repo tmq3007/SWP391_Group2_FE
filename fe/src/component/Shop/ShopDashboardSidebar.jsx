@@ -86,7 +86,7 @@ export const ShopDashboardSidebar = () => {
                             </ListItemButton>
                         </List>
                     </Collapse>
-                    <ListItem button className="sidebar-item">
+                    <ListItem button className="sidebar-item" onClick={() => navigate("/shop-dashboard/shop-inventory")}>
                         <ListItemIcon>
                             <InventoryIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
@@ -104,7 +104,7 @@ export const ShopDashboardSidebar = () => {
                         </ListSubheader>
                     }
                 >
-                    <ListItem button className="sidebar-item">
+                    <ListItem button className="sidebar-item" onClick={() => navigate("/shop-dashboard/shop-orders")}>
                         <ListItemIcon>
                             <FormatListNumberedRtlIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
