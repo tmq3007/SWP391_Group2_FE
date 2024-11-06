@@ -7,14 +7,28 @@ import Divider from '@mui/material/Divider';
 import {useNavigate} from "react-router-dom";
 import ProfileList from "../User/ProfileList";
 import {useDispatch} from "react-redux";
-import {logout} from "../State/Authentication/Action";
+import {getUser, logout} from "../State/Authentication/Action";
 import MenuItem from "@mui/material/MenuItem";
 
 
 export const VendorNavbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
-
+  const [userName, setUserName] = useState('');
+  const dispatch = useDispatch();
+  const token = localStorage.getItem('jwt');
+  const role = localStorage.getItem('role');
+  useEffect(() => {
+    if (token) {
+      dispatch(getUser(token)).then((data) => {
+        const firstName = data.result.firstName;
+        const lastName = data.result.lastName;
+        setUserName(`${firstName} ${lastName}`);
+      }).catch((error) => {
+        console.error('Error getting user:', error);
+      });
+    }
+  }, [dispatch, token]);
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -37,11 +51,11 @@ export const VendorNavbar = () => {
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const token = localStorage.getItem('jwt');
+
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const role = localStorage.getItem('role');
+
+
 
 
   useEffect(() => {
@@ -114,7 +128,7 @@ export const VendorNavbar = () => {
                 </IconButton>
 
                 <div className="flex flex-col">
-                  <span className="font-semibold text-sm text-black">Siu</span>
+                  <span className="font-semibold text-sm text-black">{userName}</span>
                   <span className="text-xs text-gray-400">Store Owner</span>
                 </div>
               </div>

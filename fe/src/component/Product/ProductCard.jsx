@@ -219,7 +219,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                                     backgroundColor: 'rgba(1, 147, 118, 0.2)',
                                 }
                             }}>
-                                {isFavorite ? <FavoriteIcon sx={{ color: '#ff4d4f' }} /> : <FavoriteBorderIcon />}
+                                {isFavorite ? <FavoriteIcon sx={{ color: '#01755b' }} /> : <FavoriteBorderIcon />}
                             </IconButton>
                         </Box>
                     )}
