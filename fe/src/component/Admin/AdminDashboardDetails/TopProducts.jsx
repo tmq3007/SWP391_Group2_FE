@@ -45,15 +45,15 @@ const TopProducts = () => {
             } else if (rating >= i - 0.5) {
                 // Half star
                 stars.push(
-                    <span key={i} className="relative inline-block overflow-hidden" style={{ width: '50%' }}>
-                    <span className="text-yellow-500">★</span>
+                    <span key={i} className="relative inline-block text-yellow-500 overflow-hidden" style={{ width: '0.5em' }}>
+                    ★
                 </span>
                 );
             } else if (rating >= i - 0.25) {
                 // Quarter star
                 stars.push(
-                    <span key={i} className="relative inline-block overflow-hidden" style={{ width: '25%' }}>
-                    <span className="text-yellow-500">★</span>
+                    <span key={i} className="relative inline-block text-yellow-500 overflow-hidden" style={{ width: '0.25em' }}>
+                    ★
                 </span>
                 );
             } else {
