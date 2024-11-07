@@ -30,7 +30,10 @@ const Payment = () => {
     // Access `amount`, `accountInfo`, and `orderId` from location.state
     //const { order } = location.state || {};
     const randomInt = Math.floor(Math.random() * 10000) + 1;
-
+    useEffect(() => {
+        // Clear the flag after successful payment or order completion
+        localStorage.removeItem('orderPlaced');
+    }, []);
     console.log("order",order)
     const MY_BANK = {
         BANK_ID: "MBBank",
@@ -211,7 +214,7 @@ const Payment = () => {
                 setShowPopup(false);  // Hide popup after 1 second
                 clearInterval(intervalRef.current); // Stop checking payment status
                 navigate('/');  // Navigate to home page
-            }, 1000);
+            }, 2000);
 
             return () => clearTimeout(timer); // Clear timer if the effect is cleaned up
         }

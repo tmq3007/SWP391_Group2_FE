@@ -137,6 +137,7 @@ const Cart = () => {
         if (selectedItemsList.length === 0) {
             setOpenWarning(true);
         } else {
+            localStorage.setItem('orderPlaced', 'true');
             navigate('/my-payment', { state: { selectedItems: selectedItemsList } });
         }
     };

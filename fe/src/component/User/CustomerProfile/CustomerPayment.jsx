@@ -131,7 +131,7 @@ const CustomerPayment = () => {
         const fetchData = async () => {
             try {
                 const addressData = await getAddressData(token);
-                setAddress(addressData.result);
+                setAddress(addressData );
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -141,8 +141,9 @@ const CustomerPayment = () => {
     console.log("2",address);
 
     ///////////////////////////////////////////////////////////////////////
-    var array = address.filter((item) => item.user.id === user.id);
+    var array =  (address.result) ? (address.result.filter((item) => item.user.id === user.id)) : [];
     console.log(array);
+
 
     ///////////////////////////////////////////////////////////////////////
     const cityRef = useRef();
@@ -163,7 +164,7 @@ const CustomerPayment = () => {
     const [openAddError, setOpenAddError] = useState(false);
     const [openUpdatePhoneError, setOpenUpdatePhoneError] = useState(false);
     const [openWarning, setOpenWarning] = useState(false);
-    const regex = /^[a-zA-Z0-9]+$/;
+    const regex = /^(?!\s*$).*/;
     ////////////////////////////////////////////////////////////////////////
     const handleCloseUpdate = () => {
         setOpenUpdate(false);
