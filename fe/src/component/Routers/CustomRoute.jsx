@@ -1,5 +1,5 @@
-import React from 'react';
-import {Navigate, Route, Routes} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import ProductDetail from "../Product/ProductDetail";
@@ -19,6 +19,7 @@ import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
 import Review from "../Review/Review";
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
+import axios from "axios";
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -31,6 +32,61 @@ const ProtectedRoute = ({ role, children }) => {
     return userRole === role ? children : <Navigate to="/auth/unauthorized" />;
 };
 
+const ProtectedVendorRoute = ({ role, children }) => {
+    const token = localStorage.getItem('jwt');
+    const userRole = localStorage.getItem('role');
+    const userId = localStorage.getItem('userId');
+    const navigate = useNavigate();
+
+    const [shopId, setShopId] = useState(null);
+    const [unverifiedShopId, setUnverifiedShopId] = useState(null);
+    const [isRejected, setIsRejected] = useState(false);
+    const [accessAllowed, setAccessAllowed] = useState(false);
+
+    useEffect(() => {
+        const fetchShopStatus = async () => {
+            try {
+                const shopResponse = await axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setShopId(shopResponse.data.result);
+            } catch (error) {
+                console.error("Error fetching shopId:", error);
+            }
+
+            try {
+                const unverifiedResponse = await axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUnverifiedShopId(unverifiedResponse.data.result);
+
+                const rejectedStatusResponse = await axios.get(`http://localhost:8080/api/v1/get-status-rejected/${unverifiedResponse.data.result}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setIsRejected(rejectedStatusResponse.data.result);
+            } catch (error) {
+                console.error("Error fetching unverified shop data:", error);
+            }
+        };
+
+        if (userId) {
+            fetchShopStatus();
+        }
+    }, [token, userId]);
+
+    useEffect(() => {
+        if (userRole === role && (shopId)) {
+            setAccessAllowed(true);
+        } else {
+            setAccessAllowed(false);
+        }
+    }, [userRole, role, shopId, unverifiedShopId, isRejected]);
+
+    if (!userRole) return <Navigate to="/auth/login" />;
+    if (!accessAllowed) return <Navigate to="/auth/unauthorized" />;
+
+    return children;
+};
 
 const CustomRoute = () => {
     return (
@@ -46,9 +102,9 @@ const CustomRoute = () => {
                 <Route path={"/success-place-order"} element={<SuccessOrderShow/>}/>
                 <Route path="/shop-dashboard/*"
                        element={
-                           <ProtectedRoute role="ROLE_VENDOR">
+                           <ProtectedVendorRoute role="ROLE_VENDOR">
                                <ShopDashboard/>
-                           </ProtectedRoute>
+                           </ProtectedVendorRoute>
                        }/>
 
                 <Route path="/vendor-dashboard/*"
