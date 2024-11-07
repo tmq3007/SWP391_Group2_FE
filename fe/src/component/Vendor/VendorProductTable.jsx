@@ -17,7 +17,7 @@ const VendorProductTable = ({ products }) => {
     const b = groupedItems.sort((a, b) => b.finalPrice - a.finalPrice);
     if (!products || products.length === 0) {
         return (
-            <div className={"items-center text-green-500"}>No data</div>
+            <div className={"items-center text-green-500"}></div>
         )
     } else {
         return (
