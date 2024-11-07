@@ -31,10 +31,10 @@ const OrderListWithMUIAndTailwind = () => {
         <Box className="h-[80vh]  w-full pr-5 md:shrink-0 lg:pr-8">
             <Box className="flex h-full flex-col bg-white pb-5 border border-gray-200 rounded-lg">
                 <Typography variant="h5" className="py-5 px-5 text-heading font-semibold">
-                    My Orders
+                    My Orderss
                 </Typography>
                 <div className="w-full overflow-y-auto" style={{ height: 'calc(100% - 80px)' }}>
-                    <Box className="px-5 space-y-4">
+                    <Box className="px-5 space-y-4 max-h-[500px] overflow-y-auto">
                         {staticOrders.map((order) => (
                             <Box
                                 key={order.id}
@@ -50,32 +50,18 @@ const OrderListWithMUIAndTailwind = () => {
                                 </Box>
 
                                 <Box className="flex justify-between w-full max-w-xs mt-2 font-semibold">
-                                    <Typography className=" font-semibold">Total:</Typography>
+                                    <Typography className="font-semibold">Total:</Typography>
                                     <Typography variant="h6">{order.total}</Typography>
                                 </Box>
 
-                                <Box className="flex justify-between w-full max-w-xs mt-2 ">
+                                <Box className="flex justify-between w-full max-w-xs mt-2">
                                     <Typography className="font-medium">Status:</Typography>
                                     <Typography className="p-2 bg-orange-100 rounded-full text-orange-700 font-light">{order.status}</Typography>
                                 </Box>
                             </Box>
-
                         ))}
-
-                        {/* Load More Button */}
-                        <div className="mt-8 flex justify-center lg:mt-12">
-                            <Button
-                                variant="contained"
-                                color="success"
-                                fullWidth
-                                className="bg-blue-500 hover:bg-blue-600 text-white"
-
-                            >
-                                Load More
-                            </Button>
-
-                        </div>
                     </Box>
+
                 </div>
             </Box>
         </Box>

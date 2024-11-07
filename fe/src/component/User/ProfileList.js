@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import {AccountBox, Logout, RecentActors} from "@mui/icons-material";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HelpIcon from '@mui/icons-material/Help';
+import {AccountBox, Logout, RecentActors} from "@mui/icons-material";
+
 const ProfileList = ({ handleLogout }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
@@ -27,6 +28,14 @@ const ProfileList = ({ handleLogout }) => {
 
     const handleProfileClick = () => {
         navigate('/my-profile'); // Navigate to /my-profile when Profile is clicked
+        handleMenuClose(); // Close the menu after navigation
+    };
+    const handleOrderClick = () => {
+        navigate('/my-profile/orders'); // Navigate to /my-profile when Profile is clicked
+        handleMenuClose(); // Close the menu after navigation
+    };
+    const handleWishlistClick = () => {
+        navigate('/my-profile/wishlist'); // Navigate to /my-profile when Profile is clicked
         handleMenuClose(); // Close the menu after navigation
     };
 
@@ -62,7 +71,15 @@ const ProfileList = ({ handleLogout }) => {
                    <AccountBox sx={{ marginRight:"10px" }} /> Profile
                 </MenuItem>
 
-                <MenuItem style={{ color: '#019376' }} onClick={handleMenuLogout}>
+                <MenuItem style={{ color: '#019376' }} onClick={handleOrderClick}>
+                    <ShoppingCartIcon sx={{ marginRight:"10px" }} /> My Orders
+                </MenuItem>
+
+                <MenuItem style={{ color: '#019376' }} onClick={handleWishlistClick}>
+                    <FavoriteIcon sx={{ marginRight:"10px" }} /> My Wishlist
+                </MenuItem>
+
+                <MenuItem style={{ color: '#019376' }} onClick={handleLogout}>
                    <Logout sx={{ marginRight:"10px" }}/> Logout
                 </MenuItem>
             </Menu>
