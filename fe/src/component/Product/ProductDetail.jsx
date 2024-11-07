@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import { Typography, Button, Box, Chip, Divider, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Typography, Button, Box, Chip, Divider, Snackbar, Alert } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import StarIcon from '@mui/icons-material/Star';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProductsAction } from '../State/Product/Action';
 import ProductCardInDetail from "./ProductCardInDetail";
 import ProductCard from "./ProductCard";
-import {getUser} from "../State/Authentication/Action";
-import {findCart} from "../State/Cart/Action";
+import { getUser } from "../State/Authentication/Action";
+import { findCart } from "../State/Cart/Action";
 
 const ProductDetail = ({ cart, item, addToCart }) => {
     const dispatch = useDispatch();
@@ -31,38 +31,33 @@ const ProductDetail = ({ cart, item, addToCart }) => {
         dispatch(getAllProductsAction());
     }, [dispatch]);
 
-    // const reviews = item?.reviews || [];
-    // const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-    // const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(2) : 'No reviews';
-    const averageRating = item?.averageRating >0? item?.averageRating :'No reviews';
-    const [openDialog, setOpenDialog] = React.useState(false); // State for dialog
-    const [dialogMessage, setDialogMessage] = React.useState(""); // State for dialog message
+    const averageRating = item?.averageRating > 0 ? item?.averageRating : 'No reviews';
+    const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar open state
+    const [snackbarMessage, setSnackbarMessage] = useState(""); // Message for the Snackbar
     const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
     const availableStock = item.stock - currentQuantityInCart;
-    console.log("availableStock",availableStock)
-    console.log("currentCartItem",currentCartItem)
-    console.log("currentQuantityInCart",currentQuantityInCart)
+
     const handleAddToCart = () => {
         if (availableStock <= 0) {
-            // If stock is 0 or less, show error message
-            setDialogMessage("Cannot add to cart no product available.");
-            setOpenDialog(true);
+            // If stock is 0 or less, show error message in Snackbar
+            setSnackbarMessage("Cannot add to cart, no product available.");
+            setOpenSnackbar(true);
         } else {
             // Add product to cart
             addToCart(item.measurementUnit, 1, item);
         }
     };
 
-    const handleCloseDialog = () => {
-        //window.location.href = "http://localhost:3000/";
-        setOpenDialog(false);
-        setDialogMessage(""); // Clear the message when closing
-
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+        setSnackbarMessage(""); // Clear the message when closing
     };
+
     const [userId, setUserId] = useState(null);
     const jwt = localStorage.getItem("jwt");
     const [cart0, setCart] = useState(null);
+
     useEffect(() => {
         if (jwt) {
             dispatch(getUser(jwt)).then((data) => {
@@ -73,9 +68,6 @@ const ProductDetail = ({ cart, item, addToCart }) => {
         }
     }, [dispatch, jwt]);
 
-    console.log("user id:", userId);
-    console.log("product",products);
-    // Fetch cart after userId is set
     useEffect(() => {
         if (userId && jwt) {
             dispatch(findCart(userId, jwt))
@@ -176,37 +168,16 @@ const ProductDetail = ({ cart, item, addToCart }) => {
             </section>
             <Divider />
 
-            {/* Related products section */}
-            {/*<section className="p-8">*/}
-            {/*    <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>*/}
-            {/*        Related Products*/}
-            {/*    </Typography>*/}
-            {/*    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">*/}
-            {/*        {relatedProducts.map((relatedItem) => (*/}
-            {/*            <ProductCardInDetail*/}
-            {/*                key={relatedItem.productId}*/}
-            {/*                item={relatedItem}*/}
-            {/*                cart={cart0?.result?.cartItems || []}*/}
-            {/*                addToCart={() => addToCart(item.measurementUnit, 1, relatedItem)}  // Pass addToCart function for related products*/}
-            {/*                selectedProductId={null}  // No selected product id for related products*/}
-            {/*                setSelectedProductId={() => {}}  // No operation for related products*/}
-            {/*            />*/}
-            {/*        ))}*/}
-            {/*    </div>*/}
-            {/*</section>*/}
-
-            {/* Popup for error message */}
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>Error</DialogTitle>
-                <DialogContent>
-                    <Typography>{dialogMessage}</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {/* Snackbar for error messages */}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000} // Duration before automatically hiding
+                onClose={handleCloseSnackbar}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 };

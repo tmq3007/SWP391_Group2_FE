@@ -131,7 +131,7 @@ export const ShopPage = () => {
                                 <p className="text-gray-600">Total Product</p>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-800">{shopData?.totalOrders || 0}</h2>
+                                <h2 className="text-2xl font-bold text-gray-800">{shopData?.totalOrder || 0}</h2>
                                 <p className="text-gray-600">Total Order</p>
                             </div>
                         </div>

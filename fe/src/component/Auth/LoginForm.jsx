@@ -76,8 +76,12 @@ const LoginForm = () => {
                 </Alert>
             </Snackbar>
 
-            <Typography variant='h4' className='text-center'>
-                Login
+            <Typography variant='h4' className='items-center align-center'>
+                <div className="flex flex-col items-center space-x-2 cursor-pointer">
+                    <li className=" mt-3 logo font-semibold text-2xl" style={{color: '#019376'}}>
+                        Shopii
+                    </li>
+                </div>
             </Typography>
 
             <Formik

@@ -187,7 +187,6 @@ export const ShopInventory = () => {
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Price/Unit</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Quantity</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -200,12 +199,6 @@ export const ShopInventory = () => {
                                 <td className="px-6 py-4 text-sm text-gray-500">{product.unitSellPrice}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{product.stock}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{product.isActive ? 'Active' : 'Inactive'}</td>
-                                <td className="px-6 py-4 text-sm text-gray-500 flex-col cursor-pointer">
-                                    <ModeEditIcon onClick={() => navigate(`/shop-dashboard/shop-edit-product/${product.productId}`)} />
-                                    <RemoveRedEyeIcon onClick={() => navigate("/")} />
-                                    <DeleteIcon onClick={() => handleDelete(product.productId)} />
-
-                                </td>
                             </tr>
                         ))}
                         </tbody>

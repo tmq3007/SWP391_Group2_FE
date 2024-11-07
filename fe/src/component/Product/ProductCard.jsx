@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ProductDetail from "./ProductDetail";
 import CloseIcon from "@mui/icons-material/Close";
-
+import { Snackbar, Alert } from '@mui/material';
 const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromWishlist }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0;
@@ -18,7 +18,8 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
     const [quantity, setQuantity] = useState(1);
     const [open, setOpen] = useState(false);
     const currentCartItem = cart.find(cartItem => cartItem.product.productId === item.productId);
-
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
 
@@ -53,13 +54,20 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
             addToCart(item.measurementUnit, quantity, item);
             setIsAddingToCart(false);
             setQuantity(1); // Reset quantity after adding to cart
+            setSnackbarMessage('Item added to cart successfully!');
+            setOpenSnackbar(true);
         } else if (quantity > availableStock) {
-            alert(`You can only add up to ${availableStock} of this item.`);
+            setSnackbarMessage(`You can only add up to ${availableStock} of this item.`);
+            setOpenSnackbar(true);
         } else {
-            alert('Please enter a valid quantity.'); // Show alert for invalid quantity
+            setSnackbarMessage('Please enter a valid quantity.');
+            setOpenSnackbar(true);
         }
     };
 
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
     const handleProductClick = () => {
         setOpen(true);
     };
@@ -248,6 +256,15 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     <ProductDetail cart={cart} item={item} addToCart={addToCart} onClose={handleClose} />
                 </DialogContent>
             </Dialog>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="info">
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 };

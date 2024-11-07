@@ -216,10 +216,10 @@ const Cart = () => {
                                         <Avatar alt={item.product.pictureUrl2} src={item.product.pictureUrl} sx={{ width: 48, height: 48, marginRight: 2, marginLeft: 4 }} />
                                         <Box sx={{ flexGrow: 1, paddingLeft: '16px' }}>
                                             <Typography sx={{ fontWeight: 'bold', fontSize: '16px' }}>{item.product.productName}</Typography>
-                                            <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>${((item.product.unitSellPrice * (1 - item.product.discount)).toFixed(2))}</Typography>
+                                            <Typography sx={{ color: '#019376', fontWeight: 'bold' }}>{((item.product.unitSellPrice * (1 - item.product.discount)).toFixed(0))} VND</Typography>
                                         </Box>
                                         <Typography sx={{ fontWeight: 'bold', marginRight: 2 }}>
-                                            ${((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(2)}
+                                            {((item.product.unitSellPrice * (1 - item.product.discount)) * item.quantity).toFixed(0)} VND
                                         </Typography>
                                         <IconButton onClick={() => handleDeleteConfirmation(item)} size="small">
                                             <DeleteIcon />
@@ -240,10 +240,10 @@ const Cart = () => {
                         Total Items: {localCart.length}
                     </Typography>
                     <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                        Total Price: ${newTotalPrice.toFixed(2)}
+                        Total Price: {newTotalPrice.toFixed(0)} VND
                     </Typography>
                     <Typography variant="body1" sx={{ marginBottom: 2 }}>
-                        Selected Total Price: ${selectedTotalPrice.toFixed(2)}
+                        Selected Total Price: {selectedTotalPrice.toFixed(0)} VND
                     </Typography>
                     <Button onClick={handleCheckout} variant="outlined" fullWidth sx={{ borderColor: '#019376', color: '#019376', borderRadius: '24px', padding: '12px 0',
                         fontWeight: 'bold', fontSize: '16px',marginTop:'10px',
