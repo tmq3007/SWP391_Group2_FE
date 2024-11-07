@@ -35,31 +35,85 @@ const ProtectedVendorRoute = ({ role, children }) => {
     const token = localStorage.getItem('jwt');
     const userRole = localStorage.getItem('role');
     const userId = localStorage.getItem('userId');
-    const [hasShop, setHasShop] = useState(false);
-    const navigate = useNavigate();
+    const [shopId, setShopId] = useState(null);
+    const [unverifiedShopId, setUnverifiedShopId] = useState(null);
+    const [isRejected, setIsRejected] = useState(false);
+    const [shopError, setShopError] = useState(false);
+    const [unverifiedShopError, setUnverifiedShopError] = useState(false);
+
 
     useEffect(() => {
-        const fetchShopStatus = async () => {
+        const fetchShopIds = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setHasShop(!!response.data.result);
+                axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                    .then(response => {
+                        setShopId(response.data.result);
+                        setShopError(false);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching shopId:", error);
+                        setShopError(true);
+                    });
+
+                axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                    .then(response => {
+                        setUnverifiedShopId(response.data.result);
+                        setUnverifiedShopError(false);
+                    })
+                    .catch(error => {
+                        setUnverifiedShopError(true);
+                    });
+
+
+                if (unverifiedShopId) {
+                    axios.get(`http://localhost:8080/api/v1/get-status-rejected/${unverifiedShopId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                        .then(response => {
+                            setIsRejected(response.data.result);
+                            console.log("is rejected: " , isRejected);
+                        })
+                        .catch(error => {
+                            console.error("Error fetching statusRejected:", error);
+                            setUnverifiedShopError(true);
+                        });
+                }
             } catch (error) {
-                console.error("Error fetching shop status:", error);
+                console.error("Error fetching shop IDs or status:", error);
             }
         };
 
         if (userId && userRole === role) {
-            fetchShopStatus();
+            fetchShopIds();
         }
     }, [token, userId, userRole, role]);
 
     if (!userRole) return <Navigate to="/auth/login" />;
-    if (userRole === role && !hasShop) return <Navigate to="/create-shop" />;
+    if (userRole === role) {
+        if (!shopError && unverifiedShopError) {
+            return children;
+        } else if ((shopError && unverifiedShopId ) && !isRejected) {
+            return <Navigate to={`/rejected-shop-creation/${unverifiedShopId}`} />;
+        } else if ((shopError && unverifiedShopId) && isRejected) {
+            return <Navigate to="/processing" />;
+        } else if (shopError && unverifiedShopError) {
+            return <Navigate to="/create-shop" />;
+        }
+    }
 
-    return children;
+    return <Navigate to="/auth/unauthorized" />;
 };
+
 
 const CustomRoute = () => {
     return (
