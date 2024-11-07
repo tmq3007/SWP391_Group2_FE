@@ -90,13 +90,8 @@ export default function ProfileInfo() {
         <div className='flex flex-col items-center'>
             <div className='flex flex-col w-5/6 m-5 gap-5'>
                 <Paper elevation={3} className='flex flex-col gap-2 justify-center items-center p-5 shadow-lg'>
-                    <Box display="flex" flexDirection="column" gap={2}>
-                        <Box display="flex" flexDirection="column" alignItems="center" mb={4} p={2} border="2px dashed gray" borderRadius="8px">
-                            <CloudUploadIcon style={{ fontSize: 60, color: "gray" }} />
-                            <Typography variant="body1" color="textSecondary" mb={2}>
-                                Upload an image or drag and drop (PNG, JPG)
-                            </Typography>
-                        </Box>
+                    <Box display="flex" flexDirection="column" gap={2} sx={{width:400}}>
+
 
                         <TextField
                             label="First Name"
@@ -135,7 +130,7 @@ export default function ProfileInfo() {
                             helperText={errors.phone}
                         />
 
-                        <Box display="flex" justifyContent="flex-end">
+                        <Box display="flex" justifyContent="center">
                             <Button variant="contained" color="success" onClick={handleSave} className='bg-green-500'>
                                 Save
                             </Button>

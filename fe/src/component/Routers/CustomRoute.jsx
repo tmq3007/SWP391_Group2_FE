@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
+import React from 'react';
+import {Navigate, Route, Routes} from "react-router-dom";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import ProductDetail from "../Product/ProductDetail";
@@ -16,11 +16,14 @@ import {HelpingCenter} from "../HelpingCenter/HelpingCenter";
 import PaymentTimeOut from "../Payment/PaymentTimeOut";
 import Payment from "../Payment/Payment";
 import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
-import Review from "../Review/Review";
+
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
-import axios from "axios";
-
+import Review from "../User/CustomerProfile/Orders/ReviewProduct";
+const PaymentRoute = ({ children }) => {
+    const orderPlaced = localStorage.getItem('orderPlaced');
+    return orderPlaced ? children : <Navigate to="/cart" />;
+};
 
 const ProtectedRoute = ({ role, children }) => {
     const userRole = localStorage.getItem('role');
@@ -32,61 +35,6 @@ const ProtectedRoute = ({ role, children }) => {
     return userRole === role ? children : <Navigate to="/auth/unauthorized" />;
 };
 
-const ProtectedVendorRoute = ({ role, children }) => {
-    const token = localStorage.getItem('jwt');
-    const userRole = localStorage.getItem('role');
-    const userId = localStorage.getItem('userId');
-    const navigate = useNavigate();
-
-    const [shopId, setShopId] = useState(null);
-    const [unverifiedShopId, setUnverifiedShopId] = useState(null);
-    const [isRejected, setIsRejected] = useState(false);
-    const [accessAllowed, setAccessAllowed] = useState(false);
-
-    useEffect(() => {
-        const fetchShopStatus = async () => {
-            try {
-                const shopResponse = await axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setShopId(shopResponse.data.result);
-            } catch (error) {
-                console.error("Error fetching shopId:", error);
-            }
-
-            try {
-                const unverifiedResponse = await axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setUnverifiedShopId(unverifiedResponse.data.result);
-
-                const rejectedStatusResponse = await axios.get(`http://localhost:8080/api/v1/get-status-rejected/${unverifiedResponse.data.result}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setIsRejected(rejectedStatusResponse.data.result);
-            } catch (error) {
-                console.error("Error fetching unverified shop data:", error);
-            }
-        };
-
-        if (userId) {
-            fetchShopStatus();
-        }
-    }, [token, userId]);
-
-    useEffect(() => {
-        if (userRole === role && (shopId)) {
-            setAccessAllowed(true);
-        } else {
-            setAccessAllowed(false);
-        }
-    }, [userRole, role, shopId, unverifiedShopId, isRejected]);
-
-    if (!userRole) return <Navigate to="/auth/login" />;
-    if (!accessAllowed) return <Navigate to="/auth/unauthorized" />;
-
-    return children;
-};
 
 const CustomRoute = () => {
     return (
@@ -98,13 +46,45 @@ const CustomRoute = () => {
                 <Route path="/product-detail" element={<ProductDetail/>}/>
                 <Route path="/help-center/*" element={<HelpingCenter/>}/>
                 <Route path="/my-profile/*" element={<CustomerProfile/>}/>
-                <Route path={"/my-payment"} element={<CustomerPayment/>}/>
-                <Route path={"/success-place-order"} element={<SuccessOrderShow/>}/>
+                <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
+                {/*<Route*/}
+                {/*    path="/payment-time-out"*/}
+                {/*    element={*/}
+                {/*        <PaymentRoute>*/}
+                {/*            <PaymentTimeOut />*/}
+                {/*        </PaymentRoute>*/}
+                {/*    }*/}
+                {/*/>*/}
+                <Route
+                    path="/payment"
+                    element={
+                        <PaymentRoute>
+                            <Payment />
+                        </PaymentRoute>
+                    }
+                />
+                <Route
+                    path="/my-payment"
+                    element={
+                        <PaymentRoute>
+                            <CustomerPayment />
+                        </PaymentRoute>
+                    }
+                />
+                <Route
+                    path="/success-place-order"
+                    element={
+                        <PaymentRoute>
+                            <SuccessOrderShow />
+                        </PaymentRoute>
+                    }
+                />
+
                 <Route path="/shop-dashboard/*"
                        element={
-                           <ProtectedVendorRoute role="ROLE_VENDOR">
+                           <ProtectedRoute role="ROLE_VENDOR">
                                <ShopDashboard/>
-                           </ProtectedVendorRoute>
+                           </ProtectedRoute>
                        }/>
 
                 <Route path="/vendor-dashboard/*"
@@ -154,9 +134,9 @@ const CustomRoute = () => {
                                <AdminDashboard/>
                            </ProtectedRoute>
                        }/>
-                <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
-                <Route path="/payment" element={<Payment/>}/>
-                <Route path="/review" element={<Review/>}/>
+
+                {/*<Route path="/payment" element={<Payment/>}/>*/}
+
 
 
             </Routes>

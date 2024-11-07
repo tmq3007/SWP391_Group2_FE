@@ -31,8 +31,8 @@ const VendorDashboard = () => {
         const fetchData = async () => {
             try {
                 const userData = await getUserData(id, token);
-                setUser(userData.result);
-                console.log("User data:", userData.result);
+                setUser((userData.result) ? userData.result : {});
+                console.log("User data:", userData);
             } catch (error) {
                 console.error('Error:', error);
             } finally {
@@ -46,6 +46,7 @@ const VendorDashboard = () => {
     if (loading) {
         return <div>Loading...</div>; // Show loading message until data is fetched
     }
+    console.log()
     return (
         <div className="w-full h-full overflow-hidden m-0">
             <VendorNavbar className="w-[100vw] h-[10vh] px-5 z-50 lg:px-20 flex items-center"/>

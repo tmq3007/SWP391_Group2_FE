@@ -37,7 +37,7 @@ const ShopDisplay = ({ shop, orderItems }) => {
           <Typography variant="h6">{user.shopName}</Typography>
           <Typography variant="body2" color="text.secondary">
             <LocationOn fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {user.city+", "+user.address}
+            {user.district+", "+user.subdistrict+", "+user.city+", "+user.address}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             <Phone fontSize="small" sx={{ verticalAlign: 'middle', mr: 1 }} />

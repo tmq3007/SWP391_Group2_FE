@@ -6,7 +6,7 @@ import {removeItemFromWishlist} from "../../State/Wishlist/Action";
 
 const WishlistItem = ({ item, userId, jwt, onRemove }) => {
     const dispatch = useDispatch();
-
+    console.log("dsa",item)
     const handleRemove = () => {
         dispatch(removeItemFromWishlist(userId, item.productId, jwt))
             .then(() => {
@@ -29,9 +29,10 @@ const WishlistItem = ({ item, userId, jwt, onRemove }) => {
                     </div>
                 </div>
                 <div className="flex flex-col items-end">
-                    <p className="text-xl font-semibold">${item.price}</p>
+                    <p className="text-xl font-semibold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</p>
                     {item.originalPrice && (
-                        <span className="line-through text-gray-400">${item.originalPrice}</span>
+
+                        <span className="line-through text-gray-400">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.origanalPrice)}</span>
                     )}
                     <div className="flex space-x-4 mt-2">
                         <button className="text-green-500">Add to Cart</button>
@@ -65,15 +66,16 @@ export const Wishlist = () => {
         if (userId && jwt) {
             dispatch(getAllWishlist(userId, jwt))
                 .then((data) => {
+                    console.log("data",data)
                     const products = data.result.products || [];
                     const formattedWishlist = products.map(product => ({
                         productId: product.productId, // Ensure productId is included
                         name: product.productName || 'Unnamed Product',
-                        price: product.unitSellPrice || 0,
+                        price: product.unitSellPrice *(1-product.discount) || 0,
                         originalPrice: product.originalPrice || null,
                         store: product.shop?.shopName || 'Unknown Store',
-                        rating: product.review?.rating || 'No Rating',
-                        image: product.pictureUrl1 || 'default-image-url',
+                        rating: product.averageRating ,
+                        image: product.pictureUrl ,
                     }));
                     setWishlist(formattedWishlist);
                 })
@@ -82,7 +84,7 @@ export const Wishlist = () => {
                 });
         }
     }, [dispatch, userId, jwt]);
-
+    console.log(wishlist)
     // Function to handle removal in local state
     const handleRemoveFromWishlist = (productId) => {
         setWishlist((prevWishlist) => prevWishlist.filter(item => item.productId !== productId));

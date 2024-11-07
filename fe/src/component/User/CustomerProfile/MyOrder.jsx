@@ -39,7 +39,7 @@ export const MyOrder = () => {
                         Authorization: `Bearer ${jwt}`,
                     },
                 });
-                const reversedOrders = response.data.result.reverse();
+                const reversedOrders = Array.isArray(response.data.result) ? response.data.result.reverse() : [];
                 setOrders(reversedOrders);
 
                 // Automatically select the first order if none is selected
@@ -75,8 +75,8 @@ export const MyOrder = () => {
         <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-1/3 p-4">
                 <Box className=" w-full pr-5 md:shrink-0 lg:pr-8">
-                    <Box className="flex h-full flex-col bg-white pb-5 border border-gray-200 rounded-lg">
-                        <Typography variant="h5" className="py-5 px-5 text-heading font-semibold">
+                    <Box className="min-h-full flex h-full flex-col bg-white pb-5 border border-gray-200 rounded-lg">
+                        <Typography variant="h4" className="py-5 px-5 text-heading font-semibold">
                             My Orders
                         </Typography>
                         <div className="w-full overflow-y-auto" style={{ height: 'calc(100% - 80px)' }}>
@@ -109,26 +109,24 @@ export const MyOrder = () => {
                                         </Box>
                                     ))
                                 ) : (
-                                    <Typography>No orders found.</Typography>
+                                    <Typography></Typography>
                                 )}
                                 {/* Load More Button */}
-                                <div className="mt-8 flex justify-center lg:mt-12">
-                                    <Button
-                                        variant="contained"
-                                        color="success"
-                                        fullWidth
-                                        className="bg-blue-500 hover:bg-blue-600 text-white"
-                                    >
-                                        Load More
-                                    </Button>
-                                </div>
+
                             </Box>
                         </div>
                     </Box>
                 </Box>
             </div>
             <div className="w-full md:w-2/3 p-4">
-                <OrderView order={selectedOrder} /> {/* Pass the selected order */}
+                {selectedOrder ? (
+                    <OrderView order={selectedOrder}/> // Pass the selected order
+
+
+                ) : (
+                    <h3 className="items-center mt-60 ">No Order History </h3>
+
+                    )}
             </div>
         </div>
     );
