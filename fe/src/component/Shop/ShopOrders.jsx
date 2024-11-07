@@ -75,7 +75,10 @@ export const ShopOrders = () => {
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.productName}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.orderItemsDate}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.orderItemsPaymentDate}</td>
-                                <td className="px-6 py-4 text-sm text-gray-500">{order.paymentId ? 'QR Code' : 'COD'}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    {order.paymentId === 1 ? 'COD' : order.paymentId === 2 ? 'QR Code' : ''}
+                                </td>
+
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.finalPrice}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.isPaid ? 'Is Paid' : 'Not Paid'}</td>
                             </tr>
