@@ -137,8 +137,12 @@ export default function ProfileInfo() {
                         </Box>
                     </Box>
                 </Paper>
-                <Paper elevation={3} className='w-full p-5 shadow-lg'>
-                    <AddressProfile />
+                <Paper elevation={3} className="w-full p-5 shadow-lg">
+                    {user ? (
+                        <AddressProfile userId={user.id} />
+                    ) : (
+                        <p>No user information available</p>
+                    )}
                 </Paper>
             </div>
         </div>
