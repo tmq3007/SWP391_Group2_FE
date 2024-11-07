@@ -131,7 +131,7 @@ const CustomerPayment = () => {
         const fetchData = async () => {
             try {
                 const addressData = await getAddressData(token);
-                setAddress(addressData.result);
+                setAddress(addressData);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -163,7 +163,7 @@ const CustomerPayment = () => {
     const [openAddError, setOpenAddError] = useState(false);
     const [openUpdatePhoneError, setOpenUpdatePhoneError] = useState(false);
     const [openWarning, setOpenWarning] = useState(false);
-    const regex = /^[a-zA-Z0-9]+$/;
+    const regex = /^(?!\s*$).*/;
     ////////////////////////////////////////////////////////////////////////
     const handleCloseUpdate = () => {
         setOpenUpdate(false);
