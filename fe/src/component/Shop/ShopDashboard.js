@@ -12,6 +12,7 @@ import RejectedShopCreation from "./RejectedShopCreation";
 import {EditShop} from "./EditShop";
 import {ShopInventory} from "./ShopInventory";
 import {ShopOrders} from "./ShopOrders";
+import {ShopReview} from "./ShopReview";
 
 export const ShopDashboard = () => {
     const [open, setOpen] = React.useState(true);
@@ -48,6 +49,8 @@ export const ShopDashboard = () => {
                     <Route path="/shop-inventory" element={<ShopInventory/>}/>
 
                     <Route path="/shop-orders" element={<ShopOrders/>}/>
+
+                    <Route path="/shop-review" element={<ShopReview/>}/>
                     {/* Add more routes here */}
 
                 </Routes>

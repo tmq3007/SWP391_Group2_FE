@@ -128,7 +128,7 @@ export const ShopDashboardSidebar = () => {
                         </ListSubheader>
                     }
                 >
-                    <ListItem button className="sidebar-item">
+                    <ListItem button className="sidebar-item" onClick={() => navigate("/shop-dashboard/shop-review")}>
                         <ListItemIcon>
                             <StarIcon fontSize="small" className="text-gray-600"/>
                         </ListItemIcon>
