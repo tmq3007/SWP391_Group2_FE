@@ -185,7 +185,7 @@ const Payment = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             navigate('/payment-time-out');
-        }, 30000);
+        }, 50000);
 
         return () => clearTimeout(timer);
     }, [navigate]);
