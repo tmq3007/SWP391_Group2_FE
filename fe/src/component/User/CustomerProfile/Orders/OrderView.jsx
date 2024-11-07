@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import Review from "./Review";
+
+import ReviewProduct from "./ReviewProduct";
+
+
 
 const OrderView = (order) => {
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedProductImage, setSelectedProductImage] = useState(null);
 
     // Open Review popup with productId
-    const handleOpenReview = (productId) => {
+    const handleOpenReview = (productId, productImage) => {
         setSelectedProductId(productId);
+        setSelectedProductImage(productImage)
         setIsReviewOpen(true);
     };
 
@@ -19,22 +24,20 @@ const OrderView = (order) => {
         setSelectedProductId(null);
     };
 
-
     if (!order) {
-        return <Typography>Select an order to view details.</Typography>; // Show a message if no order is selected
+        return <Typography>Select an order to view details.</Typography>;
     }
 
-
     return (
-        <div className=" border border-gray-200 rounded-lg">
-            <div className="mx-auto w-full max-w-screen-lg ">
+        <div className="border border-gray-200 rounded-lg">
+            <div className="mx-auto w-full max-w-screen-lg">
                 <div className='px-5'>
-                    <Typography variant="h5" className="py-5  text-heading font-semibold">
+                    <Typography variant="h5" className="py-5 text-heading font-semibold">
                         Order Details
                     </Typography>
                 </div>
-                <div className="relative overflow-hidden ">
-                    <div className=" p-6 sm:p-8 lg:p-12">
+                <div className="relative overflow-hidden">
+                    <div className="p-6 sm:p-8 lg:p-12">
                         <div className="mb-6 grid gap-4 sm:grid-cols-2 md:mb-12 lg:grid-cols-4">
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Order Number</h3>
@@ -56,11 +59,10 @@ const OrderView = (order) => {
                             </div>
                         </div>
 
-                        {/* Order Status */}
                         <div className="mb-8 flex w-full items-center justify-center md:mb-12">
                             <Typography
                                 variant="h6"
-                                className={`font-semibold rounded-full text-center p-2 rounded ${order.order.isPaid ? 'bg-green-100' : 'bg-red-100'}`}
+                                className={`font-semibold rounded-full text-center p-2 ${order.order.isPaid ? 'bg-green-100' : 'bg-red-100'}`}
                             >
                                 Order Status: {order.order.isPaid ? 'Paid' : 'Not Paid'}
                             </Typography>
@@ -74,8 +76,6 @@ const OrderView = (order) => {
                                         <strong className="w-5/12 text-sm font-semibold text-heading">Sub Total:</strong>
                                         <span className="w-7/12 text-sm pl-4">{order.order.total}</span>
                                     </p>
-
-
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-5/12 text-sm font-semibold text-heading">Total:</strong>
                                         <span className="w-7/12 text-sm pl-4">${order.order.finalTotal}</span>
@@ -88,7 +88,7 @@ const OrderView = (order) => {
                                 <div>
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-4/12 text-sm font-semibold text-heading">Name:</strong>
-                                        <span className="w-8/12 text-sm pl-4">{order.order.user.firstName +' ' + order.order.user.lastName}</span>
+                                        <span className="w-8/12 text-sm pl-4">{order.order.user.firstName + ' ' + order.order.user.lastName}</span>
                                     </p>
                                     <p className="mt-5 flex text-body-dark">
                                         <strong className="w-4/12 text-sm font-semibold text-heading">Total Items:</strong>
@@ -102,7 +102,6 @@ const OrderView = (order) => {
                             </div>
                         </div>
 
-                        {/* Order Items */}
                         <TableContainer component={Paper} className="mt-4">
                             <Table>
                                 <TableHead className="bg-gray-100">
@@ -111,34 +110,27 @@ const OrderView = (order) => {
                                         <TableCell className="text-center font-semibold">Quantity</TableCell>
                                         <TableCell className="text-right font-semibold">Price</TableCell>
                                         <TableCell className="text-right font-semibold"></TableCell>
-
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {order.order.orderItemsList.map((item, index) => (
                                         <TableRow key={index} className="border-b">
-                                            <TableCell className="flex flex-row items-center space-x-4 flex">
-                                                <div className="flex text-center items-center gap-2">
-                                                    <img src={item.productImage} alt={item.productName} className="w-12 h-12 object-cover" />
-                                                    {item.productName}
-                                                </div>
-
+                                            <TableCell className="flex items-center gap-2">
+                                                <img src={item.productImage} alt={item.productName} className="w-12 h-12 object-cover" />
+                                                {item.productName}
                                             </TableCell>
-
-
                                             <TableCell className="text-center">{item.productQuantity}</TableCell>
                                             <TableCell className="text-right">
-                                                {order.order.isPaid ? (
-                                                    <button className="bg-green-900" onClick={() => handleOpenReview(order.productId)}>Review</button>
-                                                ) : null}
+                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.finalPrice)}
                                             </TableCell>
-                                            <Review
-                                                open={isReviewOpen}
-                                                onClose={handleCloseReview}
-                                                productId={selectedProductId}
-                                                userId={order.order.user.id} // Pass userId if needed
-                                            />
 
+                                            <TableCell className="text-right">
+                                                {order.order.isPaid && (
+                                                    <Button variant="contained" color="primary" onClick={() => handleOpenReview(item.productName,item.productImage)}>
+                                                        Review
+                                                    </Button>
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -147,7 +139,21 @@ const OrderView = (order) => {
                     </div>
                 </div>
             </div>
+
+            {/* Review Pop-up */}
+            {isReviewOpen && (
+                <Box className="popup-overlay">
+                    <ReviewProduct
+                        userId={order.order.user.id}
+                        productId={selectedProductId}
+                        productImage = {selectedProductImage}
+                        onClose={handleCloseReview}
+                        open={isReviewOpen} // Set the open prop here
+                    />
+                </Box>
+            )}
         </div>
     );
 };
+
 export default OrderView;

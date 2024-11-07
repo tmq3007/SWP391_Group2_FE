@@ -19,6 +19,7 @@ import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
 
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
+import Review from "../User/CustomerProfile/Orders/ReviewProduct";
 
 
 const ProtectedRoute = ({ role, children }) => {

@@ -121,6 +121,8 @@ export const MyOrder = () => {
             <div className="w-full md:w-2/3 p-4">
                 {selectedOrder ? (
                     <OrderView order={selectedOrder}/> // Pass the selected order
+
+
                 ) : (
                     <h3 className="items-center mt-60 ">No Order History </h3>
 
