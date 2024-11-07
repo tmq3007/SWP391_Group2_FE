@@ -66,6 +66,7 @@ const setIsPaid = async (id, jwt, choice) => {
     }
 };
 
+
 const addOrder = async (order, jwt) => {
     try {
         const response = await axios.post(`http://localhost:8080/api/v1/orders`,order, {
@@ -194,8 +195,15 @@ const SuccessOrderShow = () => {
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openConfirmPayWhenRecieve, setOpenConfirmPayWhenRecieve] = useState(false);
     const [openConfirmPayViaQr, setOpenConfirmPayViaQr] = useState(false);
+
+
     const handleOpenConfirmPayWhenRecieve = () => {
         setOpenConfirmPayWhenRecieve(false);
+
+         
+            // Clear the flag after successful payment or order completion
+            localStorage.removeItem('orderPlaced');
+
     }
     const handleOpenConfirmPayViaQr = () => {
         setOpenConfirmPayViaQr(false);

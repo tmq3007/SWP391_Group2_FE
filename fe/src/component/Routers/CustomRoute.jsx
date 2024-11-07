@@ -20,7 +20,10 @@ import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
 import Review from "../User/CustomerProfile/Orders/ReviewProduct";
-
+const PaymentRoute = ({ children }) => {
+    const orderPlaced = localStorage.getItem('orderPlaced');
+    return orderPlaced ? children : <Navigate to="/cart" />;
+};
 
 const ProtectedRoute = ({ role, children }) => {
     const userRole = localStorage.getItem('role');
@@ -43,8 +46,40 @@ const CustomRoute = () => {
                 <Route path="/product-detail" element={<ProductDetail/>}/>
                 <Route path="/help-center/*" element={<HelpingCenter/>}/>
                 <Route path="/my-profile/*" element={<CustomerProfile/>}/>
-                <Route path={"/my-payment"} element={<CustomerPayment/>}/>
-                <Route path={"/success-place-order"} element={<SuccessOrderShow/>}/>
+                <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
+                {/*<Route*/}
+                {/*    path="/payment-time-out"*/}
+                {/*    element={*/}
+                {/*        <PaymentRoute>*/}
+                {/*            <PaymentTimeOut />*/}
+                {/*        </PaymentRoute>*/}
+                {/*    }*/}
+                {/*/>*/}
+                <Route
+                    path="/payment"
+                    element={
+                        <PaymentRoute>
+                            <Payment />
+                        </PaymentRoute>
+                    }
+                />
+                <Route
+                    path="/my-payment"
+                    element={
+                        <PaymentRoute>
+                            <CustomerPayment />
+                        </PaymentRoute>
+                    }
+                />
+                <Route
+                    path="/success-place-order"
+                    element={
+                        <PaymentRoute>
+                            <SuccessOrderShow />
+                        </PaymentRoute>
+                    }
+                />
+
                 <Route path="/shop-dashboard/*"
                        element={
                            <ProtectedRoute role="ROLE_VENDOR">
@@ -99,8 +134,8 @@ const CustomRoute = () => {
                                <AdminDashboard/>
                            </ProtectedRoute>
                        }/>
-                <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
-                <Route path="/payment" element={<Payment/>}/>
+
+                {/*<Route path="/payment" element={<Payment/>}/>*/}
 
 
 
