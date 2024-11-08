@@ -3,6 +3,9 @@ import "../../style/ShopProduct.css";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const ShopOrders = () => {
     const token = localStorage.getItem('jwt');
@@ -18,7 +21,6 @@ export const ShopOrders = () => {
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
     const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-    // Hàm lấy tất cả OrderItems theo shopId
     const getAllOrderItemsByShopIdAction = async (shopId) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/v1/orderItems/getAllByShopId/${shopId}`, {
@@ -48,6 +50,23 @@ export const ShopOrders = () => {
 
     const handlePageChange = (event, value) => setPage(value);
 
+    const handleIsPaid = async (orderItemsId) => {
+        try {
+            const response = await axios.patch(
+                `http://localhost:8080/api/v1/orderItems/isPaidToTrue/${orderItemsId}`,
+                {},
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating payment status:", error);
+            throw error;
+        }
+    };
+
+
     return (
         <div className="w-full bg-white h-screen overflow-y-auto">
             <div className='h-screen p-6'>
@@ -66,6 +85,7 @@ export const ShopOrders = () => {
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Payment Way</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Final Price</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -81,6 +101,16 @@ export const ShopOrders = () => {
 
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.finalPrice}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.isPaid ? 'Is Paid' : 'Not Paid'}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500 flex-col cursor-pointer">
+                                    <DeleteIcon
+                                        onClick={() => {
+                                            if (window.confirm("Do you want to confirm status to paid?")) {
+                                                handleIsPaid(order.orderItemsId);
+                                            }
+                                        }}
+                                    />
+
+                                </td>
                             </tr>
                         ))}
                         </tbody>

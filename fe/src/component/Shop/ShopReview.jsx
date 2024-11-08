@@ -3,6 +3,9 @@ import "../../style/ShopProduct.css";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const ShopReview = () => {
     const token = localStorage.getItem('jwt');
@@ -18,13 +21,23 @@ export const ShopReview = () => {
     const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
     const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
 
-    // Function to fetch all reviews by shopId
     const getAllReviewsByShopId = async (shopId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/reviews/get-all-review-by-shop-id/${shopId}`, {
+            const productResponse = await axios.get(`http://localhost:8080/api/v1/products/get-all-product-by-shopId/${shopId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setReviews(response.data.result || []); // Set reviews, default to empty array if result is null or undefined
+
+            const products = productResponse.data.result || [];
+            let allReviews = [];
+
+            for (const product of products) {
+                const reviewResponse = await axios.get(`http://localhost:8080/api/v1/reviews/reviews/get-all-review-by-product-id/${product.productId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                allReviews = allReviews.concat(reviewResponse.data.result || []);
+            }
+
+            setReviews(allReviews);
         } catch (error) {
             console.error("Error fetching reviews:", error);
         }
@@ -55,7 +68,6 @@ export const ShopReview = () => {
                     <h2 className="text-xl mt-5 font-semibold text-gray-800">Reviews</h2>
                 </div>
 
-                {/* Conditionally render reviews table only if there are reviews */}
                 {reviews.length > 0 ? (
                     <div className="rc-table-content">
                         <table className="min-w-full divide-y divide-gray-200">
@@ -70,14 +82,14 @@ export const ShopReview = () => {
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                            {currentReviews.map(review => (
+                            {currentReviews.map((review) => (
                                 <tr key={review.reviewId} className="text-center">
                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{review.reviewId}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-900">{review.product?.productName || "N/A"}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-900">{review.user?.firstName || "Anonymous"}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{review.reviewText}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{review.rating}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{new Date(review.createAt).toLocaleString()}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{review.product.productName}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{review.user.id}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{review.createAt}</td>
                                 </tr>
                             ))}
                             </tbody>

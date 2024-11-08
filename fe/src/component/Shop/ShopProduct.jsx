@@ -76,10 +76,24 @@ export const ShopProduct = () => {
         const fetchAllProductsData = async () => {
             await Promise.all(
                 products.map(async (product) => {
-                    const averageRating = await fetchAverageRating(product.productName);
-                    const updatedProductData = {...product, averageRating };
-
-                    dispatch(updateProductById(product.productId, updatedProductData));
+                    const averageRating = await fetchAverageRating(product.productId);
+                    const updatedProductData = {
+                        productId: product.productId,
+                        productName: product.productName,
+                        category: product.category.categoryId,
+                        shop: product.shop.shopId,
+                        description: product.description,
+                        measurementUnit: product.measurementUnit,
+                        unitBuyPrice: product.unitBuyPrice,
+                        unitSellPrice: product.unitSellPrice,
+                        discount: product.discount,
+                        stock: product.stock,
+                        pictureUrl: product.pictureUrl,
+                        pictureUrl2: product.pictureUrl2,
+                        isActive: product.isActive,
+                        averageRating: averageRating
+                    };
+                    await dispatch(updateProductById(product.productId, updatedProductData));
                 })
             );
         };
