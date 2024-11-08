@@ -172,7 +172,7 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
   }, [id, token]);
   console.log(orderItems);
   //IMPORTANT PART
-  if (loading || orderItems.length === 0) {
+  if (loading) {
     return <div>No data</div>; // Show loading message until data is fetched
   }
   const paidOrder = (orderItems.length > 0) ? (orderItems.filter(a => a.isPaid).length) : 0;
@@ -346,7 +346,7 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
                       Month revenue
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {revenueThisMonth}VND
+                      {revenueThisMonth} VND
                     </span>
                   </div>
                 </div>
@@ -579,10 +579,10 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
               <div className="overflow-scroll rounded-lg bg-gray-200 hover:bg-[#fff] cursor-pointer">
                 <div className="grid gap-2 xl:grid-cols-12">
                   <div
-                      className="h-[85vh] overflow-hidden rounded-lg bg-white md:p-7 xl:col-span-5 2xl:me-20 flex justify-center items-center">
+                      className="h-[85vh] overflow-hidden  bg-white md:p-7 xl:col-span-5 2xl:me-20 flex justify-center items-center">
                     <VendorProductDisplay products={orderItems ? orderItems : []}/>
                   </div>
-                  <div className="overflow-hidden rounded-lg bg-white xl:col-span-7 2xl:ltr:-ml-20 2xl:rtl:-mr-20">
+                  <div className="overflow-hidden  bg-white xl:col-span-7 2xl:ltr:-ml-20 2xl:rtl:-mr-20">
                     <VendorProductTable products={orderItems ? orderItems : []}/>
                   </div>
                 </div>
