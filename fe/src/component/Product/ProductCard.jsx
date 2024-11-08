@@ -107,7 +107,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     onClick={handleProductClick}
                     sx={{ borderRadius: '15px 15px 0 0', objectFit: 'cover', cursor: "pointer" }}
                 />
-                {discount > 0 && (
+                {discount >= 0 && (
                     <Box
                         sx={{
                             position: 'absolute',
@@ -130,7 +130,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     <Typography variant="body2" color="text.primary">
                         Buy Unit: {item.measurementUnit}
                     </Typography>
-                    {discount > 0 && (
+                    {discount >= 0 && (
                         <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
                            Original Price: {originalPrice.toFixed(0)} VND
                         </Typography>
