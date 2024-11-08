@@ -76,7 +76,7 @@ export const ShopProduct = () => {
         const fetchAllProductsData = async () => {
             await Promise.all(
                 products.map(async (product) => {
-                    const averageRating = await fetchAverageRating(product.productId);
+                    const averageRating = await fetchAverageRating(product.productName);
                     const updatedProductData = {...product, averageRating };
 
                     dispatch(updateProductById(product.productId, updatedProductData));
