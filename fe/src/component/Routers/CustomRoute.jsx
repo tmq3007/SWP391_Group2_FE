@@ -21,7 +21,13 @@ import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
 import Review from "../User/CustomerProfile/Orders/ReviewProduct";
 const PaymentRoute = ({ children }) => {
-    const orderPlaced = localStorage.getItem('orderPlaced');
+    const orderPlaced = localStorage.getItem('orderPlaced') === 'true';
+    console.log('Order placed status:', orderPlaced); // Check this output
+    return orderPlaced ? children : <Navigate to="/cart" />;
+};
+const PaymentRoute2 = ({ children }) => {
+    const orderPlaced = localStorage.getItem('paymentPlaced') === 'true';
+    console.log('Order placed status:', orderPlaced); // Check this output
     return orderPlaced ? children : <Navigate to="/cart" />;
 };
 
@@ -46,7 +52,7 @@ const CustomRoute = () => {
                 <Route path="/product-detail" element={<ProductDetail/>}/>
                 <Route path="/help-center/*" element={<HelpingCenter/>}/>
                 <Route path="/my-profile/*" element={<CustomerProfile/>}/>
-                <Route path="/payment-time-out" element={<PaymentTimeOut/>}/>
+                {/*<Route path="/payment-time-out" element={<PaymentTimeOut/>}/>*/}
                 {/*<Route*/}
                 {/*    path="/payment-time-out"*/}
                 {/*    element={*/}
@@ -58,9 +64,17 @@ const CustomRoute = () => {
                 <Route
                     path="/payment"
                     element={
-                        <PaymentRoute>
+                        <PaymentRoute2>
                             <Payment />
-                        </PaymentRoute>
+                        </PaymentRoute2>
+                    }
+                />
+                <Route
+                    path="/payment-time-out"
+                    element={
+                        <PaymentRoute2>
+                            <PaymentTimeOut />
+                        </PaymentRoute2>
                     }
                 />
                 <Route
@@ -74,11 +88,12 @@ const CustomRoute = () => {
                 <Route
                     path="/success-place-order"
                     element={
-                        <PaymentRoute>
+                        <PaymentRoute2>
                             <SuccessOrderShow />
-                        </PaymentRoute>
+                        </PaymentRoute2>
                     }
                 />
+
 
                 <Route path="/shop-dashboard/*"
                        element={

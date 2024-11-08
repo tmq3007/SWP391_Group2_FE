@@ -126,13 +126,13 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
 
     useEffect(() => {
         // Only run this effect if loading is complete
-        if (!loading) {
+
 
             if (shopError && unverifiedShopError) {
                 console.log('Both ShopID and UnverifiedShopID are null or have errors');
                 navigate("/create-shop");
             }
-            else if (shopError && unverifiedShopId) {
+            else if (shopError && unverifiedShopId && !loading) {
                 console.log("IsRejected: ", isRejected);
                 if (isRejected) {
                     console.log("Unverified ShopID is rejected: ", unverifiedShopId);
@@ -146,7 +146,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 console.log("Unverified ShopID Error but ShopID is valid");
                 navigate("/vendor-dashboard");
             }
-        }
+
     }, [shopError, unverifiedShopError, shopId, unverifiedShopId, isRejected, navigate, loading]);
 
 
