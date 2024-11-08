@@ -14,10 +14,6 @@ const DashboardPage = () => {
                 <Summary/>
             </div>
 
-            <div className='mt-10'>
-                <RecentOrders/>
-            </div>
-
             <div className='flex justify-between w-full mt-10'>
                 <div className='sale-history-container bg-white p-5 rounded-lg w-2/3'>
                     <SaleHistory/>
