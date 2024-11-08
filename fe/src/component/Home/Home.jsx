@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "../../style/Home.css";
 import axios from 'axios';
 import MultiItemCarousel from "./MultiItemCarousel";
-import { Divider, PaginationItem } from "@mui/material";
+import {Alert, Divider, PaginationItem, Snackbar} from "@mui/material";
 import CategoryMenu from "../Category/CategoryMenu";
 import ProductCard from "../Product/ProductCard";
 import Pagination from '@mui/material/Pagination';
@@ -34,6 +34,11 @@ const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const updateCart = (updatedCart) => {
         setCart(updatedCart); // Update the cart state in Home component
+    };
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
     };
     const [localCart, setLocalCart] = useState(cart || []);
     useEffect(() => {
@@ -165,14 +170,36 @@ const navigate = useNavigate();
                 // Refetch the cart to get the latest data from the server
                 dispatch(findCart(userId, jwt))
                     .then((data) => {
-                        setCart(data);  // Set cart with latest data from server
+                        if(data) {
+                            setSnackbarMessage('Item added to cart successfully!');
+                            setOpenSnackbar(true);
+                            setCart(data);
+                        }// Set cart with latest data from server
                     })
                     .catch((error) => {
-                        console.error('Error fetching updated cart:', error);
+                        if (error.response && error.response.data?.message) {
+                            setSnackbarMessage(error.response.data.message);
+                            setOpenSnackbar(true);
+                        } else if (!error.response) {
+                            setSnackbarMessage("Unable to connect to the server. Please check your network connection.");
+                            setOpenSnackbar(true);
+                        } else {
+                            setSnackbarMessage("An error occurred. Please try again later.");
+                            setOpenSnackbar(true);
+                        }
                     });
             })
             .catch((error) => {
-                console.error('Error adding item to cart:', error);
+                if (error.response && error.response.data?.message) {
+                    setSnackbarMessage(error.response.data.message);
+                    setOpenSnackbar(true);
+                } else if (!error.response) {
+                    setSnackbarMessage("Unable to connect to the server. Please check your network connection.");
+                    setOpenSnackbar(true);
+                } else {
+                    setSnackbarMessage("An error occurred. Please try again later.");
+                    setOpenSnackbar(true);
+                }
             });
     };
 
@@ -265,6 +292,15 @@ const navigate = useNavigate();
             {/*    addToCart={addToCart}*/}
             {/*    totalPrice={totalPrice}  // Pass total price*/}
             {/*/>*/}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="info">
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 };
