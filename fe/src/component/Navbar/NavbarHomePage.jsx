@@ -124,7 +124,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             console.log('Both ShopID and UnverifiedShopID are null or have errors');
             navigate("/create-shop");
         }
-        else if (shopError && unverifiedShopId) {
+        else if (shopError && !unverifiedShopError) {
             if (!isRejected) {
                 console.log("Unverified ShopID is rejected: ", unverifiedShopId);
                 navigate(`/rejected-shop-creation/${unverifiedShopId}`);
@@ -133,7 +133,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 navigate("/processing");
             }
         }
-        else if (shopId && unverifiedShopError) {
+        else if (!shopError && unverifiedShopError) {
             console.log("Unverified ShopID Error but ShopID is valid");
             navigate("/vendor-dashboard");
         }
