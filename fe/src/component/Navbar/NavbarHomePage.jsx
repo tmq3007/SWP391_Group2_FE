@@ -23,7 +23,6 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     const [shopError, setShopError] = useState(false);
     const [unverifiedShopError, setUnverifiedShopError] = useState(false);
     const [isRejected, setIsRejected] = useState(false);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
@@ -111,43 +110,34 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             })
                 .then(response => {
                     setIsRejected(response.data.result);
-                    console.log("isLoading", loading);
-                    setLoading(false);
+                    console.log("is rejected: " , isRejected);
                 })
                 .catch(error => {
                     console.error("Error fetching statusRejected:", error);
                     setUnverifiedShopError(true);
-                    setLoading(false); // Also set loading to false if there's an error
                 });
-        } else {
-
         }
     }, [unverifiedShopId, token]);
 
     useEffect(() => {
-        // Only run this effect if loading is complete
-
-
-            if (shopError && unverifiedShopError) {
-                console.log('Both ShopID and UnverifiedShopID are null or have errors');
-                navigate("/create-shop");
+        if (shopError && unverifiedShopError) {
+            console.log('Both ShopID and UnverifiedShopID are null or have errors');
+            navigate("/create-shop");
+        }
+        else if (shopError && !unverifiedShopError) {
+            if (!isRejected) {
+                console.log("Unverified ShopID is rejected: ", unverifiedShopId);
+                navigate(`/rejected-shop-creation/${unverifiedShopId}`);
+            } else {
+                console.log("ShopID Error but Unverified ShopID is valid");
+                navigate("/processing");
             }
-            else if (shopError && unverifiedShopId && !loading) {
-                console.log("IsRejected: ", isRejected);
-                if (isRejected) {
-                    console.log("Unverified ShopID is rejected: ", unverifiedShopId);
-                    navigate(`/rejected-shop-creation/${unverifiedShopId}`);
-                } else {
-                    console.log("ShopID Error but Unverified ShopID is valid");
-                    navigate("/processing");
-                }
-            }
-            else if (shopId && unverifiedShopError) {
-                console.log("Unverified ShopID Error but ShopID is valid");
-                navigate("/vendor-dashboard");
-            }
-
-    }, [shopError, unverifiedShopError, shopId, unverifiedShopId, isRejected, navigate, loading]);
+        }
+        else if (!shopError && unverifiedShopError) {
+            console.log("Unverified ShopID Error but ShopID is valid");
+            navigate("/vendor-dashboard");
+        }
+    }, [shopError, unverifiedShopError, shopId, unverifiedShopId, isRejected, navigate]);
 
 
 
