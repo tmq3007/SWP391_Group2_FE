@@ -40,6 +40,11 @@ const navigate = useNavigate();
     const handleCloseSnackbar = () => {
         setOpenSnackbar(false);
     };
+    localStorage.setItem('paymentPlaced', 'false');
+    localStorage.setItem('orderPlaced', 'false');
+    const orderPlaced = localStorage.getItem('orderPlaced');
+    console.log('Order placed status:', orderPlaced); // Check this output
+
     const [localCart, setLocalCart] = useState(cart || []);
     useEffect(() => {
         // Ensure that cart prop is updated properly in the local state

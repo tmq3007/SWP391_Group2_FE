@@ -199,14 +199,15 @@ const SuccessOrderShow = () => {
 
     const handleOpenConfirmPayWhenRecieve = () => {
         setOpenConfirmPayWhenRecieve(false);
-
-         
-            // Clear the flag after successful payment or order completion
+         // Clear the flag after successful payment or order completion
             localStorage.removeItem('orderPlaced');
+        localStorage.removeItem('paymentPlaced');
 
     }
     const handleOpenConfirmPayViaQr = () => {
         setOpenConfirmPayViaQr(false);
+        localStorage.removeItem('orderPlaced');
+        localStorage.removeItem('paymentPlaced');
     }
     const a = () => {
         setOpenConfirmPayWhenRecieve(true);

@@ -115,6 +115,7 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
 
     const placeOrder = () => {
         setOpenPlaceOrder(true);
+        localStorage.setItem('paymentPlaced', 'true');
     }
     const cancelOrder = () => {
         setOpenCancelOrder(true);

@@ -111,6 +111,7 @@ const CustomerPayment = () => {
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState();
+
     /////////////////////////////////////////////////////////////////
 
     useEffect(() => {

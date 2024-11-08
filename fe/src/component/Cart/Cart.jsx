@@ -33,7 +33,8 @@ const Cart = () => {
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const navigate = useNavigate();
-
+    localStorage.setItem('paymentPlaced', 'false');
+    localStorage.setItem('orderPlaced', 'false');
     // Hàm xử lý chọn tất cả checkbox
     const handleSelectAll = () => {
         const newSelectedItems = {};
