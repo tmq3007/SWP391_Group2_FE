@@ -12,7 +12,7 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import {useTabsList} from "@mui/base";
 import {Label} from "@mui/icons-material";
-import {padding} from "@mui/system";
+import {padding, width} from "@mui/system";
 import {REMOVE_CARTITEM_FAILURE, REMOVE_CARTITEM_REQUEST, REMOVE_CARTITEM_SUCCESS} from "../../State/Cart/ActionType";
 import {NavbarHomePage} from "../../Navbar/NavbarHomePage";
 import {useLocation} from "react-router-dom";
@@ -313,9 +313,9 @@ const CustomerPayment = () => {
         <div className='w-full h-full'>
             <NavbarHomePage/>
 
-            <Container sx={{ marginTop: 8, display: "flex", justifyContent: "space-between", gap: 5 }}>
-                <Box sx={{ width: "60%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
-                    <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: '#f5f5f5' } }}>
+            <Container sx={{ marginTop: 18, display: "flex", justifyContent: "center", gap: 5 }}>
+                <div className='w-full'>
+                    <Box sx={{ width: "100%", boxShadow: 3, padding: 2, marginBottom: 2, borderRadius: 3, '&:hover': { backgroundColor: 'none' } }}>
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center'>
                                 <IconButton sx={{ borderRadius: 3 }}>
@@ -397,14 +397,15 @@ const CustomerPayment = () => {
                                 <IconButton sx={{ borderRadius: 3 }}>
                                     <Looks3Icon sx={{ color: "#019376" }} />
                                 </IconButton>
-                                <Typography>Note</Typography>
+
                             </div>
+                            <Typography>Note</Typography>
                         </div>
                         <TextField placeholder='Note for your package...' sx={{ width: "100%", outlineStyle: 'transparent' }} inputRef={noteRef} />
                     </Box>
-                </Box>
-                    <Box sx={{ width: "40%", height: "50%", boxShadow: 3, padding: 2, borderRadius: 3 }}>
-                        <CustomerPaymentList chosenAddress={(array.length > 0 && selectedIndex !== -1) ? array[selectedIndex] : null} chosenPhone={(user !== null) ? user.phone : null} item={selectedItems} note={noteRef.current.value}/> {/* Render the ItemsList component here */}
+                </div>
+                    <Box sx={{ width: "40%", height: "490px", boxShadow: 3, padding: 2, borderRadius: 3 }}>
+                        <CustomerPaymentList  chosenAddress={(array.length > 0 && selectedIndex !== -1) ? array[selectedIndex] : null} chosenPhone={(user !== null) ? user.phone : null} item={selectedItems} note={noteRef.current.value}/> {/* Render the ItemsList component here */}
                     </Box>
             </Container>
 

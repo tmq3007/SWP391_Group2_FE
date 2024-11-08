@@ -300,13 +300,13 @@ const SuccessOrderShow = () => {
             <div className="h-[8%]">
                 <NavbarHomePage></NavbarHomePage>
             </div>
-            <div className="h-[92%] mt-9 bg-white ml-5 mr-5 rounded-lg grid grid-cols-3 p-2 gap-3"
+            <div className="h-[92%] mt-9  ml-5 mr-5 rounded-lg grid grid-cols-3 p-2 gap-3"
                  style={{ gridTemplateColumns: '58.3% 40%' }}>
-                <div className="shadow-md rounded-lg p-2 h-[80vh]">
-                    <header className="text-center font-semibold text-lg text-green-500">Order detail</header>
-                    <Box className={"h-[73vh] p-2 rounded-lg overflow-scroll shadow-md "}>
+                <div className=" bg-white rounded-lg p-2 h-[80vh]">
+                    <header className="text-center font-semibold text-lg text-green-500 mt-3 mb-3">Order detail</header>
+                    <div className={"h-[70vh] p-2 rounded-lg overflow-scroll   "}>
                         {(items.length > 0) && items.map((item, index) => (
-                            <Box key={index} className=" rounded-lg border-white" sx={{height: "fitHeight", display: 'grid', gridTemplateRows: '70% 30%', gap: 1,padding: 2,border: '1px solid #ccc', marginBottom: "5px",boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
+                            <div key={index} className=" rounded-lg border-white" sx={{height: "fitHeight", display: 'grid', gridTemplateRows: '70% 30%', gap: 1,padding: 2,border: '1px solid #ccc', marginBottom: "5px",boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
                                 <Box sx={{display: 'grid',gridTemplateColumns: '40% 60%',}}>
 
                                     <div>
@@ -325,22 +325,22 @@ const SuccessOrderShow = () => {
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <Discount className={"text-green-500 text-xs"} style={{ fontSize: '15px' }}/>
                                             <Typography
-                                                className={"font-semibold text-xs"}>Discount: {item.product.discount}%</Typography>
+                                                className={"font-semibold text-xs"}>Discount: {item.product.discount *100}%</Typography>
                                         </div>
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <AttachMoneyIcon className={"text-green-500"} style={{ fontSize: '15px' }}/>
                                             <Typography
-                                                className={"font-semibold text-1xl line-through"}>{`${item.product.unitSellPrice}$`} / {item.product.measurementUnit}</Typography>
+                                                className={"font-semibold text-1xl line-through"}>{`${item.product.unitSellPrice} VND`} / {item.product.measurementUnit}</Typography>
                                         </div>
                                         <div className={"items-center flex gap-2 m-1"}>
                                             <PointOfSaleIcon className={"text-green-500"} style={{ fontSize: '15px' }}/>
                                             <Typography
-                                                className={"font-semibold text-1xl text-green-500"}>{`${item.product.unitSellPrice - (item.product.unitSellPrice * (item.product.discount  ))}$`} / {item.product.measurementUnit}</Typography>
+                                                className={"font-semibold text-1xl text-green-500"}>{`${item.product.unitSellPrice - (item.product.unitSellPrice * (item.product.discount  ))} VND`} / {item.product.measurementUnit}</Typography>
                                         </div>
                                     </div>
                                 </Box>
-                                <Box className={"ml-2 flex mb-2 pb-4"} sx={{gridTemplateColumns: '65% 35%'}}>
-                                    <div className={"row mr-[350px]"}>
+                                <Box className={"ml-2 mt-3 flex mb-2 pb-4"}  >
+                                    <div className={"row"}>
                                         <div className={"flex mb-1"}>
                                             <StoreIcon className={"text-green-500"}></StoreIcon>
                                             <Typography>{item.product.shop.shopName}</Typography>
@@ -354,7 +354,7 @@ const SuccessOrderShow = () => {
                                             <Typography>{`${item.product.shop.country} - ${item.product.shop.city} - ${item.product.shop.address}`}</Typography>
                                         </div>
                                     </div>
-                                    <div className={"row"}>
+                                    <div className={"row  ml-[264px]"}>
                                         <div className={"flex"}>
                                             <Typography className={"pr"}>{`Quantity: `} </Typography>
                                             <Typography
@@ -363,18 +363,18 @@ const SuccessOrderShow = () => {
                                         <div className={"flex"}>
                                             <Typography className={"pr"}>Total: </Typography>
                                             <Typography
-                                                className={"line-through"}>{item.product.unitSellPrice * item.quantity}$</Typography>
+                                                className={"line-through"}>{item.product.unitSellPrice * item.quantity} VND</Typography>
                                         </div>
                                         <Typography
                                             className={"font-semibold text-green-500 "}>{item.product.unitSellPrice * item.quantity - (item.product.unitSellPrice * item.quantity * (item.product.discount ))}$</Typography>
                                     </div>
                                 </Box>
-                            </Box>
+                            </div>
                         ))}
-                    </Box>
+                    </div>
                 </div>
-                <div className="shadow-md rounded-lg p-2 ">
-                    <header className="text-center font-semibold text-lg text-green-500">Order information</header>
+                <div className=" bg-white rounded-lg p-2 ">
+                    <header className=" text-center font-semibold text-lg text-green-500">Order information</header>
                     <Divider/>
                     <div className={'mt-1 read-only cursor-pointer'}>
                         <div className={"flex mt-2"}>
