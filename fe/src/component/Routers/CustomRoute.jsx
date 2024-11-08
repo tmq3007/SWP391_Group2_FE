@@ -1,5 +1,5 @@
-import React from 'react';
-import {Navigate, Route, Routes} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import Home from "../Home/Home";
 import Auth from "../Auth/Auth";
 import ProductDetail from "../Product/ProductDetail";
@@ -20,6 +20,7 @@ import UnAuthorizedPage from "../Auth/UnAuthorizedPage";
 import RejectedShopCreation from "../Shop/RejectedShopCreation";
 import {EditShop} from "../Shop/EditShop";
 import Review from "../User/CustomerProfile/Orders/ReviewProduct";
+import axios from "axios";
 const PaymentRoute = ({ children }) => {
     const orderPlaced = localStorage.getItem('orderPlaced') === 'true';
     console.log('Order placed status:', orderPlaced); // Check this output
