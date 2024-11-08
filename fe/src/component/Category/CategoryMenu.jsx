@@ -129,7 +129,7 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
                                     color: '#019376',
                                 }
                             }} />}
-                            label="Under 50000VND"
+                            label="Under 50000 VND"
                         />
                     </ListItem>
                     <ListItem>
@@ -140,7 +140,7 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
                                     color: '#019376',
                                 }
                             }} />}
-                            label="Above 50000VND"
+                            label="Above 50000 VND"
                         />
                     </ListItem>
                 </RadioGroup>

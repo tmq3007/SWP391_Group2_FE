@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import moment from "moment";
+import Avatar from "@mui/material/Avatar";
 
 const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
     const address = chosenAddress;
@@ -114,27 +115,35 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
 
     const placeOrder = () => {
         setOpenPlaceOrder(true);
+        localStorage.setItem('paymentPlaced', 'true');
     }
     const cancelOrder = () => {
         setOpenCancelOrder(true);
     }
     const temp = [];
     return (
-        <Box sx={{padding: 2}}>
-            <Typography variant="h6" marginBottom={"10px"} color={"#019376"}>Items List</Typography>
+        <Box sx={{padding: 2}} >
+            <Typography variant="h6" marginBottom={"20px"} color={"#019376"}>Items List</Typography>
+            <Box  sx={{display: 'row',height:"120px"}} className="overflow-y-auto">
             {(items.length > 0) && items.map((item, index) => (
-                <Box key={index} sx={{display: 'row'}}>
-                    <Box width={"100%"} sx={{
-                        display: 'flex', justifyContent: 'space-between', padding: 1, marginBottom: 1.5,
-                        borderRadius: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white'
+
+                    <Box key={index} width={"100%"}  sx={{
+                        display: 'flex', justifyContent: 'space-between',  marginBottom: 1.5,
+                        borderRadius: 2,
                     }}>
+                        <Avatar
+                            alt={item.product.productName}
+                            src={item.product.pictureUrl}
+                            style={{ marginRight: '10px' }}
+                        />
                         <div><Typography className="font-semibold" >{`${item.product.productName}`}</Typography>
                             <Typography><span className={"text-green-500"}>{`${item.quantity} `}</span> <span> x </span>
-                                <span>{`${item.product.unitSellPrice}`}</span></Typography></div>
-                        <div><Typography><span className={"text-green-500 font-semibold"}>{`Sale ${item.product.discount}%`}</span></Typography></div>
+                                <span>{`${item.product.unitSellPrice}`} VND</span></Typography></div>
+                        <div><Typography><span className={"text-green-500 font-bold"}>{`Sale ${item.product.discount *100}%`}</span></Typography></div>
                     </Box>
-                </Box>
+
             ))}
+            </Box>
             <Box sx={{display: 'flex', flexDirection: 'column',  verticallypaddingTop: '8px', marginTop: 2, fontWeight: 'bold', borderTop: '2px solid black',}}>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',fontWeight: 'bold',marginBottom:"10px", marginTop: "10px"}}>
                     <Typography>Total products: </Typography>
@@ -143,19 +152,19 @@ const CustomerPaymentList = ({ chosenAddress, chosenPhone, item, note }) => {
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',widthpadding: 1,marginBottom:"10px"}}>
                     <Typography>Total: </Typography>
                     <Typography sx={{ marginRight:"10px"}} className={"line-through"}>{ (items.length > 0) ? (items.reduce((total,item) =>
-                    { return total + (item.quantity * item.product.unitSellPrice)},0)).toFixed(2) : 0}$</Typography>
+                    { return total + (item.quantity * item.product.unitSellPrice)},0)).toFixed(0) : 0} VND</Typography>
                 </Box>
 
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',marginBottom:"10px"}}>
                     <Typography>Saved: </Typography>
                     <Typography sx={{ marginRight:"10px"}}>{ (items.length > 0) ? (items.reduce((total,item) =>
-                    { return total + (item.quantity * item.product.unitSellPrice * (item.product.discount ))},0)).toFixed(2) : 0}$</Typography>
+                    { return total + (item.quantity * item.product.unitSellPrice * (item.product.discount ))},0)).toFixed(0) : 0} VND</Typography>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%',fontWeight: 'bold',marginBottom:"10px"}}>
                     <Typography>Final Total: </Typography>
                     <Typography sx={{ marginRight:"10px"}}>
                         { (items.length > 0) ? (items.reduce((total,item) =>
-                        { return total + ((item.quantity * item.product.unitSellPrice) - (item.quantity * item.product.unitSellPrice * (item.product.discount)))},0)).toFixed(2) : 0}$
+                        { return total + ((item.quantity * item.product.unitSellPrice) - (item.quantity * item.product.unitSellPrice * (item.product.discount)))},0)).toFixed(0) : 0} VND
                     </Typography>
                 </Box>
             </Box>

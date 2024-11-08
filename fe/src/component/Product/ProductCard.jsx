@@ -54,8 +54,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
             addToCart(item.measurementUnit, quantity, item);
             setIsAddingToCart(false);
             setQuantity(1); // Reset quantity after adding to cart
-            setSnackbarMessage('Item added to cart successfully!');
-            setOpenSnackbar(true);
+
         } else if (quantity > availableStock) {
             setSnackbarMessage(`You can only add up to ${availableStock} of this item.`);
             setOpenSnackbar(true);

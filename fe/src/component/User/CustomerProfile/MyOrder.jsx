@@ -80,7 +80,7 @@ export const MyOrder = () => {
                             My Orders
                         </Typography>
                         <div className="w-full overflow-y-auto" style={{ height: 'calc(100% - 80px)' }}>
-                            <Box className="px-5 space-y-4">
+                            <Box className="px-5 space-y-4 max-h-[500px] overflow-y-auto">
                                 {orders.length > 0 ? (
                                     orders.map((order) => (
                                         <Box
@@ -102,18 +102,25 @@ export const MyOrder = () => {
                                             <Box className="flex justify-between w-full max-w-xs mt-2">
                                                 <Typography className="font-medium">Status:</Typography>
                                                 <Typography
-                                                    className={`p-2 rounded-full font-light ${order.isPaid ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                                                    className={`p-2 rounded-full font-light ${order.isPaid ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}
+                                                >
                                                     {order.isPaid ? 'Paid' : 'Not Paid'}
                                                 </Typography>
                                             </Box>
                                         </Box>
                                     ))
                                 ) : (
-                                    <Typography></Typography>
+                                    <Typography variant="h6" className="text-center text-gray-500">
+                                        No orders available
+                                    </Typography>
                                 )}
-                                {/* Load More Button */}
 
+                                {/* Load More Button */}
+                                <Box className="text-center mt-4">
+
+                                </Box>
                             </Box>
+
                         </div>
                     </Box>
                 </Box>

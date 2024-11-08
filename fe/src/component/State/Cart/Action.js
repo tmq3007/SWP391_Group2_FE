@@ -26,7 +26,7 @@ const API_URL_CART = 'http://localhost:8080/api/v1/cart';
 // Thêm hàm để tìm giỏ hàng
 export const findCart = (userId, jwt) => async (dispatch) => {
     dispatch({ type: FIND_CART_REQUEST });
-    try {
+    
         const { data } = await axios.get(`${API_URL_CART}/${userId}`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
@@ -35,10 +35,7 @@ export const findCart = (userId, jwt) => async (dispatch) => {
         dispatch({ type: FIND_CART_SUCCESS, payload: data });
         console.log("cart find", data);
         return data;  // Correctly return the data here
-    } catch (error) {
-        dispatch({ type: FIND_CART_FAILURE, payload: error });
-        console.error("Error finding cart:", error); // Log errors for better debugging
-    }
+
 };
 
 

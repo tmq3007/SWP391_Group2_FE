@@ -29,7 +29,7 @@ const menu = [
     herf: 'orders'
   },
   {
-    title: 'My Wishlists',
+    title: 'My Wishlist',
     icon: <FavoriteIcon />,
     herf: 'wishlist'
   },
@@ -61,7 +61,7 @@ export default function ProfileNav({ open, handleClose }) {
   };
 
   return (
-      <div className="sticky flex flex-col h-90 w-60 bg-white  m-10 border-t border-border-200 ml-5">
+      <div className="max-h-[500px] h-[600px] sticky flex flex-col  w-60 bg-white  m-10 border-t border-border-200 ml-5">
         <ul className=" ">
           {menu.map((item, i) => (
               <React.Fragment key={i}>

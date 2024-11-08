@@ -35,7 +35,7 @@ export const CustomerProfile = () => {
       <div>
         <NavbarHomePage/>
         <div className='sticky  lg:flex justify-between '>
-          <div className='sticky h-[70vh] lg:w-[20%] bg-white mt-10 mr-4 rounded-lg'>
+          <div className='sticky h-full lg:w-[20%] bg-white mt-10 mr-4 rounded-lg'>
             <ProfileNav/>
           </div>
 
