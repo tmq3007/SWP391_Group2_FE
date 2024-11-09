@@ -10,6 +10,7 @@ import {Alert, Snackbar} from "@mui/material";
 
 
 const WishlistItem = ({ item, userId, jwt, onRemove,addToCart }) => {
+
     const dispatch = useDispatch();
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -24,9 +25,10 @@ const WishlistItem = ({ item, userId, jwt, onRemove,addToCart }) => {
                 console.error("Error removing item from wishlist:", error);
             });
     };
+    console.log("item",item)
     const handleAddToCart = () =>{
         addToCart(item.measurementUnit, 1, item);
-        handleRemove()
+        handleRemove();
         setSnackbarMessage('Item added to cart successfully!');
         setOpenSnackbar(true);
     }
@@ -37,19 +39,16 @@ const WishlistItem = ({ item, userId, jwt, onRemove,addToCart }) => {
         <div className="mx-10">
             <div className="flex justify-between items-center p-4 my-3">
                 <div className="flex items-center space-x-4">
-                    <img src={item.image} alt={item.name} className="w-20 h-20 border shadow-md" />
+                    <img src={item.pictureUrl} alt={item.productName} className="w-20 h-20 border shadow-md" />
                     <div>
-                        <h3 className="font-semibold">{item.name}</h3>
-                        <p className="text-gray-500">{item.store}</p>
-                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">{item.rating}★</span>
+                        <h3 className="font-semibold">{item.productName}</h3>
+                        <p className="text-gray-500">{item.shop.shopName}</p>
+                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">{item.averageRating}★</span>
                     </div>
                 </div>
                 <div className="flex flex-col items-end">
-                    <p className="text-xl font-semibold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</p>
-                    {item.originalPrice && (
-
-                        <span className="line-through text-gray-400">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.origanalPrice)}</span>
-                    )}
+                    <p className="text-xl font-semibold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.unitSellPrice*(1-item.discount))}</p>
+                    z
                     <div className="flex space-x-4 mt-2">
                         <button onClick={handleAddToCart} className="text-green-500">Add to Cart</button>
                         <div className="border-l border-gray-300 h-5"></div>
@@ -79,7 +78,11 @@ export const Wishlist = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useState(null);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
-
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
     //add to cart
     const addToCart = (buyUnit, quantity, item) => {
         if (!userId) {
@@ -87,55 +90,51 @@ export const Wishlist = () => {
             return;
         }
 
-        // Check if item already exists in the cart
-        const existingCartItem = cart?.result?.cartItems?.find(cartItem => cartItem.productId === item.productId);
+        const productDetails = {
+            buyUnit,
+            quantity,
+            productId: item.productId,
+        };
 
-        if (existingCartItem) {
-            // Item exists, so we only update the quantity
-            const updatedQuantity = existingCartItem.quantity + quantity;
-            const updatedProductDetails = {
-                buyUnit,
-                quantity: updatedQuantity,
-                productId: item.productId,
-            };
 
-            dispatch(addItemToCart(userId, updatedProductDetails, jwt))
-                .then(() => {
-                    // Refetch the cart to get the latest data from the server
-                    dispatch(findCart(userId, jwt))
-                        .then((data) => {
-                            setCart(data);  // Set cart with latest data from server
-                        })
-                        .catch((error) => {
-                            console.error('Error fetching updated cart:', error);
-                        });
-                })
-                .catch((error) => {
-                    console.error('Error updating item quantity in cart:', error);
-                });
-        } else {
-            // Item doesn't exist in cart, so we add it as a new item
-            const productDetails = {
-                buyUnit,
-                quantity,
-                productId: item.productId,
-            };
 
-            dispatch(addItemToCart(userId, productDetails, jwt))
-                .then(() => {
-                    // Refetch the cart to get the latest data from the server
-                    dispatch(findCart(userId, jwt))
-                        .then((data) => {
-                            setCart(data);  // Set cart with latest data from server
-                        })
-                        .catch((error) => {
-                            console.error('Error fetching updated cart:', error);
-                        });
-                })
-                .catch((error) => {
-                    console.error('Error adding item to cart:', error);
-                });
-        }
+        //add to cart
+        dispatch(addItemToCart(userId, productDetails, jwt))
+            .then(() => {
+                // Refetch the cart to get the latest data from the server
+                dispatch(findCart(userId, jwt))
+                    .then((data) => {
+                        if(data) {
+                            setSnackbarMessage('Item added to cart successfully!');
+                            setOpenSnackbar(true);
+                            setCart(data);
+                        }// Set cart with latest data from server
+                    })
+                    .catch((error) => {
+                        if (error.response && error.response.data?.message) {
+                            setSnackbarMessage(error.response.data.message);
+                            setOpenSnackbar(true);
+                        } else if (!error.response) {
+                            setSnackbarMessage("Unable to connect to the server. Please check your network connection.");
+                            setOpenSnackbar(true);
+                        } else {
+                            setSnackbarMessage("An error occurred. Please try again later.");
+                            setOpenSnackbar(true);
+                        }
+                    });
+            })
+            .catch((error) => {
+                if (error.response && error.response.data?.message) {
+                    setSnackbarMessage(error.response.data.message);
+                    setOpenSnackbar(true);
+                } else if (!error.response) {
+                    setSnackbarMessage("Unable to connect to the server. Please check your network connection.");
+                    setOpenSnackbar(true);
+                } else {
+                    setSnackbarMessage("An error occurred. Please try again later.");
+                    setOpenSnackbar(true);
+                }
+            });
     };
 
     // findCart
@@ -175,8 +174,9 @@ export const Wishlist = () => {
                         store: product.shop?.shopName || 'Unknown Store',
                         rating: product.averageRating ,
                         image: product.pictureUrl ,
+                        measurementUnit : product.measurementUnit,
                     }));
-                    setWishlist(formattedWishlist);
+                    setWishlist(products);
                 })
                 .catch((error) => {
                     console.error('Error fetching wishlist:', error);
