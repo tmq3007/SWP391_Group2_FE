@@ -105,7 +105,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     image={item.pictureUrl}
                     alt={item.productName}
                     onClick={handleProductClick}
-                    sx={{ borderRadius: '15px 15px 0 0', objectFit: 'cover', cursor: "pointer" }}
+                    sx={{ borderRadius: '15px 15px 0 0', objectFit: 'cover', cursor: "pointer", maxHeight: '290px' }}
                 />
                 {discount >= 0 && (
                     <Box
