@@ -117,9 +117,12 @@ function CategoriesPage() {
             setSuccessSnackBarMessage("Category deleted successfully");
             setSuccessSnackBarOpen(true);
 
-            // Update local state to remove the deleted category
-            setCategories(prevCategories =>
-                prevCategories.filter(category => category.id !== selectedCategory.id)
+            setCategories((prevCategories) =>
+                prevCategories.map((category) =>
+                    category.id === selectedCategory.id
+                        ? { ...category, status: category.status === 'Active' ? 'Inactive' : 'Active' }
+                        : category
+                )
             );
 
             // Close the delete modal
