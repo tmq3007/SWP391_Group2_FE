@@ -19,16 +19,26 @@ export const VendorNavbar = () => {
   const token = localStorage.getItem('jwt');
   const role = localStorage.getItem('role');
   useEffect(() => {
-    if (token) {
+    if (token ) {
       dispatch(getUser(token)).then((data) => {
-        const firstName = data.result.firstName;
-        const lastName = data.result.lastName;
-        setUserName(`${firstName} ${lastName}`);
+        if(data.result && data.result.firstName && data.result.lastName){
+          const firstName = data.result.firstName;
+          const lastName = data.result.lastName;
+          setUserName(`${firstName} ${lastName}`);
+        } else if(!data.result || !data.result.firstName || !data.result.lastName ){
+          console.log("error fetching xxxx" )
+          navigate("/")
+        } else {
+          console.log("an error has logged")
+        }
+
       }).catch((error) => {
         console.error('Error getting user:', error);
       });
     }
   }, [dispatch, token]);
+
+
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -128,7 +138,7 @@ export const VendorNavbar = () => {
                 </IconButton>
 
                 <div className="flex flex-col">
-                  <span className="font-semibold text-sm text-black">{userName}</span>
+                  <span className="font-semibold text-sm text-black">Vendor</span>
                   <span className="text-xs text-gray-400">Store Owner</span>
                 </div>
               </div>
