@@ -23,7 +23,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
-    const averageRating = item?.averageRating > 0 ? item?.averageRating : 'No reviews';
+
 
     // Calculate available stock
     const availableStock = item.stock - currentQuantityInCart;
@@ -85,11 +85,13 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
         const newQuantity = e.target.value;
         setQuantity(newQuantity); // Cập nhật state quantity với giá trị mới
     };
+    const averageRating = item?.averageRating > 0 ? item?.averageRating : 'No reviews';
 
     return (
         <>
             <Card sx={{
                 maxWidth: 300,
+
                 margin: 2,
                 borderRadius: 2,
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
@@ -100,7 +102,6 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.15)',
                 }
             }}>
-
                 <CardMedia
                     component="img"
                     height="140"
@@ -109,23 +110,38 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     onClick={handleProductClick}
                     sx={{ borderRadius: '15px 15px 0 0', objectFit: 'cover', cursor: "pointer", maxHeight: '290px' }}
                 />
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    zIndex: 1,
+                    borderRadius: '8px 8px 0 0'
+                }}>
+                    <Typography variant="h6" component="div" sx={{marginLeft:"10px", fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                        {averageRating} <StarIcon sx={{ color: '#FFD700', fontSize: 22, ml: 0.5 }} />
+                    </Typography>
 
-                {discount >= 0 && (
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: 10,
-                            right: 10,
-                            backgroundColor: '#ff4d4f',
-                            color: 'white',
-                            padding: '3px 8px',
-                            borderRadius: 1,
-                            fontSize: 12,
-                        }}
-                    >
-                        Sale {discountPercentage}%
-                    </Box>
-                )}
+                    {discount >= 0 && (
+                        <Box
+                            sx={{
+                                backgroundColor: '#ff4d4f',
+                                color: 'white',
+                                padding: '3px 8px',
+                                borderRadius: 1,
+                                fontSize: 12,
+                            }}
+                        >
+                            Sale {discountPercentage}%
+                        </Box>
+                    )}
+                </Box>
+
                 <CardContent>
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 2 }}>
                         {item.productName}
