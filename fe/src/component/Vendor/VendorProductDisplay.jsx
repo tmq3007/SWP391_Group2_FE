@@ -26,7 +26,7 @@ const VendorProductDisplay = ({ products}) => {
             const handlePrevious = () => {
             setCurrentIndex((prevIndex) => (prevIndex - 1 + b.length) % b.length);
         };
-    if(!products || products.length === 0) {
+    if(!b || b.length <= 0) {
         return (
             <div className={"items-center text-green-500"}>Waiting for your first sell ❤️</div>
         )}else{
