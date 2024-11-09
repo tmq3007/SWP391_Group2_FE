@@ -158,6 +158,20 @@ const CustomRoute = () => {
                 <Route path="/product-detail" element={<ProductDetail/>}/>
                 <Route path="/help-center/*" element={<HelpingCenter/>}/>
                 <Route path="/my-profile/*" element={<CustomerProfile/>}/>
+
+                {/*<Route path="/my-profile/orders"*/}
+                {/*       element={*/}
+                {/*           <ProtectedRoute role="ROLE_CUSTOMER">*/}
+                {/*               <CustomerProfile/>*/}
+                {/*           </ProtectedRoute>*/}
+                {/*       }/>*/}
+                {/*<Route path="/my-profile/wishlist"*/}
+
+                {/*       element={*/}
+                {/*           <ProtectedRoute role="ROLE_CUSTOMER">*/}
+                {/*               <CustomerProfile/>*/}
+                {/*           </ProtectedRoute>*/}
+                {/*       }/>*/}
                 {/*<Route path="/payment-time-out" element={<PaymentTimeOut/>}/>*/}
                 {/*<Route*/}
                 {/*    path="/payment-time-out"*/}

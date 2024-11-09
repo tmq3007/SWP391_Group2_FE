@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -11,12 +11,15 @@ import {
     Typography
 } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {createReview} from "../../../State/Feedback/Action";
+import axios from "axios";
+import {updateProductById} from "../../../State/Product/Action";
 
 const ReviewProduct = ({ open = true, onClose, productId, userId ,productImage}) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
+    const token = localStorage.getItem('jwt');
 
 
     console.log("he",productImage)
@@ -30,8 +33,52 @@ const ReviewProduct = ({ open = true, onClose, productId, userId ,productImage})
             setUploadedImage(file);
         }
     };
+    const fetchAverageRating = async (productId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/reviews/get-all-review-by-product-id/${productId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const reviews = response.data;
+            console.log("review data: " , reviews);
+            const averageRating = reviews.reduce((total, review) => total + review.rating, 0) / reviews.length || 0;
+            console.log("averageRating:",averageRating);
+            return averageRating.toFixed(1);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+            return 'N/A';
+        }
+    };
 
 
+    const { products } = useSelector(store => store.products);
+    useEffect(() => {
+        const fetchAllProductsData = async () => {
+            await Promise.all(
+                products.map(async (product) => {
+                    const averageRating = await fetchAverageRating(product.productId);
+                    const updatedProductData = {
+                        productId: product.productId,
+                        productName: product.productName,
+                        category: product.category.categoryId,
+                        shop: product.shop.shopId,
+                        description: product.description,
+                        measurementUnit: product.measurementUnit,
+                        unitBuyPrice: product.unitBuyPrice,
+                        unitSellPrice: product.unitSellPrice,
+                        discount: product.discount,
+                        stock: product.stock,
+                        pictureUrl: product.pictureUrl,
+                        pictureUrl2: product.pictureUrl2,
+                        isActive: product.isActive,
+                        averageRating: averageRating
+                    };
+                    await dispatch(updateProductById(product.productId, updatedProductData));
+                })
+            );
+        };
+
+        if (products.length > 0) fetchAllProductsData();
+    }, [products, token, dispatch]);
 
     const handleSubmit = () => {
         const formData = {
@@ -40,6 +87,7 @@ const ReviewProduct = ({ open = true, onClose, productId, userId ,productImage})
             productName: productId,    // keep productId from props
             userId: userId             // keep userId from props
         };
+
 
         console.log("Submitting data:", formData);
 

@@ -211,11 +211,15 @@ const navigate = useNavigate();
 
     const filteredProducts = products?.products?.filter((product) => {
         const matchesCategory = selectedCategory === 'all' || product.category.categoryName === selectedCategory;
-        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice* (1 - product.discount) <= 50000) || (selectedPrice === 'high' && product.unitSellPrice* (1 - product.discount) > 50000) || selectedPrice === 'all';
+        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice * (1 - product.discount) <= 50000) ||
+            (selectedPrice === 'high' && product.unitSellPrice * (1 - product.discount) > 50000) ||
+            selectedPrice === 'all';
         const matchesSearch = product.productName.toLowerCase().includes(searchQuery);
+        const isActive = product.isActive === true; // Ensure product is active
 
-        return matchesCategory && matchesPrice && matchesSearch;
+        return matchesCategory && matchesPrice && matchesSearch && isActive;
     }) || [];
+
 
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
@@ -255,12 +259,13 @@ const navigate = useNavigate();
             <section className="pt-[2rem] lg:flex relative">
                 <div className="space-y-10 w-[300px] filter" style={{ backgroundColor: '#ffffff', padding: '1rem' }}>
                     <div className="box spacey-8 items-center lg:sticky top-28">
-                        <CategoryMenu setSelectedCategory={setSelectedCategory} setSelectedPrice={setSelectedPrice} />
+                        <CategoryMenu setSelectedCategory={setSelectedCategory} setSelectedPrice={setSelectedPrice} setCurrentPage={setCurrentPage} />
+
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
-                    {currentProducts.map((item) => item &&　item.isActive&& (
+                    {currentProducts.map((item) => item &&　  (
                         <ProductCard
                             key={item.id}
                             cart={cart?.result?.cartItems || []}

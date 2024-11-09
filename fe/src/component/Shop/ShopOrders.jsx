@@ -59,7 +59,9 @@ export const ShopOrders = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 }
             );
+            await getAllOrderItemsByShopIdAction(shopId);
             return response.data;
+
         } catch (error) {
             console.error("Error updating payment status:", error);
             throw error;
@@ -85,7 +87,7 @@ export const ShopOrders = () => {
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Payment Way</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Final Price</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
+
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -101,16 +103,7 @@ export const ShopOrders = () => {
 
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.finalPrice}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.isPaid ? 'Is Paid' : 'Not Paid'}</td>
-                                <td className="px-6 py-4 text-sm text-gray-500 flex-col cursor-pointer">
-                                    <DeleteIcon
-                                        onClick={() => {
-                                            if (window.confirm("Do you want to confirm status to paid?")) {
-                                                handleIsPaid(order.orderItemsId);
-                                            }
-                                        }}
-                                    />
-
-                                </td>
+                                
                             </tr>
                         ))}
                         </tbody>

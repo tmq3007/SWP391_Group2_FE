@@ -124,7 +124,7 @@ export const getCategoryById = async (categoryId) => {
 
 export const deleteCategory = async (categoryId) => {
     try {
-        const response = await axiosInstance.delete(`/api/v1/categories/${categoryId}`);
+        const response = await axiosInstance.patch(`/api/v1/categories/delete/${categoryId}`);
         return response.data;
     } catch (error) {
         console.error("Error deleting category", error);
@@ -226,6 +226,16 @@ export const getTop10CategoriesByMostProducts = async () => {
         return response.data;
     } catch (error) {
         console.error("Error fetching top 10 categories by most products", error);
+        throw error;
+    }
+}
+
+export const getCountOrdersByMonthAndYear = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/orders/countOrdersByMonthAndYear`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching count orders by month and year", error);
         throw error;
     }
 }

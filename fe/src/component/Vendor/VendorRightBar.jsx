@@ -30,111 +30,7 @@ import {PieChart} from "@mui/icons-material";
 *
 * shop information
 * */
-const products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'This is a great product',
-    price: 29.99,
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'Another fantastic product',
-    price: 19.99,
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'This is a great product',
-    price: 29.99,
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'Another fantastic product',
-    price: 19.99,
-  },
-  {
-    id: 5,
-    name: 'Product 5',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'This is a great product',
-    price: 29.99,
-  },
-  {
-    id: 6,
-    name: 'Product 6',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'Another fantastic product',
-    price: 19.99,
-  },
-  {
-    id: 7,
-    name: 'Product 7',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'This is a great product',
-    price: 29.99,
-  },
-  {
-    id: 8,
-    name: 'Product 8',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'Another fantastic product',
-    price: 19.99,
-  },
-  {
-    id: 9,
-    name: 'Product 9',
-    image: 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?w=283&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'This is a great product',
-    price: 29.99,
-  },
-  {
-    id: 10,
-    name: 'Product 10',
-    image: 'https://th.bing.com/th/id/OIP.JDa_1X-NqdM1K-bZxp99DQHaEo?w=265&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-    description: 'Another fantastic product',
-    price: 19.99,
-  },
-  // Add more products...
-];
 
-const shopData = {
-  name: 'Furniture Shop',
-  address: '588 Finwood Road, East Dover, New Jersey',
-  phone: '+213 42 12 12 21',
-  avatar: 'https://via.placeholder.com/150', // Replace with actual avatar URL
-  commission: 10,
-  sale: 1233,
-  balance: 1233,
-  withdraw: 0,
-};
-
-const notificationData = [
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-  { message: 'Your order has been shipped!', date: '2024-10-04' },
-  { message: 'Your profile has been updated.', date: '2024-10-03' },
-];
 
 const getShopOrderItemsData = async (id, jwt) => {
   try {
@@ -170,14 +66,22 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
     };
     fetchData();
   }, [id, token]);
-  console.log(orderItems);
+  console.log("aaaaaaaaaaa",orderItems);
   //IMPORTANT PART
+
   if (loading) {
     return <div>No data</div>; // Show loading message until data is fetched
   }
   const paidOrder = (orderItems.length > 0) ? (orderItems.filter(a => a.isPaid).length) : 0;
   const unPaidOrder = (orderItems.length > 0) ? (orderItems.filter(a => !a.isPaid).length) : 0;
   const totalOrder = (orderItems.length > 0) ? orderItems.length : 0;
+
+  // setOrderCount({
+  //   a: (orderItems.length > 0) ? (orderItems.filter(item => item.isPaid).length) : 0,
+  //   b: (orderItems.length > 0) ? (orderItems.filter(item => !item.isPaid).length) : 0,
+  //   c: (orderItems.length > 0) ? (orderItems.length) : 0,
+  // });
+  // console.log("Print",OrderCount);
 
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
   const revenueToday = orderItems.filter(item => {
@@ -195,6 +99,8 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
   const currentYear = today1.getFullYear();
 
 
+
+
   const revenueThisMonth = (orderItems.length > 0) ? orderItems.filter(item => {
     if (item.isPaid && item.orderItemsPaymentDate) {
       const orderDate = new Date(item.orderItemsPaymentDate);
@@ -210,9 +116,10 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
 
 
   const handleTodayOrder = () => {
+    console.log("Array: ",orderItems);
     const todayOrders = (orderItems.length > 0) ?  orderItems.filter(item => {
-      if (item.orderItemsPaymentDate) {
-        const orderDate = new Date(item.orderItemsPaymentDate).toISOString().split('T')[0];
+      if (item.orderItemsDate) {
+        const orderDate = new Date(item.orderItemsDate).toISOString().split('T')[0];
         return orderDate === today;
       }
       return false;
@@ -224,10 +131,13 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
     })
   };
 
+
+
   const handleMonthOrder = () => {
+    console.log("Array: ",orderItems);
     const monthOrders = (orderItems.length > 0) ?  orderItems.filter(item => {
-      if (item.orderItemsPaymentDate) {
-        const orderDate = new Date(item.orderItemsPaymentDate);
+      if (item.orderItemsDate) {
+        const orderDate = new Date(item.orderItemsDate);
         return orderDate.getMonth() === currentMonth && orderDate.getFullYear() === currentYear;
       }
       return false;
@@ -240,9 +150,10 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
   };
 
   const handleYearOrder = () => {
+    console.log("Array: ",orderItems);
     const yearOrders =  (orderItems.length > 0) ?  orderItems.filter(item => {
-      if (item.orderItemsPaymentDate) {
-        const orderDate = new Date(item.orderItemsPaymentDate);
+      if (item.orderItemsDate) {
+        const orderDate = new Date(item.orderItemsDate);
         return orderDate.getFullYear() === currentYear;
       }
       return false;
@@ -426,7 +337,7 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
                       Paid orders
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {OrderCount ? OrderCount.a : 0}
+                      { OrderCount.a !== 0 ? OrderCount.a : paidOrder}
                     </span>
                   </div>
                 </div>
@@ -442,7 +353,7 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
                       Unpaid orders
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {OrderCount ? OrderCount.b : 0}
+                      { OrderCount.b !== 0 ? OrderCount.b : unPaidOrder}
                     </span>
                   </div>
                 </div>
@@ -458,7 +369,7 @@ const VendorRightBar = ({ selectedPage , ooo }) => {
                       All orders
                     </span>
                     <span className="mb-2 text-2xl font-semibold text-heading">
-                      {OrderCount ? OrderCount.c : 0}
+                      {OrderCount.c !== 0 ? OrderCount.c : totalOrder}
                     </span>
                   </div>
                 </div>

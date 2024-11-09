@@ -97,7 +97,8 @@ export const MyOrder = () => {
                                             </Box>
                                             <Box className="flex justify-between w-full max-w-xs mt-2 font-semibold">
                                                 <Typography className="font-semibold">Total:</Typography>
-                                                <Typography variant="h6">${order.finalTotal}</Typography>
+                                                <Typography variant="h6">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.finalTotal)}</Typography>
+
                                             </Box>
                                             <Box className="flex justify-between w-full max-w-xs mt-2">
                                                 <Typography className="font-medium">Status:</Typography>

@@ -87,30 +87,57 @@ export const Wishlist = () => {
             return;
         }
 
-        const productDetails = {
-            buyUnit,
-            quantity,
-            productId: item.productId,
-        };
+        // Check if item already exists in the cart
+        const existingCartItem = cart?.result?.cartItems?.find(cartItem => cartItem.productId === item.productId);
 
+        if (existingCartItem) {
+            // Item exists, so we only update the quantity
+            const updatedQuantity = existingCartItem.quantity + quantity;
+            const updatedProductDetails = {
+                buyUnit,
+                quantity: updatedQuantity,
+                productId: item.productId,
+            };
 
+            dispatch(addItemToCart(userId, updatedProductDetails, jwt))
+                .then(() => {
+                    // Refetch the cart to get the latest data from the server
+                    dispatch(findCart(userId, jwt))
+                        .then((data) => {
+                            setCart(data);  // Set cart with latest data from server
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching updated cart:', error);
+                        });
+                })
+                .catch((error) => {
+                    console.error('Error updating item quantity in cart:', error);
+                });
+        } else {
+            // Item doesn't exist in cart, so we add it as a new item
+            const productDetails = {
+                buyUnit,
+                quantity,
+                productId: item.productId,
+            };
 
-        //add to cart
-        dispatch(addItemToCart(userId, productDetails, jwt))
-            .then(() => {
-                // Refetch the cart to get the latest data from the server
-                dispatch(findCart(userId, jwt))
-                    .then((data) => {
-                        setCart(data);  // Set cart with latest data from server
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching updated cart:', error);
-                    });
-            })
-            .catch((error) => {
-                console.error('Error adding item to cart:', error);
-            });
+            dispatch(addItemToCart(userId, productDetails, jwt))
+                .then(() => {
+                    // Refetch the cart to get the latest data from the server
+                    dispatch(findCart(userId, jwt))
+                        .then((data) => {
+                            setCart(data);  // Set cart with latest data from server
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching updated cart:', error);
+                        });
+                })
+                .catch((error) => {
+                    console.error('Error adding item to cart:', error);
+                });
+        }
     };
+
     // findCart
     useEffect(() => {
         if (userId && jwt) {

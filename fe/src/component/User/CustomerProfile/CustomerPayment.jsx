@@ -357,7 +357,7 @@ const CustomerPayment = () => {
                             </Button>
                         </div>
 
-                        <Box sx={{ marginTop: 2, padding: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                        <Box sx={{ marginTop: 2, marginLeft:-0.8  }}>
                             {array.length > 0 && array.map((addr, index) => (
                                 <Box
                                     key={index}
