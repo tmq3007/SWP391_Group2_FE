@@ -47,59 +47,60 @@ const ProtectedVendorRoute = ({ role, children }) => {
     const userRole = localStorage.getItem('role');
     const userId = localStorage.getItem('userId');
     const navigate = useNavigate();
+
     const [shopId, setShopId] = useState(null);
     const [unverifiedShopId, setUnverifiedShopId] = useState(null);
     const [shopError, setShopError] = useState(false);
     const [unverifiedShopError, setUnverifiedShopError] = useState(false);
     const [isRejected, setIsRejected] = useState(false);
 
+    const [isShopIdLoaded, setIsShopIdLoaded] = useState(false);
+    const [isUnverifiedShopIdLoaded, setIsUnverifiedShopIdLoaded] = useState(false);
+
+    // Validate user role and redirect if unauthorized
     useEffect(() => {
         if (userRole !== role || !userId) {
             navigate("/auth/unauthorized");
-            return;
         }
+    }, [userRole, role, userId, navigate]);
 
+    // Fetch shopId and unverifiedShopId
+    useEffect(() => {
         const fetchShopData = async () => {
             try {
-                axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                    .then(response => {
-                        setShopId(response.data.result);
-                        setShopError(false);
-                    })
-                    .catch(error => {
-                        console.error("Error fetching shopId:", error);
-                        setShopError(true);
-                    });
-
-                axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                    .then(response => {
-                        setUnverifiedShopId(response.data.result);
-                        setUnverifiedShopError(false);
-                        console.log("UnverifiedShopId:", response.data.result);
-                    })
-                    .catch(error => {
-                        console.error("Error fetching UnshopId:", error);
-                        setUnverifiedShopError(true);
-                    });
+                const shopResponse = await axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setShopId(shopResponse.data.result);
+                setShopError(false);
             } catch (error) {
-                console.error("Error fetching shop data:", error);
+                console.error("Error fetching shopId:", error);
+                setShopError(true);
+            } finally {
+                setIsShopIdLoaded(true);
+            }
+
+            try {
+                const unverifiedShopResponse = await axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUnverifiedShopId(unverifiedShopResponse.data.result);
+                setUnverifiedShopError(false);
+            } catch (error) {
+                console.error("Error fetching unverifiedShopId:", error);
+                setUnverifiedShopError(true);
+            } finally {
+                setIsUnverifiedShopIdLoaded(true);
             }
         };
 
         fetchShopData();
-    }, [userRole, role, userId, token, navigate]);
+    }, [userId, token]);
 
+    // Fetch rejection status if unverifiedShopId is available
     useEffect(() => {
-        if (unverifiedShopId) {
-            const fetchRejectedStatus = async () => {
+        const fetchRejectedStatus = async () => {
+            if (unverifiedShopId) {
                 try {
                     const response = await axios.get(`http://localhost:8080/api/v1/get-status-rejected/${unverifiedShopId}`, {
                         headers: { Authorization: `Bearer ${token}` }
@@ -108,26 +109,28 @@ const ProtectedVendorRoute = ({ role, children }) => {
                 } catch (error) {
                     console.error("Error fetching rejection status:", error);
                 }
-            };
-            fetchRejectedStatus();
-        }
+            }
+        };
+
+        fetchRejectedStatus();
     }, [unverifiedShopId, token]);
 
     useEffect(() => {
-        if (shopError && unverifiedShopError) {
-            navigate("/create-shop");
-        } else if (shopError && !unverifiedShopError) {
-            navigate(!isRejected ? "/processing" : `/rejected-shop-creation/${unverifiedShopId}`);
-        } else if (!shopError && unverifiedShopError) {
-            navigate("/vendor-dashboard");
+        if (isShopIdLoaded && isUnverifiedShopIdLoaded) {
+            if (shopError && unverifiedShopError) {
+                navigate("/create-shop");
+            } else if (shopError && !unverifiedShopError) {
+                navigate(isRejected ? `/rejected-shop-creation/${unverifiedShopId}` : "/processing");
+            } else if (!shopError && unverifiedShopError) {
+                if (window.location.pathname !== '/shop-dashboard') {
+                    navigate("/vendor-dashboard");
+                }
+            }
         }
-    }, [shopError, unverifiedShopError, isRejected, unverifiedShopId, navigate]);
+    }, [shopError, unverifiedShopError, isRejected, unverifiedShopId, isShopIdLoaded, isUnverifiedShopIdLoaded, navigate]);
 
     return userRole === role ? children : <Navigate to="/auth/unauthorized" />;
 };
-
-
-
 const CustomRoute = () => {
     return (
         <div>
@@ -180,14 +183,13 @@ const CustomRoute = () => {
                     }
                 />
 
-
                 <Route path="/shop-dashboard/*" element={
                     <ProtectedRoute role="ROLE_VENDOR">
                         <ShopDashboard />
                     </ProtectedRoute>
                 } />
 
-                <Route path="/vendor-dashboard/*" element={
+                <Route path="/vendor-dashboard" element={
                     <ProtectedVendorRoute role="ROLE_VENDOR">
                         <VendorDashboard />
                     </ProtectedVendorRoute>

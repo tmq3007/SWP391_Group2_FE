@@ -28,8 +28,32 @@ export const EditShop = () => {
 
 
     const handleEditShop = () => {
-        if (!shopName || !description || !city || !state || !address || !phone ) {
-            alert("Please fill out all required fields.");
+        if (!shopName) {
+            alert("Please enter the shop name.");
+            return;
+        }
+        if (!description) {
+            alert("Please enter the description.");
+            return;
+        }
+        if (!country) {
+            alert("Please enter the country.");
+            return;
+        }
+        if (!city) {
+            alert("Please enter the city.");
+            return;
+        }
+        if (!state) {
+            alert("Please enter the state.");
+            return;
+        }
+        if (!address) {
+            alert("Please enter the address.");
+            return;
+        }
+        if (!phone) {
+            alert("Please enter the phone number.");
             return;
         }
 

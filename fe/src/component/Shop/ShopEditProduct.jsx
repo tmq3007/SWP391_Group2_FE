@@ -79,8 +79,37 @@ export const ShopEditProduct = () => {
 
     // when click add product
     const handleUpdateProduct = () => {
-        if (!unitBuyPrice || !unitSellPrice || !stock || !category || !shopId) {
-            alert("Please fill out all required fields.");
+        if (!description) {
+            alert("Please enter the description.");
+            return;
+        }
+        if (!measurementUnit) {
+            alert("Please enter the measurement unit.");
+            return;
+        }
+        if (category === undefined) {
+            alert("Please select a category.");
+            return;
+        }
+        if (!shopId) {
+            alert("Please select a shop.");
+            return;
+        }
+
+        if (!unitBuyPrice || unitBuyPrice <= 0) {
+            alert("Unit Buy Price must be greater than 0.");
+            return;
+        }
+        if (!unitSellPrice || unitSellPrice <= 0) {
+            alert("Unit Sell Price must be greater than 0.");
+            return;
+        }
+        if (!stock || stock <= 0) {
+            alert("Stock must be greater than 0.");
+            return;
+        }
+        if (discount < 0) {
+            alert("Discount cannot be negative.");
             return;
         }
 
