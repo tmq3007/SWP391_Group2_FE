@@ -7,6 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ProductDetail from "./ProductDetail";
 import CloseIcon from "@mui/icons-material/Close";
 import { Snackbar, Alert } from '@mui/material';
+import StarIcon from "@mui/icons-material/Star";
 const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromWishlist }) => {
     const originalPrice = item.unitSellPrice || 0;
     const discount = item.discount * 100 || 0;
@@ -22,7 +23,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const currentQuantityInCart = currentCartItem ? currentCartItem.quantity : 0;
-
+    const averageRating = item?.averageRating > 0 ? item?.averageRating : 'No reviews';
 
     // Calculate available stock
     const availableStock = item.stock - currentQuantityInCart;
@@ -99,6 +100,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.15)',
                 }
             }}>
+
                 <CardMedia
                     component="img"
                     height="140"
@@ -107,6 +109,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     onClick={handleProductClick}
                     sx={{ borderRadius: '15px 15px 0 0', objectFit: 'cover', cursor: "pointer", maxHeight: '290px' }}
                 />
+
                 {discount >= 0 && (
                     <Box
                         sx={{
@@ -127,6 +130,8 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 2 }}>
                         {item.productName}
                     </Typography>
+
+
                     <Typography variant="body2" color="text.primary">
                         Buy Unit: {item.measurementUnit}
                     </Typography>

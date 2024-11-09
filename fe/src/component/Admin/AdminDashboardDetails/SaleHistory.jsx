@@ -32,7 +32,7 @@ const SaleHistoryChart = () => {
             try {
                 const response = await getCountOrdersByMonthAndYear();
                 console.log(response);
-                const data = response.data.result;
+                const data = response.result;
                 console.log(data);
                 setOrderData(data);
 
