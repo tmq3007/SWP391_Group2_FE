@@ -132,7 +132,12 @@ const ProtectedVendorRoute = ({ role, children }) => {
             if (shopError && unverifiedShopError) {
                 navigate("/create-shop");
             } else if (shopError && !unverifiedShopError) {
-                navigate(isRejected ? `/rejected-shop-creation/${unverifiedShopId}` : "/processing");
+                if(isRejected){
+                    if(!window.location.pathname.startsWith('/create-shop'))
+                    navigate(`/rejected-shop-creation/${unverifiedShopId}`);
+                } else {
+                    navigate("/processing");
+                }
             } else if (!shopError && unverifiedShopError) {
                 if (!allowedPaths.some(path => window.location.pathname.startsWith(path))) {
                     navigate("/vendor-dashboard");
