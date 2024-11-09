@@ -30,7 +30,7 @@ const MultiItemCarousel = () => {
     console.log("products top 10", products);
 
     // Lọc sản phẩm với averageRating > 3
-    const topRatedProducts = products?.products?.filter(product => product.averageRating > 3);
+    const topRatedProducts = products?.products?.filter(product => product.averageRating > 3 && product.isActive === true);
 
     return (
         <div style={{ padding: '20px' }}>

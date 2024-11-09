@@ -64,8 +64,10 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
                             label="All"
                         />
                     </ListItem>
-                    {Array.isArray(categories.result) && categories.result.length > 0 ? (
-                        categories.result.map((category) => (
+                    {Array.isArray(categories.result) && categories.result.length > 0  ? (
+                        categories.result
+                            .filter((category) => category.isActive)
+                            .map((category) => (
                             <ListItem key={category.categoryId}>
                                 <FormControlLabel
                                     value={category.categoryName}

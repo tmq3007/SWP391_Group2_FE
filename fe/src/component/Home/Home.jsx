@@ -211,11 +211,15 @@ const navigate = useNavigate();
 
     const filteredProducts = products?.products?.filter((product) => {
         const matchesCategory = selectedCategory === 'all' || product.category.categoryName === selectedCategory;
-        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice* (1 - product.discount) <= 50000) || (selectedPrice === 'high' && product.unitSellPrice* (1 - product.discount) > 50000) || selectedPrice === 'all';
+        const matchesPrice = (selectedPrice === 'low' && product.unitSellPrice * (1 - product.discount) <= 50000) ||
+            (selectedPrice === 'high' && product.unitSellPrice * (1 - product.discount) > 50000) ||
+            selectedPrice === 'all';
         const matchesSearch = product.productName.toLowerCase().includes(searchQuery);
+        const isActive = product.isActive === true; // Ensure product is active
 
-        return matchesCategory && matchesPrice && matchesSearch;
+        return matchesCategory && matchesPrice && matchesSearch && isActive;
     }) || [];
+
 
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
@@ -260,7 +264,7 @@ const navigate = useNavigate();
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mx-auto ml-8" style={{ width: '100%', maxWidth: '1600px' }}>
-                    {currentProducts.map((item) => item &&　item.isActive&& (
+                    {currentProducts.map((item) => item &&　  (
                         <ProductCard
                             key={item.id}
                             cart={cart?.result?.cartItems || []}
