@@ -34,18 +34,20 @@ export const ShopReview = () => {
         return () => { isMounted = false };
     }, [dispatch, token, userId]);
 
-    // Get all reviews by shop id
+    // Get all reviews by shop id and set default sort by reviewId descending
     useEffect(() => {
         let isMounted = true;
 
         const fetchReviews = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/reviews/get-all-review-by-shop-id/3`, {
+                const response = await axios.get(`http://localhost:8080/api/v1/reviews/get-all-review-by-shop-id/${shopId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (isMounted) {
                     const review = response.data;
-                    setReview(review);
+                    // Default sort by reviewId descending
+                    const sortedReviews = review.sort((a, b) => b.reviewId - a.reviewId);
+                    setReview(sortedReviews);
                 }
             } catch (error) {
                 console.error("Error fetching review:", error);

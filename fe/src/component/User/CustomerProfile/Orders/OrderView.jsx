@@ -3,10 +3,25 @@ import { Box, Button, Typography } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 import ReviewProduct from "./ReviewProduct";
+import axios from "axios";
 
+const setTrue = async (id,item,jwt) => {
 
+    try {
+        const response = await axios.patch(`http://localhost:8080/api/v1/orders/${id}`,item, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log("Error fetching user data:", error);
+        throw error;
+    }
+};
 
 const OrderView = (order) => {
+    const token = localStorage.getItem('jwt');
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
     const [selectedProductImage, setSelectedProductImage] = useState(null);
@@ -18,6 +33,15 @@ const OrderView = (order) => {
         setIsReviewOpen(true);
     };
 
+    const handlePaid = (id, order, jwt) => {
+        const date = new Date();
+        const formattedDate = date.toISOString().split('T')[0];
+        order.order.paymentDate = formattedDate;  // Set the paymentDate to current date in yyyy-MM-dd format
+        order.order.paymentId = 1;
+        order.order.isPaid = true;
+        // Call setTrue with updated order data
+        setTrue(id,order.order,jwt);
+    };
     // Close Review popup
     const handleCloseReview = () => {
         setIsReviewOpen(false);
@@ -60,12 +84,20 @@ const OrderView = (order) => {
                         </div>
 
                         <div className="mb-8 flex w-full items-center justify-center md:mb-12">
+                            {order.order.isPaid ?
                             <Typography
                                 variant="h6"
-                                className={`font-semibold rounded-full text-center p-2 ${order.order.isPaid ? 'bg-green-100' : 'bg-red-100'}`}
+                                className={`font-semibold rounded-full text-center p-2 bg-green-100`}
                             >
                                 Order Status: {order.order.isPaid ? 'Paid' : 'Not Paid'}
                             </Typography>
+                                :
+                                <Button onClick={() => handlePaid(order.order.orderId,order, token)} key={order.order.orderId}>
+                                    <Typography className={`font-semibold rounded-full text-center p-2 bg-green-500`}>
+                                        Click here to verify if you receive the goods
+                                    </Typography>
+                                </Button>
+                            }
                         </div>
 
                         <div className="flex flex-col lg:flex-row">
