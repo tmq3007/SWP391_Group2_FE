@@ -259,7 +259,8 @@ const navigate = useNavigate();
             <section className="pt-[2rem] lg:flex relative">
                 <div className="space-y-10 w-[300px] filter" style={{ backgroundColor: '#ffffff', padding: '1rem' }}>
                     <div className="box spacey-8 items-center lg:sticky top-28">
-                        <CategoryMenu setSelectedCategory={setSelectedCategory} setSelectedPrice={setSelectedPrice} />
+                        <CategoryMenu setSelectedCategory={setSelectedCategory} setSelectedPrice={setSelectedPrice} setCurrentPage={setCurrentPage} />
+
                     </div>
                 </div>
 
