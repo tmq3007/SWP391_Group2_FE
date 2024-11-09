@@ -83,7 +83,7 @@ const ProtectedVendorRoute = ({ role, children }) => {
                     .then(response => {
                         setUnverifiedShopId(response.data.result);
                         setUnverifiedShopError(false);
-                        console.log("UnverifiedShopId : ", response.data.result);
+                        console.log("UnverifiedShopId:", response.data.result);
                     })
                     .catch(error => {
                         console.error("Error fetching UnshopId:", error);
@@ -114,8 +114,6 @@ const ProtectedVendorRoute = ({ role, children }) => {
     }, [unverifiedShopId, token]);
 
     useEffect(() => {
-        console.log("shopError",shopError);
-        console.log("unverifiedShopError",unverifiedShopError);
         if (shopError && unverifiedShopError) {
             navigate("/create-shop");
         } else if (shopError && !unverifiedShopError) {
@@ -123,10 +121,11 @@ const ProtectedVendorRoute = ({ role, children }) => {
         } else if (!shopError && unverifiedShopError) {
             navigate("/vendor-dashboard");
         }
-    }, [shopId, unverifiedShopId, isRejected, navigate]);
+    }, [shopError, unverifiedShopError, isRejected, unverifiedShopId, navigate]);
 
     return userRole === role ? children : <Navigate to="/auth/unauthorized" />;
 };
+
 
 
 const CustomRoute = () => {
@@ -183,9 +182,9 @@ const CustomRoute = () => {
 
 
                 <Route path="/shop-dashboard/*" element={
-                    <ProtectedRoute role="ROLE_VENDOR">
+                    <ProtectedVendorRoute role="ROLE_VENDOR">
                         <ShopDashboard />
-                    </ProtectedRoute>
+                    </ProtectedVendorRoute>
                 } />
 
                 <Route path="/vendor-dashboard/*" element={
