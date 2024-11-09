@@ -49,7 +49,7 @@ const OrderView = (order) => {
                             </div>
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Total</h3>
-                                <p className="text-sm text-body-dark">${order.order.finalTotal}</p>
+                                <p className="text-sm text-body-dark">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.order.finalTotal)}</p>
                             </div>
                             <div className="rounded border border-gray-200 px-5 py-4 shadow-sm">
                                 <h3 className="mb-2 text-sm font-semibold text-heading">Payment Method</h3>

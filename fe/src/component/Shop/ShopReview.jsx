@@ -93,7 +93,7 @@ export const ShopReview = () => {
                     <tr key={re.reviewId} className="hover:bg-gray-50">
                         <td className="px-6 py-4 border-b text-sm font-medium text-gray-900">#ID: {re.reviewId}</td>
                         <td className="px-6 py-4 border-b text-center">
-                            <img src={re.product.pictureUrl} alt={re.product.pictureUrl} className="h-10 w-10 rounded-full mx-auto" />
+                            <img src={re.product.pictureUrl} alt={re.product.productName} className="h-10 w-10 rounded-full mx-auto" />
                             <p>{re.product.productName}</p>
                         </td>
                         <td className="px-6 py-4 border-b text-sm text-gray-500">
