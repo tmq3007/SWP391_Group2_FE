@@ -229,3 +229,13 @@ export const getTop10CategoriesByMostProducts = async () => {
         throw error;
     }
 }
+
+export const getCountOrdersByMonthAndYear = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/orders/countOrdersByMonthAndYear`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching count orders by month and year", error);
+        throw error;
+    }
+}

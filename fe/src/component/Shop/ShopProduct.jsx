@@ -10,7 +10,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { ShopFilter } from "./ShopFilter";
 import { useDispatch, useSelector } from "react-redux";
-import {getAllProductsByShopIdAction, updateProductById} from "../State/Product/Action";
+import { getAllProductsByShopIdAction, updateProductById } from "../State/Product/Action";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -24,15 +24,21 @@ export const ShopProduct = () => {
     const [shopId, setShopId] = useState("");
     const [page, setPage] = useState(1);
     const [isFilterVisible, setFilterVisible] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(""); // Add search term state
 
     const productsPerPage = 5;
-    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    // Filter products based on search term and pagination
+    const filteredProducts = products
+        .filter(product => product.isActive)
+        .filter(product =>
+            product.productName.toLowerCase().includes(searchTerm.toLowerCase()) // Filter by search term
+        );
+
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
     const indexOfLastProduct = page * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products
-        .filter(product => product.isActive)
-        .slice(indexOfFirstProduct, indexOfLastProduct);
-
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
     useEffect(() => {
         let isMounted = true;
@@ -62,9 +68,7 @@ export const ShopProduct = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const reviews = response.data;
-            console.log("review data: " , reviews);
             const averageRating = reviews.reduce((total, review) => total + review.rating, 0) / reviews.length || 0;
-            console.log("averageRating:",averageRating);
             return averageRating.toFixed(1);
         } catch (error) {
             console.error("Error fetching reviews:", error);
@@ -78,19 +82,7 @@ export const ShopProduct = () => {
                 products.map(async (product) => {
                     const averageRating = await fetchAverageRating(product.productId);
                     const updatedProductData = {
-                        productId: product.productId,
-                        productName: product.productName,
-                        category: product.category.categoryId,
-                        shop: product.shop.shopId,
-                        description: product.description,
-                        measurementUnit: product.measurementUnit,
-                        unitBuyPrice: product.unitBuyPrice,
-                        unitSellPrice: product.unitSellPrice,
-                        discount: product.discount,
-                        stock: product.stock,
-                        pictureUrl: product.pictureUrl,
-                        pictureUrl2: product.pictureUrl2,
-                        isActive: product.isActive,
+                        ...product,
                         averageRating: averageRating
                     };
                     await dispatch(updateProductById(product.productId, updatedProductData));
@@ -101,33 +93,19 @@ export const ShopProduct = () => {
         if (products.length > 0) fetchAllProductsData();
     }, [products, token, dispatch]);
 
-
     const handlePageChange = (event, value) => setPage(value);
     const toggleFilter = () => setFilterVisible(!isFilterVisible);
+    const handleSearchChange = (e) => setSearchTerm(e.target.value); // Update search term
 
     const handleDelete = async (productId) => {
         const confirmDelete = window.confirm("Do you want to delete this product?");
         if (confirmDelete) {
             const product = products.find(product => product.productId === productId);
 
-            // Ensure all necessary fields are included in the update
             const updatedProductData = {
-                productId: product.productId,
-                productName: product.productName,
-                category: product.category.categoryId,
-                shop: product.shop.shopId,
-                description: product.description,
-                measurementUnit: product.measurementUnit,
-                unitBuyPrice: product.unitBuyPrice,
-                unitSellPrice: product.unitSellPrice,
-                discount: product.discount,
-                stock: product.stock,
-                pictureUrl: product.pictureUrl,
-                pictureUrl2: product.pictureUrl2,
+                ...product,
                 isActive: false,
-                averageRating: product.averageRating,
             };
-
 
             try {
                 await dispatch(updateProductById(productId, updatedProductData));
@@ -138,19 +116,14 @@ export const ShopProduct = () => {
         }
     };
 
-
-
     return (
         <div className="w-full bg-white h-screen overflow-y-auto">
             <div className='h-screen p-6'>
                 <div className="bg-white rounded-lg p-6 shadow-md mb-8">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        {/* Title */}
                         <h2 className="text-xl mt-5 font-semibold text-gray-800">Products</h2>
 
-                        {/* Search, Add Product, and Filter Buttons */}
                         <div className="flex items-center gap-4">
-                            {/* Search Bar */}
                             <div className="relative w-full max-w-md hidden lg:flex items-center mt-4 ">
                                 <SearchIcon className="-mt-4 absolute left-4 text-gray-400"/>
                                 <input
@@ -158,10 +131,11 @@ export const ShopProduct = () => {
                                     className="pl-12 pr-4 h-12 w-full rounded-full border border-gray-300 focus:ring focus:ring-[#019376] focus:border-[#019376] transition-shadow"
                                     placeholder="Search by Name"
                                     aria-label="Search"
+                                    value={searchTerm} // Bind input to search term
+                                    onChange={handleSearchChange} // Update search term on input
                                 />
                             </div>
 
-                            {/* Add Product Button */}
                             <button
                                 className="flex items-center justify-center h-12 px-6 bg-[#019376] text-white font-medium rounded-full shadow hover:bg-[#01765c] transition-colors"
                                 onClick={() => navigate("/shop-dashboard/shop-add-product")}
@@ -169,29 +143,15 @@ export const ShopProduct = () => {
                                 + Add Product
                             </button>
 
-                            {/* Filter Button */}
-                            <button
-                                onClick={toggleFilter}
-                                className="flex items-center text-[#019376] font-semibold hover:text-[#01765c] transition-colors"
-                            >
-                                Filter
-                                {isFilterVisible ? (
-                                    <ArrowDownwardIcon className="ml-1"/>
-                                ) : (
-                                    <ArrowUpwardIcon className="ml-1"/>
-                                )}
-                            </button>
                         </div>
                     </div>
 
-                    {/* Filter Section */}
                     {isFilterVisible && (
                         <div className="mt-6 pt-4 border-t border-gray-200">
                             <ShopFilter/>
                         </div>
                     )}
                 </div>
-
 
                 <div className="rc-table-content">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -221,7 +181,6 @@ export const ShopProduct = () => {
                                     <ModeEditIcon onClick={() => navigate(`/shop-dashboard/shop-edit-product/${product.productId}`)} />
                                     <RemoveRedEyeIcon onClick={() => navigate("/")} />
                                     <DeleteIcon onClick={() => handleDelete(product.productId)} />
-
                                 </td>
                             </tr>
                         ))}
@@ -229,12 +188,14 @@ export const ShopProduct = () => {
                     </table>
                 </div>
 
-                <div className="flex items-center justify-end mt-5">
+                <div className="flex items-center justify-center mt-6">
                     <Stack spacing={2}>
                         <Pagination
                             count={totalPages}
                             page={page}
                             onChange={handlePageChange}
+                            shape="rounded"
+                            variant="outlined"
                             color="primary"
                         />
                     </Stack>
@@ -243,5 +204,3 @@ export const ShopProduct = () => {
         </div>
     );
 };
-
-

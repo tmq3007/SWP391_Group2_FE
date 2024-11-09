@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from '@mui/material';
+import {Button, Dialog, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import axios from 'axios';
 // import { DotLottieReact } from '@lottiefiles/dotlottie-react'; // Uncomment if needed
 
@@ -9,17 +9,27 @@ const RejectedShopCreation = () => {
     const { unverifiedShopId } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('jwt');
+    const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
+
+    const handleSuccessPopupClose = () => {
+        setIsSuccessPopupOpen(false);
+        navigate("/create-shop");
+    };
 
     const handleNewCreationRequest = () => {
         if (unverifiedShopId) {
             axios.delete(`http://localhost:8080/api/v1/delete-rejected-request/${unverifiedShopId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-                .then(() => console.log("Rejected shop request deleted successfully"))
+                .then(() => {
+                    console.log("Rejected shop request deleted successfully");
+                    setIsSuccessPopupOpen(true);
+                })
                 .catch(error => console.error("Error deleting rejected request:", error));
         }
-        navigate("/create-shop");
     };
+
+
 
     const buttonStyles = {
         padding: '10px 20px',
@@ -52,6 +62,16 @@ const RejectedShopCreation = () => {
                     Create New Shop
                 </Button>
             </ButtonContainer>
+
+            {/* Success Popup */}
+            <Dialog open={isSuccessPopupOpen} onClose={handleSuccessPopupClose}>
+                <DialogTitle>Success!</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Your previous shop creation has been delete successfully.
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
         </Container>
     );
 };

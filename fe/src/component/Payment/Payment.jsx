@@ -37,7 +37,7 @@ const Payment = () => {
     console.log("order",order)
     const MY_BANK = {
         BANK_ID: "MBBank",
-        ACCOUNT_ID: "99999300799999"
+        ACCOUNT_ID: "1010030072004"
         //ACCOUNT_ID: "0867726950"
     };
 
@@ -227,7 +227,7 @@ const Payment = () => {
             // "https://script.google.com/macros/s/AKfycbysOrpaEO6-6v5kC_wkHGTd7OFTHHQT0DIX_sCYBQMNYVYG4rhSuyuQ5GiQmYr7kwLv/exec"
             try {
                 const response = await fetch(
-                    "https://script.google.com/macros/s/AKfycbwXhY05yiY7aV_G4R_7D-pJcnNwDQJ_zGHu8q_fGUxtkT-u93WFJUmC94YAI_uS-g3v/exec"
+                    "https://script.google.com/macros/s/AKfycbweMSdqQbcrIE3rHkH_w9YQoXgEk2vdQ5zSNKWzZyatRMrAqTCs-46PkZ2gLPOZh4am2g/exec"
 
                 );
                 const data = await response.json();

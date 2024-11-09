@@ -448,12 +448,12 @@ const SuccessOrderShow = () => {
                                     </Typography>
                                 </td>
                                 <td>
-                                    <Typography className={"line-through"}>{item.quantity} x {item.product.unitSellPrice}$</Typography>
+                                    <Typography className={"line-through"}>{item.quantity} x {item.product.unitSellPrice} VND</Typography>
                                     <Typography style={{ color: "#017D65"}}>{item.quantity} x {item.product.unitSellPrice - item.product.unitSellPrice * (item.product.discount)}$</Typography>
                                 </td>
                                 <td>
-                                    <Typography className={"line-through"}>{item.quantity * item.product.unitSellPrice}$</Typography>
-                                    <Typography style={{ color: "#017D65"}}>{(item.quantity * item.product.unitSellPrice - (item.quantity * item.product.unitSellPrice * (item.product.discount ))).toFixed(2)}$</Typography>
+                                    <Typography className={"line-through"}>{item.quantity * item.product.unitSellPrice} VND</Typography>
+                                    <Typography style={{ color: "#017D65"}}>{(item.quantity * item.product.unitSellPrice - (item.quantity * item.product.unitSellPrice * (item.product.discount ))).toFixed(2)} VND</Typography>
                                 </td>
                             </tr>
                         ))}
@@ -468,9 +468,9 @@ const SuccessOrderShow = () => {
                             <Typography className={"flex justify-center  "} style={{ color: "#017D65"}}>Final total</Typography>
                         </div>
                         <div className={"row justify-center"}>
-                            <Typography className={"flex justify-center line-through"}>{order.total.toFixed(2)}$</Typography>
-                            <Typography className={"flex justify-center  "} style={{ color: "#017D65"}}>{(order.total - order.finalTotal).toFixed(2)}$</Typography>
-                            <Typography className={"flex justify-center "} style={{ color: "#017D65"}}>{order.finalTotal.toFixed(2)}$</Typography>
+                            <Typography className={"flex justify-center line-through"}>{order.total.toFixed(2)} VND</Typography>
+                            <Typography className={"flex justify-center  "} style={{ color: "#017D65"}}>{(order.total - order.finalTotal).toFixed(2)} VND</Typography>
+                            <Typography className={"flex justify-center "} style={{ color: "#017D65"}}>{order.finalTotal.toFixed(2)} VND</Typography>
                         </div>
                     </div>
                     <Divider/>
