@@ -59,7 +59,9 @@ export const ShopOrders = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 }
             );
+            await getAllOrderItemsByShopIdAction(shopId);
             return response.data;
+
         } catch (error) {
             console.error("Error updating payment status:", error);
             throw error;
