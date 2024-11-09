@@ -41,12 +41,7 @@ const menu = [
     herf: 'help-center',
     restricted: true
   },
-  {
-    title: 'Setting',
-    icon: <Settings />,
-    herf: 'setting',
-    restricted: true
-  },
+
 ];
 
 export default function ProfileNav({ open, handleClose }) {
