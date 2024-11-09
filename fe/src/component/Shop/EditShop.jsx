@@ -52,8 +52,8 @@ export const EditShop = () => {
             alert("Please enter the address.");
             return;
         }
-        if (!phone) {
-            alert("Please enter the phone number.");
+        if (!phone.match(/^[0-9]{10}$/)) {
+            alert("Please enter exactly 10 digits for your phone number");
             return;
         }
 
