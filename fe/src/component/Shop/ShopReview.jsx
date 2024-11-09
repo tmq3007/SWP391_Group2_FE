@@ -1,117 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import "../../style/ShopProduct.css";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from "react-redux";
 import axios from "axios";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { getAllProductsByShopIdAction } from "../State/Product/Action";
 
 export const ShopReview = () => {
-    const token = localStorage.getItem('jwt');
+    const dispatch = useDispatch();
+    const token = localStorage.getItem("jwt");
     const userId = localStorage.getItem("userId");
-
-    const [reviews, setReviews] = useState([]);
     const [shopId, setShopId] = useState("");
-    const [page, setPage] = useState(1);
+    const [review, setReview] = useState([]);
+    const [sortOrder, setSortOrder] = useState("asc");
 
-    const reviewsPerPage = 5;
-    const totalPages = Math.ceil(reviews.length / reviewsPerPage);
-    const indexOfLastReview = page * reviewsPerPage;
-    const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-    const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
-
-    const getAllReviewsByShopId = async (shopId) => {
-        try {
-            const productResponse = await axios.get(`http://localhost:8080/api/v1/products/get-all-product-by-shopId/${shopId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            const products = productResponse.data.result || [];
-            let allReviews = [];
-
-            for (const product of products) {
-                const reviewResponse = await axios.get(`http://localhost:8080/api/v1/reviews/reviews/get-all-review-by-product-id/${product.productId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                allReviews = allReviews.concat(reviewResponse.data.result || []);
-            }
-
-            setReviews(allReviews);
-        } catch (error) {
-            console.error("Error fetching reviews:", error);
-        }
-    };
-
+    // Get shop Id
     useEffect(() => {
+        let isMounted = true;
+
         const fetchShopId = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                const shopId = response.data.result;
-                setShopId(shopId);
-                if (shopId) getAllReviewsByShopId(shopId);
+                if (isMounted) {
+                    const shopId = response.data.result;
+                    setShopId(shopId);
+                    if (shopId) dispatch(getAllProductsByShopIdAction(shopId));
+                }
             } catch (error) {
                 console.error("Error fetching shopId:", error);
             }
         };
-        fetchShopId();
-    }, [userId, token]);
 
-    const handlePageChange = (event, value) => setPage(value);
+        fetchShopId();
+        return () => { isMounted = false };
+    }, [dispatch, token, userId]);
+
+    // Get all reviews by shop id
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchReviews = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/v1/reviews/get-all-review-by-shop-id/3`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (isMounted) {
+                    const review = response.data;
+                    setReview(review);
+                }
+            } catch (error) {
+                console.error("Error fetching review:", error);
+            }
+        };
+
+        fetchReviews();
+        return () => { isMounted = false };
+    }, [dispatch, token, shopId]);
+
+    const sortReviews = () => {
+        const sortedReviews = [...review].sort((a, b) => {
+            if (sortOrder === "asc") {
+                return a.rating - b.rating;
+            } else {
+                return b.rating - a.rating;
+            }
+        });
+        setReview(sortedReviews);
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    };
 
     return (
-        <div className="w-full bg-white h-screen overflow-y-auto">
-            <div className='h-screen p-6'>
-                <div className="bg-white rounded-lg p-6 shadow-md mb-8">
-                    <h2 className="text-xl mt-5 font-semibold text-gray-800">Reviews</h2>
-                </div>
-
-                {reviews.length > 0 ? (
-                    <div className="rc-table-content">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Review ID</th>
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Product Name</th>
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">User Name</th>
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Review Text</th>
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Rating</th>
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Created At</th>
-                            </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                            {currentReviews.map((review) => (
-                                <tr key={review.reviewId} className="text-center">
-                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{review.reviewId}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{review.reviewText}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{review.rating}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{review.product.productName}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{review.user.id}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{review.createAt}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-                ) : (
-                    <p className="text-center text-gray-500">No reviews available</p>
-                )}
-
-                {reviews.length > 0 && (
-                    <div className="flex items-center justify-end mt-5">
-                        <Stack spacing={2}>
-                            <Pagination
-                                count={totalPages}
-                                page={page}
-                                onChange={handlePageChange}
-                                color="primary"
-                            />
-                        </Stack>
-                    </div>
-                )}
-            </div>
+        <div className="p-6 bg-white shadow-md rounded-lg">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Reviews</h2>
+            <table className="min-w-full bg-white border border-gray-200">
+                <thead>
+                <tr className="bg-gray-50">
+                    <th className="px-6 py-3 border-b text-xs font-medium text-gray-500 uppercase">ID</th>
+                    <th className="px-6 py-3 border-b text-xs font-medium text-gray-500 uppercase">Product</th>
+                    <th className="px-6 py-3 border-b text-xs font-medium text-gray-500 uppercase">Customer Review</th>
+                    <th
+                        className="px-6 py-3 border-b text-xs font-medium text-gray-500 uppercase cursor-pointer"
+                        onClick={sortReviews}
+                    >
+                        Ratings {sortOrder === "asc" ? "↑" : "↓"}
+                    </th>
+                    <th className="px-6 py-3 border-b text-xs font-medium text-gray-500 uppercase">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {review.map((re) => (
+                    <tr key={re.reviewId} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 border-b text-sm font-medium text-gray-900">#ID: {re.reviewId}</td>
+                        <td className="px-6 py-4 border-b text-center">
+                            <img src={re.product.pictureUrl} alt={re.product.pictureUrl} className="h-10 w-10 rounded-full mx-auto" />
+                            <p>{re.product.productName}</p>
+                        </td>
+                        <td className="px-6 py-4 border-b text-sm text-gray-500">
+                            <p><span className="font-semibold">By {re.user.firstName + re.user.lastName}</span></p>
+                            <p>{re.reviewText}</p>
+                        </td>
+                        <td className="px-6 py-4 border-b text-center">
+                            <span className="text-green-500 font-semibold">{re.rating}</span>
+                        </td>
+                        <td className="px-6 py-4 border-b text-center">
+                            {new Date(re.createAt).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
         </div>
     );
 };
