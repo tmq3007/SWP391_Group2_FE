@@ -30,7 +30,7 @@ const ProductCard = ({ cart, item, addToCart,wishlist, addToWishlist,removeFromW
     const currentWish = wishlist.find(wishlistItem => wishlistItem.productId == item.productId);
 
     const [isFavorite, setIsFavorite] = useState(false);
-    //console.log("meo",wishlist)
+
     useEffect(() => {
         const inWishlist = wishlist.some(product => product.productId === item.productId);
         setIsFavorite(inWishlist);
