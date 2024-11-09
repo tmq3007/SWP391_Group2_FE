@@ -88,39 +88,6 @@ export const ShopInventory = () => {
     const handlePageChange = (event, value) => setPage(value);
     const toggleFilter = () => setFilterVisible(!isFilterVisible);
 
-    const handleDelete = async (productId) => {
-        const confirmDelete = window.confirm("Do you want to delete this product?");
-        if (confirmDelete) {
-            const product = products.find(product => product.productId === productId);
-
-            // Ensure all necessary fields are included in the update
-            const updatedProductData = {
-                productId: product.productId,
-                productName: product.productName,
-                category: product.category.categoryId,
-                shop: product.shop.shopId,
-                description: product.description,
-                measurementUnit: product.measurementUnit,
-                unitBuyPrice: product.unitBuyPrice,
-                unitSellPrice: product.unitSellPrice,
-                discount: product.discount,
-                stock: product.stock,
-                pictureUrl: product.pictureUrl,
-                pictureUrl2: product.pictureUrl2,
-                isActive: false,
-                averageRating: product.averageRating,
-            };
-
-
-            try {
-                await dispatch(updateProductById(productId, updatedProductData));
-                dispatch(getAllProductsByShopIdAction(shopId));
-            } catch (error) {
-                console.error("Error updating product:", error);
-            }
-        }
-    };
-
 
 
     return (

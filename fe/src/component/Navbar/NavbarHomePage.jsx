@@ -7,11 +7,10 @@ import ProfileList from '../User/ProfileList';
 import '../../style/NavbarHomePage.css';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
-import {logout} from "../State/Authentication/Action";
-import {useDispatch} from "react-redux";
+import { logout } from "../State/Authentication/Action";
+import { useDispatch } from "react-redux";
 import axios from "axios";
-import config from "tailwindcss/defaultConfig";
-import {HelpOutline} from "@mui/icons-material";
+import { HelpOutline } from "@mui/icons-material";
 
 export const NavbarHomePage = ({ setSearchQuery }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,12 +27,13 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
     const id = localStorage.getItem('userId');
+
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
     useEffect(() => {
-        if (token !== null && role) {
+        if (token && role) {
             setIsLoggedIn(true);
             setUserRole(role);
             console.log("Role from localStorage:", role);
@@ -41,7 +41,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     }, [token]);
 
     useEffect(() => {
-        if (token !== null && id) {
+        if (token && id) {
             setIsLoggedIn(true);
             setUserId(id);
             console.log("ID from localStorage:", id);
@@ -50,9 +50,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
 
     const handleLogout = () => {
         console.log('Logout clicked. Logging out...');
-
-        dispatch(logout({token: token}));
-
+        dispatch(logout({ token }));
         localStorage.removeItem('jwt');
         localStorage.removeItem('role');
         setIsLoggedIn(false);
@@ -61,8 +59,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     };
 
     const handleVendorRegister = () => {
-        dispatch(logout({token: token}));
-
+        dispatch(logout({ token }));
         localStorage.removeItem('jwt');
         localStorage.removeItem('role');
         setIsLoggedIn(false);
@@ -72,9 +69,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     const handleVendorDashboard = () => {
         if (userId) {
             axios.get(`http://localhost:8080/api/v1/shops/get-shopId/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             })
                 .then(response => {
                     setShopId(response.data.result);
@@ -86,14 +81,12 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 });
 
             axios.get(`http://localhost:8080/api/v1/get-unverifed-shopid/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             })
                 .then(response => {
                     setUnverifiedShopId(response.data.result);
                     setUnverifiedShopError(false);
-                    console.log("UnverifiedShopId : ", response.data.result);
+                    console.log("UnverifiedShopId:", response.data.result);
                 })
                 .catch(error => {
                     console.error("Error fetching UnshopId:", error);
@@ -105,9 +98,7 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
     useEffect(() => {
         if (unverifiedShopId) {
             axios.get(`http://localhost:8080/api/v1/get-status-rejected/${unverifiedShopId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             })
                 .then(response => {
                     setIsRejected(response.data.result);
@@ -117,48 +108,40 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
                 .catch(error => {
                     console.error("Error fetching statusRejected:", error);
                     setUnverifiedShopError(true);
-                    setLoading(false); // Also set loading to false if there's an error
+                    setLoading(false);
                 });
-        } else {
-
         }
     }, [unverifiedShopId, token]);
 
     useEffect(() => {
-        // Only run this effect if loading is complete
-
-
+        if (!loading) {
             if (shopError && unverifiedShopError) {
                 console.log('Both ShopID and UnverifiedShopID are null or have errors');
                 navigate("/create-shop");
-            }
-            else if (shopError && unverifiedShopId && !loading) {
-                console.log("IsRejected: ", isRejected);
+            } else if (shopError && unverifiedShopId && !loading) {
+                console.log("IsRejected:", isRejected);
                 if (isRejected) {
-                    console.log("Unverified ShopID is rejected: ", unverifiedShopId);
+                    console.log("Unverified ShopID is rejected:", unverifiedShopId);
                     navigate(`/rejected-shop-creation/${unverifiedShopId}`);
                 } else {
                     console.log("ShopID Error but Unverified ShopID is valid");
                     navigate("/processing");
                 }
-            }
-            else if (shopId && unverifiedShopError) {
+            } else if (shopId && unverifiedShopError) {
                 console.log("Unverified ShopID Error but ShopID is valid");
                 navigate("/vendor-dashboard");
             }
-
+        }
     }, [shopError, unverifiedShopError, shopId, unverifiedShopId, isRejected, navigate, loading]);
-
-
-
 
     const handleJoin = () => {
         navigate("/auth/login");
         console.log('Redirecting to login page');
     };
+
     const handleClick = () => {
         if (userRole !== "ROLE_ADMIN") {
-            navigate("/"); // Chuyển hướng về trang home page
+            navigate("/");
         }
     };
 
@@ -167,30 +150,26 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
             {/* Logo and ShopMenu */}
             <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-2 lg:mr-10 cursor-pointer">
-                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{color: '#019376'}}>
+                    <li onClick={handleClick} className="logo font-semibold text-2xl" style={{ color: '#019376' }}>
                         Shopii
                     </li>
                 </div>
-
-                {/*<ShopMenu className="shop-menu" />*/}
-
             </div>
 
             {/* Search Bar */}
             <div className="relative top-2 hidden w-full max-w-[710px] lg:flex items-center top-3">
-                <SearchIcon className="absolute left-4 text-gray-400 top-2"/>
+                <SearchIcon className="absolute left-4 text-gray-400 top-2" />
                 <input
                     type="text"
-                    className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500
-                    focus:bg-white focus:outline-none "
+                    className="block w-full pl-12 pr-4 py-2 rounded-full border border-gray-300 bg-gray-50 text-sm focus:border-green-500 focus:bg-white focus:outline-none"
                     placeholder="Search products..."
-                    onChange={handleSearchChange}  // Xử lý thay đổi giá trị tìm kiếm
+                    onChange={handleSearchChange}
                 />
             </div>
 
             <div className="flex items-center">
                 <Button
-                    sx={{color: '#039375'}}
+                    sx={{ color: '#039375' }}
                     size='small'
                     onClick={() => navigate("/help-center")}
                 >
@@ -201,55 +180,49 @@ export const NavbarHomePage = ({ setSearchQuery }) => {
 
             {/* User Info and Actions */}
             <div className="flex items-center space-x-3">
-                {/*<IconButton>*/}
-                {/*    <Badge badgeContent={4} color="success">*/}
-                {/*        <FavoriteIcon sx={{ fontSize: '1.5rem' }} />*/}
-                {/*    </Badge>*/}
-                {/*</IconButton>*/}
                 {isLoggedIn ? (
                     <>
-                        <ProfileList handleLogout={handleLogout}/>
-                        {userRole === "ROLE_VENDOR" && (
+                        <ProfileList handleLogout={handleLogout} />
+                        {userRole === "ROLE_VENDOR" ? (
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{backgroundColor: '#019376'}}
-                                onClick={() => handleVendorDashboard()}
+                                sx={{ backgroundColor: '#019376' }}
+                                onClick={handleVendorDashboard}
                             >
-                                <span style={{color: "#FFFFFF"}}>Dash Board</span>
+                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>
-                        ) || userRole === "ROLE_ADMIN" && (
+                        ) : userRole === "ROLE_ADMIN" ? (
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{backgroundColor: '#019376'}}
+                                sx={{ backgroundColor: '#019376' }}
                                 onClick={() => navigate("/admin-dashboard")}
                             >
-                                <span style={{color: "#FFFFFF"}}>Dash Board</span>
+                                <span style={{ color: "#FFFFFF" }}>Dash Board</span>
                             </Button>
-                        ) || userRole === "ROLE_CUSTOMER" && (
+                        ) : userRole === "ROLE_CUSTOMER" ? (
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{backgroundColor: '#019376'}}
-                                onClick={() => handleVendorRegister()}
+                                sx={{ backgroundColor: '#019376' }}
+                                onClick={handleVendorRegister}
                             >
-                                <span style={{color: "#FFFFFF"}}>Become a seller</span>
+                                <span style={{ color: "#FFFFFF" }}>Become a seller</span>
                             </Button>
-                        )}
+                        ) : null}
                     </>
                 ) : (
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={handleJoin}
-                        sx={{backgroundColor: '#019376'}}
+                        sx={{ backgroundColor: '#019376' }}
                     >
-                        <span style={{color: "#FFFFFF"}}>Join</span>
+                        <span style={{ color: "#FFFFFF" }}>Join</span>
                     </Button>
                 )}
             </div>
-
         </div>
     );
 };

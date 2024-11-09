@@ -124,7 +124,7 @@ export const getCategoryById = async (categoryId) => {
 
 export const deleteCategory = async (categoryId) => {
     try {
-        const response = await axiosInstance.delete(`/api/v1/categories/${categoryId}`);
+        const response = await axiosInstance.patch(`/api/v1/categories/delete/${categoryId}`);
         return response.data;
     } catch (error) {
         console.error("Error deleting category", error);

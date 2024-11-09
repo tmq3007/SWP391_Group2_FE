@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import { getAllCategoriesAction } from "../State/Category/Action";
 import { List, ListItem, ListSubheader } from "@mui/material";
 
-const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
+const CategoryMenu = ({ setSelectedCategory, setSelectedPrice,setCurrentPage  }) => {
     const [valueCategory, setValueCategory] = React.useState('all'); // Default value for category radio
     const [valuePrice, setValuePrice] = React.useState('all'); // Default value for price radio
     const dispatch = useDispatch();
@@ -24,11 +24,13 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
     const handleCategoryChange = (event) => {
         setValueCategory(event.target.value); // Update selected category
         setSelectedCategory(event.target.value); // Pass selected category to parent component
+        setCurrentPage(1);
     };
 
     const handlePriceChange = (event) => {
         setValuePrice(event.target.value); // Update selected price range
         setSelectedPrice(event.target.value); // Pass selected price range to parent component
+        setCurrentPage(1);
     };
 
     return (
@@ -64,8 +66,10 @@ const CategoryMenu = ({ setSelectedCategory, setSelectedPrice }) => {
                             label="All"
                         />
                     </ListItem>
-                    {Array.isArray(categories.result) && categories.result.length > 0 ? (
-                        categories.result.map((category) => (
+                    {Array.isArray(categories.result) && categories.result.length > 0  ? (
+                        categories.result
+                            .filter((category) => category.isActive)
+                            .map((category) => (
                             <ListItem key={category.categoryId}>
                                 <FormControlLabel
                                     value={category.categoryName}

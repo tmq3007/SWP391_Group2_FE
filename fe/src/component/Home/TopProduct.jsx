@@ -15,8 +15,9 @@ const TopProduct = () => {
 
     // Filter products with averageRating > 3 and limit to 10
     const topRatedProducts = products
-        .filter(product => product.averageRating > 3)
+        .filter(product => product.averageRating > 3 && product.isActive === true)
         .slice(0, 10);
+
 
     return (
         <div>

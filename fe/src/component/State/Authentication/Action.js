@@ -60,6 +60,15 @@ export const loginUser = (reqData) => async (dispatch) => {
 
         // Điều hướng dựa trên vai trò
         if (token.scope === "ROLE_VENDOR") {
+            console.log("shopId" , token.shopId);
+            console.log("unverified shop Id,", token.unverifiedShopId);
+            if(token.shopId){
+                localStorage.setItem('shopId', token.shopId);
+            }
+            if(token.unverifiedShopId){
+                localStorage.setItem('unverifiedShopId', token.unverifiedShopId);
+            }
+
             reqData.navigate("/");
         } else if (token.scope === "ROLE_ADMIN") {
             console.log("ADMIN...", token.scope);
