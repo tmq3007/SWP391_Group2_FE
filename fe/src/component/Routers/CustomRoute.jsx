@@ -115,6 +115,18 @@ const ProtectedVendorRoute = ({ role, children }) => {
         fetchRejectedStatus();
     }, [unverifiedShopId, token]);
 
+    const allowedPaths = [
+        '/shop-dashboard',
+        '/shop-transaction',
+        '/shop-product',
+        '/shop-add-product',
+        '/shop-edit-product',
+        '/edit-shop',
+        '/shop-inventory',
+        '/shop-orders',
+        '/shop-review'
+    ];
+
     useEffect(() => {
         if (isShopIdLoaded && isUnverifiedShopIdLoaded) {
             if (shopError && unverifiedShopError) {
@@ -122,7 +134,7 @@ const ProtectedVendorRoute = ({ role, children }) => {
             } else if (shopError && !unverifiedShopError) {
                 navigate(isRejected ? `/rejected-shop-creation/${unverifiedShopId}` : "/processing");
             } else if (!shopError && unverifiedShopError) {
-                if (window.location.pathname !== '/shop-dashboard') {
+                if (!allowedPaths.some(path => window.location.pathname.startsWith(path))) {
                     navigate("/vendor-dashboard");
                 }
             }
