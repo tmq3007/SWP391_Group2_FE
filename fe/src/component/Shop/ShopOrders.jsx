@@ -6,20 +6,28 @@ import axios from "axios";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SearchIcon from "@mui/icons-material/Search";
 
 export const ShopOrders = () => {
     const token = localStorage.getItem('jwt');
     const userId = localStorage.getItem("userId");
 
-    const [orders, setOrders] = useState([]); // Lưu trữ các OrderItems
+    const [orders, setOrders] = useState([]); // Store OrderItems
     const [shopId, setShopId] = useState("");
     const [page, setPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const ordersPerPage = 5;
-    const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+    // Filter orders based on search term
+    const filteredOrders = orders.filter(order =>
+        order.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
     const indexOfLastOrder = page * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+    const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
     const getAllOrderItemsByShopIdAction = async (shopId) => {
         try {
@@ -50,30 +58,27 @@ export const ShopOrders = () => {
 
     const handlePageChange = (event, value) => setPage(value);
 
-    const handleIsPaid = async (orderItemsId) => {
-        try {
-            const response = await axios.patch(
-                `http://localhost:8080/api/v1/orderItems/isPaidToTrue/${orderItemsId}`,
-                {},
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
-            await getAllOrderItemsByShopIdAction(shopId);
-            return response.data;
-
-        } catch (error) {
-            console.error("Error updating payment status:", error);
-            throw error;
-        }
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+        setPage(1); // Reset to first page on new search
     };
-
 
     return (
         <div className="w-full bg-white h-screen overflow-y-auto">
             <div className='h-screen p-6'>
-                <div className="bg-white rounded-lg p-6 shadow-md mb-8">
+                <div className="flex space-x-80 bg-white rounded-lg p-6 shadow-md mb-8">
                     <h2 className="text-xl mt-5 font-semibold text-gray-800">Orders</h2>
+                    <div className="relative w-full max-w-md hidden lg:flex items-center mt-3">
+                        <SearchIcon className="-mt-4 absolute left-4 text-gray-400"/>
+                        <input
+                            type="text"
+                            className="pl-12 pr-4 h-12 w-full rounded-full border border-gray-300 focus:ring focus:ring-[#019376] focus:border-[#019376] transition-shadow"
+                            placeholder="Search by Product Name"
+                            aria-label="Search"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
                 </div>
 
                 <div className="rc-table-content">
@@ -87,7 +92,6 @@ export const ShopOrders = () => {
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Payment Way</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Final Price</th>
                             <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -100,10 +104,8 @@ export const ShopOrders = () => {
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     {order.paymentId === 1 ? 'COD' : order.paymentId === 2 ? 'QR Code' : ''}
                                 </td>
-
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.finalPrice}</td>
                                 <td className="px-6 py-4 text-sm text-gray-500">{order.isPaid ? 'Is Paid' : 'Not Paid'}</td>
-                                
                             </tr>
                         ))}
                         </tbody>
