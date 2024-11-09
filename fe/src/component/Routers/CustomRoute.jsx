@@ -196,9 +196,9 @@ const CustomRoute = () => {
                 />
 
                 <Route path="/shop-dashboard/*" element={
-                    <ProtectedRoute role="ROLE_VENDOR">
+                    <ProtectedVendorRoute role="ROLE_VENDOR">
                         <ShopDashboard />
-                    </ProtectedRoute>
+                    </ProtectedVendorRoute>
                 } />
 
                 <Route path="/vendor-dashboard" element={
