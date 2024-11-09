@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -6,8 +6,24 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HelpIcon from '@mui/icons-material/Help';
 import {AccountBox, Logout, RecentActors} from "@mui/icons-material";
+import {getUser} from "../State/Authentication/Action";
+import {useDispatch} from "react-redux";
 
 const ProfileList = ({ handleLogout }) => {
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        if (jwt) {
+            dispatch(getUser(jwt)).then((data) => {
+                setUserId(data.result.roles[0].name);
+            }).catch((error) => {
+                console.error('Error getting user:', error);
+            });
+        }
+    }, [dispatch, jwt]);
+    console.log('role', userId)
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const navigate = useNavigate(); // Initialize useNavigate hook
@@ -68,21 +84,27 @@ const ProfileList = ({ handleLogout }) => {
                 }}
             >
                 <MenuItem style={{ color: '#019376' }} onClick={handleProfileClick}>
-                   <AccountBox sx={{ marginRight:"10px" }} /> Profile
+                    <AccountBox sx={{ marginRight: "10px" }} /> Profile
                 </MenuItem>
 
-                <MenuItem style={{ color: '#019376' }} onClick={handleOrderClick}>
-                    <ShoppingCartIcon sx={{ marginRight:"10px" }} /> My Orders
-                </MenuItem>
+                {userId === "CUSTOMER" && (
+                    <>
+                        <MenuItem style={{ color: '#019376' }} onClick={handleOrderClick}>
+                            <ShoppingCartIcon sx={{ marginRight: "10px" }} /> My Orders
+                        </MenuItem>
 
-                <MenuItem style={{ color: '#019376' }} onClick={handleWishlistClick}>
-                    <FavoriteIcon sx={{ marginRight:"10px" }} /> My Wishlist
-                </MenuItem>
+                        <MenuItem style={{ color: '#019376' }} onClick={handleWishlistClick}>
+                            <FavoriteIcon sx={{ marginRight: "10px" }} /> My Wishlist
+                        </MenuItem>
+                    </>
+                )}
 
                 <MenuItem style={{ color: '#019376' }} onClick={handleLogout}>
-                   <Logout sx={{ marginRight:"10px" }}/> Logout
+                    <Logout sx={{ marginRight: "10px" }} /> Logout
                 </MenuItem>
             </Menu>
+
+
         </div>
     );
 };
