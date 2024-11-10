@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import '../../../style/AdminDashboard.css';
-import { getTotalOrders, getTotalShops, getTotalVendors } from "../../State/Admin/Action";
+import {getTotalOrders, getTotalRevenue, getTotalShops, getTotalVendors} from "../../State/Admin/Action";
 
 const Summary = () => {
     const [totalShops, setTotalShops] = useState(0);
     const [totalVendors, setTotalVendors] = useState(0);
     const [totalOrders, setTotalOrders] = useState(0);
+    const [totalRevenue, setTotalRevenue] = useState(0);
 
     useEffect(() => {
         // Async function to fetch summary data
@@ -19,6 +20,9 @@ const Summary = () => {
 
                 const ordersData = await getTotalOrders();
                 setTotalOrders(ordersData?.result || 0);  // Fallback to 0 if no data
+
+                const totalRevenue = await getTotalRevenue();
+                setTotalRevenue(totalRevenue?.result || 0);  // Fallback to 0 if no data
             } catch (e) {
                 console.log('Error fetching summary data', e);
             }
@@ -32,7 +36,7 @@ const Summary = () => {
         {
             id: 1,
             label: 'Total Revenue',
-            value: 1818.80, // Static value, you can make it dynamic as needed
+            value:  totalRevenue, // Static value, you can make it dynamic as needed
             icon: '💰',
             color: 'green',
         },

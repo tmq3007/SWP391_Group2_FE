@@ -239,3 +239,13 @@ export const getCountOrdersByMonthAndYear = async () => {
         throw error;
     }
 }
+
+export const getTotalRevenue = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/v1/orders/sumTotalRevenue`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching total revenue", error);
+        throw error;
+    }
+}
